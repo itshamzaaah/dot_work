@@ -45,12 +45,12 @@ const LoginPage = () => {
         {/* Right Part */}
         <div className="w-9/12 bg-indigo-400">
           <div className="bg-white p-10 rounded-3xl shadow-md relative shadow-2xl">
-
+<div className="block h-3 mb-4 text-gray-700 text-sm font-medium">
+              </div>
             <h2 className="text-2xl font-semibold mb-8">Welcome Back</h2>
 
             <form onSubmit={handleSubmit}>
-              <div className="block h-3 mb-4 text-gray-700 text-sm font-medium">
-              </div>
+              
               {/* Email */}
               <label className="block mb-4 text-gray-700 text-sm font-medium">
                 Email Address
@@ -116,8 +116,8 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={!isValid}
-                className={`w-full py-3 rounded-full text-white font-semibold transition duration-200 ${isValid ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-400 cursor-not-allowed"
-                  }`}
+                className={`w-full py-3 rounded-full text-white font-semibold transition duration-200 ${isValid ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"
+                  } transition duration-200`}
               >
                 Sign In
               </button>
