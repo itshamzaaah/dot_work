@@ -32,15 +32,15 @@ const SignupPage = () => {
             <h1 className="text-3xl font-extrabold leading-tight mb-10">
               AI Based <br />
               Evaluation <br />
-              of the assesments
+              of the assessments
             </h1>
           </div>
 
-          <div className="flex-1 flex items-end">
+          <div className="w-60  flex items-center justify-center mx-auto">
             <img
               src={signUpImg}
               alt="Illustration"
-              className="w-full object-cover"
+              className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
