@@ -1,23 +1,21 @@
 import { useState } from "react";
-import signUpImg from "../assets/images/signup.png";
+import loginImg from "../assets/images/signup.png";
 import { useNavigate } from 'react-router-dom';
 
-
-const SignupPage = () => {
-  const [fullName, setFullName] = useState("");
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [agreed, setAgreed] = useState(false);
-  const [fullNameTouched, setFullNameTouched] = useState(false);
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
-  const isNameValid = /^[A-Za-z\s]*$/.test(fullName) && fullName.trim() !== "";
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(password);
 
-  const canSubmit = agreed && isNameValid && isEmailValid && isPasswordValid;
+  const isValid = email.trim() !== "" && password.trim() !== "";
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isValid) return;
+    // Api call 🥲
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white p-6">
@@ -35,10 +33,9 @@ const SignupPage = () => {
               of the assessments
             </h1>
           </div>
-
           <div className="w-60  flex items-center justify-center mx-auto">
             <img
-              src={signUpImg}
+              src={loginImg}
               alt="Illustration"
               className="max-w-full max-h-full object-contain"
             />
@@ -46,69 +43,35 @@ const SignupPage = () => {
         </div>
 
         {/* Right Part */}
-        <div className="w-9/12 bg-indigo-400 ">
-          <div className="bg-white  p-10 rounded-3xl shadow-md relative shadow-2xl ">
+        <div className="w-9/12 bg-indigo-400">
+          <div className="bg-white p-10 rounded-3xl shadow-md relative shadow-2xl">
+<div className="block h-3 mb-4 text-gray-700 text-sm font-medium">
+              </div>
+            <h2 className="text-2xl font-semibold mb-8">Welcome Back</h2>
 
-            {/* Language Selector */}
-            {/* <div className="absolute top-6 right-6 text-sm text-gray-500 cursor-pointer select-none">
-            English(USA) ▼
-          </div> */}
-
-            <h2 className="text-2xl font-semibold mb-8">Create Accout</h2>
-
-            <form>
-              {/* Full Name */}
-              <label className="block mb-2 text-gray-700 text-sm font-medium">
-                Full Name
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => {
-                    const input = e.target.value;
-                    if (/^[A-Za-z\s]*$/.test(input) || input === "") {
-                      setFullName(input);
-                    }
-                  }}
-                  onBlur={() => setFullNameTouched(true)}
-                  className="mt-1 block w-full border-b border-gray-300 focus:border-indigo-600 focus:outline-none py-2 placeholder-gray-400"
-                  required
-                />
-              </label>
-              {fullNameTouched && !isNameValid && (
-                <p className={`text-xs mb-3 text-red-500`}>
-                  Full name must contain only alphabets and spaces.
-                </p>
-              )}
-
+            <form onSubmit={handleSubmit}>
+              
               {/* Email */}
-              <label className="block mb-2 text-gray-700 text-sm font-medium">
+              <label className="block mb-4 text-gray-700 text-sm font-medium">
                 Email Address
                 <input
                   type="email"
-                  placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  onBlur={() => setEmailTouched(true)}
+                  placeholder="Email Address"
                   className="mt-1 block w-full border-b border-gray-300 focus:border-indigo-600 focus:outline-none py-2 placeholder-gray-400"
                   required
                 />
               </label>
-              {emailTouched && !isEmailValid && (
-                <p className={`text-xs mb-3  "text-red-500"`}>
-                  Enter a valid email address (e.g. user@example.com).
-                </p>
-              )}
 
               {/* Password */}
-              <label className="block mb-2 text-gray-700 text-sm font-medium relative">
+              <label className="block mb-4 text-gray-700 text-sm font-medium relative">
                 Password
                 <input
                   type={passwordVisible ? "text" : "password"}
-                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  onBlur={() => setPasswordTouched(true)}
+                  placeholder="Password"
                   className="mt-1 block w-full border-b border-gray-300 focus:border-indigo-600 focus:outline-none py-2 placeholder-gray-400"
                   required
                 />
@@ -118,6 +81,7 @@ const SignupPage = () => {
                   className="absolute right-0 bottom-3 pr-2 text-gray-400 hover:text-indigo-600 focus:outline-none"
                   aria-label={passwordVisible ? "Hide password" : "Show password"}
                 >
+                  {/* SVG same as before */}
                   {passwordVisible ? (
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.975 9.975 0 012.052-6.086M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -131,52 +95,33 @@ const SignupPage = () => {
                   )}
                 </button>
               </label>
-              {passwordTouched && !isPasswordValid && (
-                <p className={`text-xs mb-3  text-red-500`}>
-                  Password must be at least 6 characters, include 1 capital letter and 1 special character.
-                </p>
-              )}
-              {/* Checkbox */}
-              <label className="flex items-center text-xs text-gray-600 mb-8">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mr-2 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                  required
-                />
-                I agree to the{" "}
-                <a
-                  href="#"
-                  className="text-indigo-600 underline mx-1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  terms of service
-                </a>{" "}
-                and{" "}
-                <a
-                  href="#"
-                  className="text-indigo-600 underline ml-1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  privacy policy
-                </a>
-                .
-              </label>
 
-              {/* Submit */}
+              {/* Remember Me + Forgot */}
+              <div className="flex items-center justify-between mb-6 text-sm text-gray-600">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="mr-2 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  Remember Me
+                </label>
+                <a href="#" className="text-indigo-600 hover:underline">Forgot Password?</a>
+              </div>
+              <div className="block h-3 mb-4 text-gray-700 text-sm font-medium">
+              </div>
+
+              {/* Sign In Button */}
               <button
                 type="submit"
-                disabled={!canSubmit}
-                className={`w-full py-3 rounded-full text-white font-semibold ${canSubmit ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"} transition duration-200`}
+                disabled={!isValid}
+                className={`w-full py-3 rounded-full text-white font-semibold transition duration-200 ${isValid ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"
+                  } transition duration-200`}
               >
-                Sign Up
+                Sign In
               </button>
             </form>
-
-
             <div className="flex items-center mt-8 mb-6 text-gray-300 text-sm">
               <div className="bg-gray-200 flex-1 h-px"></div>
               <span className="mx-4">Or Sign Up With</span>
@@ -254,15 +199,15 @@ const SignupPage = () => {
               </a>
             </div>
 
+            {/* Footer */}
             <p className="text-center text-sm text-gray-400 mt-6">
-              Already Have an account?{" "}
+              Don't have an account?{" "}
               <button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/')}
                 className="text-indigo-600 underline"
               >
-                Sign in
+                Sign up
               </button>
-
             </p>
           </div>
         </div>
@@ -271,4 +216,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default LoginPage;
