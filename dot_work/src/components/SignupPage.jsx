@@ -40,7 +40,8 @@ const SignupPage = () => {
             <img
               src={signUpImg}
               alt="Illustration"
-              className="max-w-full max-h-full object-contain"
+              className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-110"
+            //className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
@@ -75,11 +76,11 @@ const SignupPage = () => {
                   required
                 />
               </label>
-              {fullNameTouched && !isNameValid && (
-                <p className={`text-xs mb-3 text-red-500`}>
-                  Full name must contain only alphabets and spaces.
-                </p>
-              )}
+              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500">
+                {fullNameTouched && !isNameValid && (
+                  <p>Full name must contain only alphabets and spaces.</p>
+                )}
+              </div>
 
               {/* Email */}
               <label className="block mb-2 text-gray-700 text-sm font-medium">
@@ -94,12 +95,11 @@ const SignupPage = () => {
                   required
                 />
               </label>
-              {emailTouched && !isEmailValid && (
-                <p className={`text-xs mb-3  "text-red-500"`}>
-                  Enter a valid email address (e.g. user@example.com).
-                </p>
-              )}
-
+              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500">
+                {emailTouched && !isEmailValid && (
+                  <p>Enter a valid email address (e.g. user@example.com).</p>
+                )}
+              </div>
               {/* Password */}
               <label className="block mb-2 text-gray-700 text-sm font-medium relative">
                 Password
@@ -131,11 +131,11 @@ const SignupPage = () => {
                   )}
                 </button>
               </label>
-              {passwordTouched && !isPasswordValid && (
-                <p className={`text-xs mb-3  text-red-500`}>
-                  Password must be at least 6 characters, include 1 capital letter and 1 special character.
-                </p>
-              )}
+              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500">
+                {passwordTouched && !isPasswordValid && (
+                  <p>Password must be at least 6 characters, include 1 capital letter and 1 special character.</p>
+                )}
+              </div>
               {/* Checkbox */}
               <label className="flex items-center text-xs text-gray-600 mb-8">
                 <input
