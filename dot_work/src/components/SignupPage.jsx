@@ -1,7 +1,6 @@
 import { useState } from "react";
 import signUpImg from "../assets/images/signup.png";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [fullName, setFullName] = useState("");
@@ -15,28 +14,31 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const isNameValid = /^[A-Za-z\s]*$/.test(fullName) && fullName.trim() !== "";
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isPasswordValid = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(password);
+  const isPasswordValid =
+    /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(password);
 
   const canSubmit = agreed && isNameValid && isEmailValid && isPasswordValid;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white p-6">
-      <div className="flex max-w-5xl w-full rounded-3xl shadow-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row max-w-5xl w-full rounded-3xl shadow-lg overflow-hidden">
         {/* Left Part */}
-        <div className="flex flex-col bg-indigo-400 px-12 py-10 w-6/12 rounded-l-3xl text-white">
+        <div className="flex flex-col bg-indigo-400 px-4 py-3 md:px-12 md:py-10 w-full md:w-6/12 md:rounded-l-3xl text-white">
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="font-semibold">DotWork</span>
             </div>
-            <p className="text-xs font-light mb-8">Study Online, Learn Online</p>
-            <h1 className="text-3xl font-extrabold leading-tight mb-10">
+            <p className="text-xs font-light mb-8">
+              Study Online, Learn Online
+            </p>
+            <h1 className="text-xl md:text-3xl font-extrabold leading-tight mb-0 md:mb-10">
               AI Based <br />
               Evaluation <br />
               of the assessments
             </h1>
           </div>
 
-          <div className="w-60  flex items-center justify-center mx-auto">
+          <div className="hidden md:block w-60 mx-auto">
             <img
               src={signUpImg}
               alt="Illustration"
@@ -46,9 +48,8 @@ const SignupPage = () => {
         </div>
 
         {/* Right Part */}
-        <div className="w-9/12 bg-indigo-400 ">
-          <div className="bg-white  p-10 rounded-3xl shadow-md relative shadow-2xl ">
-
+        <div className="w-full md:w-9/12 bg-indigo-400 ">
+          <div className="bg-white p-4 md:p-10 rounded-3xl shadow-md relative shadow-2xl ">
             {/* Language Selector */}
             {/* <div className="absolute top-6 right-6 text-sm text-gray-500 cursor-pointer select-none">
             English(USA) ▼
@@ -116,24 +117,57 @@ const SignupPage = () => {
                   type="button"
                   onClick={() => setPasswordVisible(!passwordVisible)}
                   className="absolute right-0 bottom-3 pr-2 text-gray-400 hover:text-indigo-600 focus:outline-none"
-                  aria-label={passwordVisible ? "Hide password" : "Show password"}
+                  aria-label={
+                    passwordVisible ? "Hide password" : "Show password"
+                  }
                 >
                   {passwordVisible ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.975 9.975 0 012.052-6.086M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10a9.975 9.975 0 012.052-6.086M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 3l18 18"
+                      />
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   )}
                 </button>
               </label>
               {passwordTouched && !isPasswordValid && (
                 <p className={`text-xs mb-3  text-red-500`}>
-                  Password must be at least 6 characters, include 1 capital letter and 1 special character.
+                  Password must be at least 6 characters, include 1 capital
+                  letter and 1 special character.
                 </p>
               )}
               {/* Checkbox */}
@@ -170,12 +204,15 @@ const SignupPage = () => {
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className={`w-full py-3 rounded-full text-white font-semibold ${canSubmit ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"} transition duration-200`}
+                className={`w-full py-3 rounded-full text-white font-semibold ${
+                  canSubmit
+                    ? "bg-indigo-600 hover:bg-indigo-700"
+                    : "bg-indigo-300 cursor-not-allowed"
+                } transition duration-200`}
               >
                 Sign Up
               </button>
             </form>
-
 
             <div className="flex items-center mt-8 mb-6 text-gray-300 text-sm">
               <div className="bg-gray-200 flex-1 h-px"></div>
@@ -209,7 +246,11 @@ const SignupPage = () => {
                   />
                 </svg>
               </a>
-              <a href="#" aria-label="Facebook" className="hover:text-indigo-600">
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="hover:text-indigo-600"
+              >
                 <svg
                   className="w-6 h-6"
                   fill="currentColor"
@@ -219,7 +260,11 @@ const SignupPage = () => {
                   <path d="M22.675 0h-21.35c-.735 0-1.325.589-1.325 1.324v21.352c0 .734.59 1.324 1.324 1.324h11.494v-9.294H9.691v-3.622h3.008V8.413c0-2.978 1.917-4.6 4.72-4.6 1.343 0 2.498.1 2.835.144v3.292l-1.947.001c-1.527 0-1.823.726-1.823 1.792v2.35h3.646l-.475 3.622h-3.171V24h6.215c.736 0 1.326-.59 1.326-1.324V1.325c0-.735-.59-1.325-1.325-1.325z" />
                 </svg>
               </a>
-              <a href="#" aria-label="Instagram" className="hover:text-indigo-600">
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="hover:text-indigo-600"
+              >
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -234,7 +279,11 @@ const SignupPage = () => {
                   <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
                 </svg>
               </a>
-              <a href="#" aria-label="Twitter" className="hover:text-indigo-600">
+              <a
+                href="#"
+                aria-label="Twitter"
+                className="hover:text-indigo-600"
+              >
                 <svg
                   className="w-6 h-6"
                   fill="currentColor"
@@ -243,7 +292,11 @@ const SignupPage = () => {
                   <path d="M24 4.557a9.83 9.83 0 01-2.828.775 4.932 4.932 0 002.164-2.724c-.949.564-2.002.974-3.127 1.195A4.918 4.918 0 0016.616 3a4.92 4.92 0 00-4.917 4.917c0 .385.045.76.127 1.121C7.728 8.806 4.1 6.864 1.671 3.905a4.822 4.822 0 00-.666 2.475 4.917 4.917 0 002.188 4.096 4.904 4.904 0 01-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 01-2.224.084 4.922 4.922 0 004.6 3.417 9.868 9.868 0 01-6.102 2.104c-.396 0-.788-.023-1.174-.067a13.945 13.945 0 007.557 2.212c9.054 0 14.002-7.498 14.002-14 0-.213-.005-.425-.014-.636A10.012 10.012 0 0024 4.557z" />
                 </svg>
               </a>
-              <a href="#" aria-label="LinkedIn" className="hover:text-indigo-600">
+              <a
+                href="#"
+                aria-label="LinkedIn"
+                className="hover:text-indigo-600"
+              >
                 <svg
                   className="w-6 h-6"
                   fill="currentColor"
@@ -257,12 +310,11 @@ const SignupPage = () => {
             <p className="text-center text-sm text-gray-400 mt-6">
               Already Have an account?{" "}
               <button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 className="text-indigo-600 underline"
               >
                 Sign in
               </button>
-
             </p>
           </div>
         </div>
