@@ -39,7 +39,8 @@ const LoginPage = () => {
             <img
               src={loginImg}
               alt="Illustration"
-              className="max-w-full max-h-full object-contain"
+              className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-110"
+              // className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
@@ -63,7 +64,7 @@ const LoginPage = () => {
                   required
                 />
               </label>
-
+              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500"></div>
               {/* Password */}
               <label className="block mb-4 text-gray-700 text-sm font-medium relative">
                 Password
@@ -127,7 +128,7 @@ const LoginPage = () => {
                   )}
                 </button>
               </label>
-
+              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500"></div>
               {/* Remember Me + Forgot */}
               <div className="flex items-center justify-between mb-6 text-sm text-gray-600">
                 <label className="flex items-center">
