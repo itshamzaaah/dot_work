@@ -1,20 +1,15 @@
-import React, { useState } from "react";
 import { IoChevronDown } from "react-icons/io5";
-import TextInput from "./TextInput";
+import TextInput from "../TextInput";
+import { useDispatch, useSelector } from "react-redux";
+import { updateStepOne } from "../../store/slices/createTestSlice";
 
 const StepOne = () => {
-  const [formData, setFormData] = useState({
-    testName: "",
-    category: "",
-    duration: "60",
-    description: "",
-  });
+
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.testForm.stepOne);
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    dispatch(updateStepOne({ [field]: value }));
   };
 
   return (
@@ -74,7 +69,7 @@ const StepOne = () => {
             value={formData.duration}
             onChange={handleInputChange}
           />
-          <div></div>
+    
         </div>
 
         {/* Description */}

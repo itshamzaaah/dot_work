@@ -1,98 +1,108 @@
 import { useState } from "react";
 import { FaPlus, FaRegFileAlt, FaTrash } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setDescriptive,
+  setMcqs,
+  setTrueFalse,
+} from "../../store/slices/createTestSlice";
 
 const StepTwo = () => {
-  const [mcqs, setMcqs] = useState([]);
-  const [trueFalse, setTrueFalse] = useState([]);
-  const [descriptive, setDescriptive] = useState([]);
-
+  const dispatch = useDispatch();
+  const { mcqs, trueFalse, descriptive } = useSelector(
+    (state) => state.testForm.stepTwo
+  );
   console.log("mcqs", mcqs);
   console.log("trueFalse", trueFalse);
   console.log("descriptive", descriptive);
+  // const [mcqs, setMcqs] = useState([]);
+  // const [trueFalse, setTrueFalse] = useState([]);
+  // const [descriptive, setDescriptive] = useState([]);
 
   const addMcq = () => {
     const newMCQ = {
-      id: Date.now(),
+       id: window.crypto.randomUUID(),
       question: "",
       options: ["", "", "", ""],
       correctAnswer: "",
       marks: 1,
     };
 
-    setMcqs([...mcqs, newMCQ]);
+    dispatch(setMcqs([...mcqs, newMCQ]));
+  };
+
+  const updateMcq = (id, field, value) => {
+    const updated = mcqs.map((mcq) =>
+      mcq.id === id ? { ...mcq, [field]: value } : mcq
+    );
+    dispatch(setMcqs(updated));
   };
 
   const addTrueFalse = () => {
     const newTrueFalse = {
-      id: Date.now(),
+      id: window.crypto.randomUUID(),
       question: "",
       correctAnswer: "",
       marks: 1,
     };
 
-    setTrueFalse([...trueFalse, newTrueFalse]);
+    dispatch(setTrueFalse([...trueFalse, newTrueFalse]));
   };
 
   const addDescriptive = () => {
     const newDescriptive = {
-      id: Date.now(),
+      id: window.crypto.randomUUID(),
       question: "",
       marks: 1,
     };
 
-    setDescriptive([...descriptive, newDescriptive]);
-  };
-
-  const updateMcq = (id, field, value) => {
-    setMcqs((prev) =>
-      prev.map((mcq) => (mcq.id === id ? { ...mcq, [field]: value } : mcq))
-    );
-  };
-
-  const updateTrueFalse = (id, field, value) => {
-    setTrueFalse((prev) =>
-      prev.map((tf) => (tf.id === id ? { ...tf, [field]: value } : tf))
-    );
-  };
-
-  const updateDescriptive = (id, field, value) => {
-    setDescriptive((prev) =>
-      prev.map((desc) => (desc.id === id ? { ...desc, [field]: value } : desc))
-    );
+    dispatch(setDescriptive([...descriptive, newDescriptive]));
   };
 
   const updateOption = (id, index, value) => {
-    setMcqs((prev) =>
-      prev.map((mcq) =>
-        mcq.id === id
-          ? {
-              ...mcq,
-              options: mcq.options.map((option, i) =>
-                i === index ? value : option
-              ),
-            }
-          : mcq
-      )
+    const updated = mcqs.map((mcq) =>
+      mcq.id === id
+        ? {
+            ...mcq,
+            options: mcq.options.map((option, i) =>
+              i === index ? value : option
+            ),
+          }
+        : mcq
     );
+    dispatch(setMcqs(updated));
   };
 
   const deleteMcq = (id) => {
-    setMcqs((prev) => prev.filter((mcq) => mcq.id !== id));
+    dispatch(setMcqs(mcqs.filter((mcq) => mcq.id !== id)));
+  };
+
+  const updateTrueFalse = (id, field, value) => {
+    const updated = trueFalse.map((tf) =>
+      tf.id === id ? { ...tf, [field]: value } : tf
+    );
+    dispatch(setTrueFalse(updated));
   };
 
   const deleteTrueFalse = (id) => {
-    setTrueFalse((prev) => prev.filter((tf) => tf.id !== id));
+    dispatch(setTrueFalse(trueFalse.filter((tf) => tf.id !== id)));
+  };
+
+  const updateDescriptive = (id, field, value) => {
+    const updated = descriptive.map((desc) =>
+      desc.id === id ? { ...desc, [field]: value } : desc
+    );
+    dispatch(setDescriptive(updated));
   };
 
   const deleteDescriptive = (id) => {
-    setDescriptive((prev) => prev.filter((desc) => desc.id !== id));
+    dispatch(setDescriptive(descriptive.filter((desc) => desc.id !== id)));
   };
 
-  // Combine all questions for numbering
   const allQuestions = [
-    ...mcqs.map(mcq => ({ ...mcq, type: 'MCQ' })),
-    ...trueFalse.map(tf => ({ ...tf, type: 'TRUE/FALSE' })),
-    ...descriptive.map(desc => ({ ...desc, type: 'DESCRIPTIVE' }))
+    ...mcqs.map((mcq) => ({ ...mcq, type: "MCQ" })),
+    ...trueFalse.map((tf) => ({ ...tf, type: "TRUE/FALSE" })),
+    ...descriptive.map((desc) => ({ ...desc, type: "DESCRIPTIVE" })),
   ].sort((a, b) => a.id - b.id);
 
   return (
@@ -121,7 +131,7 @@ const StepTwo = () => {
           >
             <FaPlus className="text-gray-500" /> Add True/False
           </button>
-          
+
           <button
             onClick={addDescriptive}
             className="flex items-center gap-2 border border-gray-300 text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition"
@@ -143,7 +153,7 @@ const StepTwo = () => {
 
         {/* Render all questions in order */}
         {allQuestions.map((question, index) => {
-          if (question.type === 'MCQ') {
+          if (question.type === "MCQ") {
             return (
               <div
                 key={question.id}
@@ -165,16 +175,22 @@ const StepTwo = () => {
                 </div>
 
                 {/* Question */}
-                <label className="text-sm font-medium mb-1 block">Question</label>
+                <label className="text-sm font-medium mb-1 block">
+                  Question
+                </label>
                 <textarea
                   value={question.question}
-                  onChange={(e) => updateMcq(question.id, "question", e.target.value)}
+                  onChange={(e) =>
+                    updateMcq(question.id, "question", e.target.value)
+                  }
                   placeholder="Enter your question here..."
                   className="w-full border rounded px-3 py-2 text-sm mb-4"
                 />
 
                 {/* Options */}
-                <label className="text-sm font-medium mb-1 block">Options</label>
+                <label className="text-sm font-medium mb-1 block">
+                  Options
+                </label>
                 {question.options.map((opt, i) => (
                   <div key={i} className="flex items-center mb-2">
                     <input
@@ -185,7 +201,9 @@ const StepTwo = () => {
                     <input
                       type="text"
                       value={opt}
-                      onChange={(e) => updateOption(question.id, i, e.target.value)}
+                      onChange={(e) =>
+                        updateOption(question.id, i, e.target.value)
+                      }
                       className="flex-1 border rounded px-3 py-2 text-sm"
                       placeholder={`Option ${i + 1}`}
                     />
@@ -208,7 +226,9 @@ const StepTwo = () => {
                   </div>
 
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <label className="text-sm font-medium">Correct Answer:</label>
+                    <label className="text-sm font-medium">
+                      Correct Answer:
+                    </label>
                     <input
                       type="text"
                       value={question.correctAnswer}
@@ -222,7 +242,7 @@ const StepTwo = () => {
                 </div>
               </div>
             );
-          } else if (question.type === 'TRUE/FALSE') {
+          } else if (question.type === "TRUE/FALSE") {
             return (
               <div
                 key={question.id}
@@ -244,10 +264,14 @@ const StepTwo = () => {
                 </div>
 
                 {/* Question */}
-                <label className="text-sm font-medium mb-1 block">Question</label>
+                <label className="text-sm font-medium mb-1 block">
+                  Question
+                </label>
                 <textarea
                   value={question.question}
-                  onChange={(e) => updateTrueFalse(question.id, "question", e.target.value)}
+                  onChange={(e) =>
+                    updateTrueFalse(question.id, "question", e.target.value)
+                  }
                   placeholder="Enter your question here..."
                   className="w-full border rounded px-3 py-2 text-sm mb-4"
                   rows={4}
@@ -262,18 +286,28 @@ const StepTwo = () => {
                       min={1}
                       value={question.marks}
                       onChange={(e) =>
-                        updateTrueFalse(question.id, "marks", Number(e.target.value))
+                        updateTrueFalse(
+                          question.id,
+                          "marks",
+                          Number(e.target.value)
+                        )
                       }
                       className="w-16 border rounded px-2 py-1 text-sm"
                     />
                   </div>
 
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                    <label className="text-sm font-medium">Correct Answer:</label>
+                    <label className="text-sm font-medium">
+                      Correct Answer:
+                    </label>
                     <select
                       value={question.correctAnswer}
                       onChange={(e) =>
-                        updateTrueFalse(question.id, "correctAnswer", e.target.value)
+                        updateTrueFalse(
+                          question.id,
+                          "correctAnswer",
+                          e.target.value
+                        )
                       }
                       className="border rounded px-3 py-2 text-sm"
                     >
@@ -285,7 +319,7 @@ const StepTwo = () => {
                 </div>
               </div>
             );
-          } else if (question.type === 'DESCRIPTIVE') {
+          } else if (question.type === "DESCRIPTIVE") {
             return (
               <div
                 key={question.id}
@@ -307,10 +341,14 @@ const StepTwo = () => {
                 </div>
 
                 {/* Question */}
-                <label className="text-sm font-medium mb-1 block">Question</label>
+                <label className="text-sm font-medium mb-1 block">
+                  Question
+                </label>
                 <textarea
                   value={question.question}
-                  onChange={(e) => updateDescriptive(question.id, "question", e.target.value)}
+                  onChange={(e) =>
+                    updateDescriptive(question.id, "question", e.target.value)
+                  }
                   placeholder="Enter your question here..."
                   className="w-full border rounded px-3 py-2 text-sm mb-4"
                   rows={4}
@@ -324,7 +362,11 @@ const StepTwo = () => {
                     min={1}
                     value={question.marks}
                     onChange={(e) =>
-                      updateDescriptive(question.id, "marks", Number(e.target.value))
+                      updateDescriptive(
+                        question.id,
+                        "marks",
+                        Number(e.target.value)
+                      )
                     }
                     className="w-16 border rounded px-2 py-1 text-sm"
                   />

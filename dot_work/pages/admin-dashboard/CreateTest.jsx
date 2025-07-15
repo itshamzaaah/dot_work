@@ -1,17 +1,20 @@
 import { useState } from "react";
-import StepOne from "../../src/components/StepOne";
+import StepOne from "../../src/components/create-test/StepOne";
 import PageHeader from "../../src/components/PageHeader";
 import Stepper from "../../src/components/Stepper";
 import { IoSaveOutline } from "react-icons/io5";
-import StepTwo from "../../src/components/StepTwo";
-import StepThree from "../../src/components/StepThree";
-import StepFour from "../../src/components/StepFour";
+import StepTwo from "../../src/components/create-test/StepTwo";
+import StepThree from "../../src/components/create-test/StepThree";
+import StepFour from "../../src/components/create-test/StepFour";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentStep } from "../../src/store/slices/createTestSlice";
 
 const CreateTest = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const dispatch = useDispatch();
+  const currentStep = useSelector(state => state.testForm.currentStep);
 
-  const next = () => setCurrentStep((prev) => Math.min(prev + 1, 4));
-  const previous = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const next = () => dispatch(setCurrentStep( Math.min(currentStep + 1, 4)));
+  const previous = () => dispatch(setCurrentStep(Math.max(currentStep - 1, 1)));
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -71,7 +74,6 @@ const CreateTest = () => {
 
   return (
     <div className="w-full">
-      <PageHeader />
       <Stepper currentStep={currentStep} />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto">

@@ -16,7 +16,7 @@ export default function Stepper({ currentStep }) {
   return (
     <div className="flex justify-center">
       <div className="w-full md:max-w-4xl block mx-auto px-2 md:px-6">
-        <div className="flex items-center py-6">
+        <div className="flex items-center py-4">
           {steps.map((step, index) => {
             const isActive = currentStep === index + 1;
             const isCompleted = currentStep > index + 1;

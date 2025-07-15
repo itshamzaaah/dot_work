@@ -1,28 +1,26 @@
 import React, { useState } from "react";
 import { IoChevronDown } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { updateStepFour } from "../../store/slices/createTestSlice";
 
 export default function StepFour() {
-  const [enableProctoring, setEnableProctoring] = useState(true);
-  const [screenshotFrequency, setScreenshotFrequency] =
-    useState("Every 5 seconds");
-  const [forceFullScreen, setForceFullScreen] = useState(true);
+  const dispatch = useDispatch();
+  const { enableProctoring, screenShotFrequency, forceFullScreen } =
+    useSelector((state) => state.testForm.stepFour);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const frequencyOptions = [
-    "Every 5 seconds",
-    "Every 10 seconds",
-    "Every 30 seconds",
-    "Every 60 seconds",
+    {title: "Every 5 seconds", value: 5},
+    {title: "Every 10 seconds", value: 10},
+    {title: "Every 30 seconds", value: 30},
+    {title: "Every 60 seconds", value: 60},
   ];
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const selectFrequency = (option) => {
-    setScreenshotFrequency(option);
-    setDropdownOpen(false);
-  };
 
   const ToggleSwitch = ({ checked, onChange }) => (
     <div className="relative">
@@ -70,7 +68,9 @@ export default function StepFour() {
         </div>
         <ToggleSwitch
           checked={enableProctoring}
-          onChange={() => setEnableProctoring(!enableProctoring)}
+          onChange={() =>
+            dispatch(updateStepFour({ enableProctoring: !enableProctoring }))
+          }
         />
       </div>
 
@@ -84,7 +84,7 @@ export default function StepFour() {
             onClick={toggleDropdown}
             className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm flex items-center justify-between"
           >
-            <span>{screenshotFrequency}</span>
+            <span>{screenShotFrequency}</span>
             <IoChevronDown
               className={`w-4 h-4 transition-transform ${
                 dropdownOpen ? "rotate-180" : ""
@@ -97,10 +97,13 @@ export default function StepFour() {
               {frequencyOptions.map((option) => (
                 <button
                   key={option}
-                  onClick={() => selectFrequency(option)}
+                  onClick={() => {
+                    dispatch(updateStepFour({ screenShotFrequency: option.value })),
+                      setDropdownOpen(false);
+                  }}
                   className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 first:rounded-t-md last:rounded-b-md"
                 >
-                  {option}
+                  {option.title}
                 </button>
               ))}
             </div>
@@ -120,10 +123,11 @@ export default function StepFour() {
         </div>
         <ToggleSwitch
           checked={forceFullScreen}
-          onChange={() => setForceFullScreen(!forceFullScreen)}
+          onChange={() =>
+            dispatch(updateStepFour({ forceFullScreen: !forceFullScreen }))
+          }
         />
       </div>
-
     </div>
   );
 }
