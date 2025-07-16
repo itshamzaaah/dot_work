@@ -10,7 +10,11 @@ import { RxCross2 } from "react-icons/rx";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const links = [
-  { name: "Dashboard", icon: <FaHome className="w-4 h-4" />, path: "/admin" },
+  {
+    name: "Dashboard",
+    icon: <FaHome className="w-4 h-4" />,
+    path: "/dashboard",
+  },
   {
     name: "Create Test",
     icon: <FaPlusSquare className="w-4 h-4" />,
@@ -44,7 +48,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           <div className="text-xl font-bold mb-6 flex justify-between items-center">
             Dot Work
             <RxCross2
-              className="lg:hidden cursor-pointer"
+              className="lg:hidden bg-gray-100 rounded-md size-5 cursor-pointer"
               onClick={() => setIsOpen(false)}
             />
           </div>
