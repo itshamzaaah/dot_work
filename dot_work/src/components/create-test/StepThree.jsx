@@ -1,25 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { MdContentCopy } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStepThree } from "../../store/slices/createTestSlice";
+import { RxCross2 } from "react-icons/rx";
 
-export default function StepThree() {
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export default function StepThree({ errors = {} }) {
   const dispatch = useDispatch();
   const { candidateEmails, accessDeadline, testLink } = useSelector(
     (state) => state.testForm.stepThree
   );
 
-  const [emailText, setEmailText] = useState(candidateEmails.join(", "));
+  const inputRef = useRef(null);
+  const [inputValue, setInputValue] = useState("");
+  const [emails, setEmails] = useState(candidateEmails || []);
 
-  const handleEmailsChange = (e) => {
-    const value = e.target.value;
-    setEmailText(value); // update local input string immediately
+  const isValidEmail = (email) => emailRegex.test(email);
 
-    const emails = value
-      .split(/[\n,]+/)
-      .map((email) => email.trim())
-      .filter(Boolean);
-    dispatch(updateStepThree({ candidateEmails: emails }));
+  const handleAddEmail = () => {
+    const value = inputValue.trim().replace(/,$/, ""); // remove trailing comma
+    if (!value) return;
+
+    const chunks = value.split(/[\s,]+/).filter(Boolean);
+    const newEmails = [...emails];
+
+    chunks.forEach((email) => {
+      if (!newEmails.includes(email)) {
+        newEmails.push(email);
+      }
+    });
+
+    setEmails(newEmails);
+    setInputValue("");
+    dispatch(updateStepThree({ candidateEmails: newEmails }));
+  };
+
+  const handleKeyDown = (e) => {
+    if (["Enter", ","].includes(e.key)) {
+      e.preventDefault();
+      handleAddEmail();
+    } else if (e.key === "Backspace" && inputValue === "" && emails.length) {
+       const updated = emails.slice(0, -1);
+      setEmails(updated);
+      dispatch(updateStepThree({ candidateEmails: updated }));
+    }
+  };
+
+  const removeEmail = (email) => {
+    const updated = emails.filter((e) => e !== email);
+    setEmails(updated);
+    dispatch(updateStepThree({ candidateEmails: updated }));
   };
 
   const handleDeadlineChange = (e) => {
@@ -39,32 +70,78 @@ export default function StepThree() {
         Configure how candidates will access this test
       </p>
 
-      {/* Candidate Emails */}
-      <div className="space-y-2">
+      {/* Email Tags */}
+      <div className="space-y-1">
         <label className="block text-sm font-medium text-gray-700">
           Candidate Emails
         </label>
-        <textarea
-          value={emailText}
-          onChange={handleEmailsChange}
-          placeholder="Enter email addresses separated by commas or new lines..."
-          className="w-full h-24 px-3 py-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-        />
+        <div
+          className={`min-h-[3rem] w-full flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md text-sm focus-within:ring-2 ${
+            errors.candidateEmails
+              ? "border-red-400"
+              : "border-gray-300 focus-within:ring-blue-500"
+          }`}
+        >
+          {emails.map((email, i) => {
+            const isValid = isValidEmail(email);
+            return (
+              <span
+                key={i}
+                className={`flex items-center px-2 py-1 rounded-full text-sm ${
+                  isValid
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-red-100 text-red-700"
+                }`}
+              >
+                {email}
+                <button
+                  type="button"
+                  className="ml-2 text-xs"
+                  onClick={() => removeEmail(email)}
+                >
+                  <RxCross2 size={15} />
+                </button>
+              </span>
+            );
+          })}
+          <input
+            ref={inputRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={handleAddEmail}
+            placeholder="Type email and press enter"
+            className="flex-1 outline-none text-sm min-w-[120px]"
+          />
+        </div>
+        {errors.candidateEmails && (
+          <p className="text-sm text-red-500">{errors.candidateEmails}</p>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2">
-        <div className="space-y-2 mt-6">
+      {/* Deadline & Link */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 mt-6">
+        <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">
             Access Deadline
           </label>
           <input
             type="date"
+             min={new Date().toISOString().split("T")[0]}
             value={accessDeadline}
             onChange={handleDeadlineChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
+              errors.accessDeadline
+                ? "border-red-400"
+                : "border-gray-300 focus:ring-blue-500"
+            }`}
           />
+          {errors.accessDeadline && (
+            <p className="text-sm text-red-500">{errors.accessDeadline}</p>
+          )}
         </div>
-        <div className="space-y-2 mt-6">
+
+        <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">
             Test Link
           </label>
@@ -73,7 +150,9 @@ export default function StepThree() {
               type="text"
               value={testLink}
               readOnly
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-sm text-gray-600 focus:outline-none"
+              className={`flex-1 px-3 py-2 border rounded-l-md bg-gray-50 text-sm text-gray-600 focus:outline-none ${
+                errors.testLink ? "border-red-400" : "border-gray-300"
+              }`}
             />
             <button
               onClick={handleCopyLink}
@@ -83,6 +162,9 @@ export default function StepThree() {
               <span className="hidden lg:inline">Copy</span>
             </button>
           </div>
+          {errors.testLink && (
+            <p className="text-sm text-red-500">{errors.testLink}</p>
+          )}
         </div>
       </div>
     </>

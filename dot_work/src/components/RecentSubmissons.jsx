@@ -76,7 +76,7 @@ export default function RecentSubmissions() {
       {/* Table */}
       <div className="overflow-x-auto w-[270px] md:w-full mt-6">
         <table className="w-full table-auto text-sm text-left">
-          <thead className="border-b text-gray-500 font-medium">
+          <thead className="border-b bg-primary text-white font-medium">
             <tr>
               <th className="py-3 px-4">Candidate</th>
               <th className="py-3 px-4">Test</th>
