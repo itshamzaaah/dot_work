@@ -13,7 +13,7 @@ export default function MainLayout() {
   const renderNavbar = () => {
     const path = location.pathname;
     if (path.startsWith("/dashboard")) return <Navbar setIsOpen={setIsOpen} />;
-    if (path.startsWith("/create-test"))
+    if (path.startsWith("/create-test") || path.startsWith("/preview"))
       return <PageHeader setIsOpen={setIsOpen} />;
   };
 

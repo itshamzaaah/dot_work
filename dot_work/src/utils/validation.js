@@ -42,9 +42,9 @@ export const validateStepTwo = ({ mcqs, trueFalse, descriptive }) => {
     if (!mcq.question?.trim()) {
       questionErrors.question = "Question is required";
     }
-    if (!mcq.correctAnswer?.trim()) {
-      questionErrors.correctAnswer = "Correct answer is required";
-    }
+    // if (!mcq.correctAnswer?.trim()) {
+    //   questionErrors.correctAnswer = "Correct answer is required";
+    // }
     if (!Array.isArray(mcq.options) || mcq.options.length < 2) {
       questionErrors.options = "At least 2 options are required";
     } else {
@@ -71,9 +71,9 @@ export const validateStepTwo = ({ mcqs, trueFalse, descriptive }) => {
     if (!q.question?.trim()) {
       questionErrors.question = "Question is required";
     }
-    if (!q.correctAnswer?.trim()) {
-      questionErrors.correctAnswer = "Correct answer is required";
-    }
+    // if (!q.correctAnswer?.trim()) {
+    //   questionErrors.correctAnswer = "Correct answer is required";
+    // }
     if (!q.marks || q.marks <= 0) {
       questionErrors.marks = "Marks must be a positive number";
     }

@@ -95,7 +95,7 @@ const StepOne = ({ errors = {} }) => {
             onChange={(e) => handleInputChange("description", e.target.value)}
             placeholder="Describe what this test evaluates..."
             rows={4}
-            spellcheck="true"
+            spellCheck="true"
             className={`w-full px-4 py-3 border ${
               errors.description ? "border-red-400" : "border-gray-300"
             } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none`}

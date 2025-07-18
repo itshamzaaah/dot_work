@@ -67,8 +67,8 @@ const CreateTest = () => {
   const renderButtons = (currentStep, next, previous) => {
     const buttonTextMap = {
       1: "Continue to Questions",
-      2: "Continue to Proctoring",
-      3: "Continue to Sharing",
+      2: "Continue to Scheduling",
+      3: "Continue to Proctoring",
       4: "Generate and Send Invitations",
     };
 

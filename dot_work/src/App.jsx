@@ -10,6 +10,7 @@ import LoginPage from "./components/LoginPage";
 import Admin from "../pages/admin-dashboard/Admin";
 import MainLayout from "./layouts/MainLayout";
 import CreateTest from "../pages/admin-dashboard/CreateTest";
+import PreviewQuestions from "../pages/preview-questions/PreviewQuestions";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Admin />} />
         <Route path="/create-test" element={<CreateTest />} />
+        <Route path="/preview" element={<PreviewQuestions />} />
       </Route>
     </>
   )

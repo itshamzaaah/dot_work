@@ -1,16 +1,15 @@
-import { act } from "react";
 import {
   IoDocumentTextOutline,
   IoAddOutline,
   IoCameraOutline,
-  IoShareSocialOutline,
 } from "react-icons/io5";
+import { MdSchedule } from "react-icons/md";
 
 const steps = [
   { label: "Basic Info", icon: <IoDocumentTextOutline size={20} /> },
   { label: "Add Questions", icon: <IoAddOutline size={20} /> },
+  { label: "Scheduling", icon: <MdSchedule size={20} /> },
   { label: "Proctoring", icon: <IoCameraOutline size={20} /> },
-  { label: "Sharing", icon: <IoShareSocialOutline size={20} /> },
 ];
 
 const colorMap = [

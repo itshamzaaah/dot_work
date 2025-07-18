@@ -1,6 +1,7 @@
 
 import { FaBars } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const PageHeader = ({ setIsOpen }) => {
   return (
@@ -24,12 +25,12 @@ const PageHeader = ({ setIsOpen }) => {
             </button>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+            <Link to="/preview" className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-800 transition-colors">
               <IoEyeOutline size={16} />
               <span className="ml-2 text-sm">Preview</span>
-            </button>
+            </Link>
             <button className="text-center px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-              <span className="ml-2">Save & Publish</span>
+              <span>Publish</span>
             </button>
           </div>
         </div>
