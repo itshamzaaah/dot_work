@@ -1,3 +1,4 @@
+import { act } from "react";
 import {
   IoDocumentTextOutline,
   IoAddOutline,
@@ -12,6 +13,27 @@ const steps = [
   { label: "Sharing", icon: <IoShareSocialOutline size={20} /> },
 ];
 
+const colorMap = [
+  "bg-primary text-white",
+  "bg-purple-600 text-white",
+  "bg-green-600 text-white",
+  "bg-pink-600 text-white",
+];
+
+const connectorColorMap = [
+  "bg-primary",
+  "bg-purple-600",
+  "bg-green-600",
+  "bg-pink-600",
+];
+
+const labelColorMap = [
+  "text-primary",
+  "text-purple-600",
+  "text-green-600",
+  "text-pink-600",
+];
+
 export default function Stepper({ currentStep }) {
   return (
     <div className="flex justify-center">
@@ -21,16 +43,18 @@ export default function Stepper({ currentStep }) {
             const isActive = currentStep === index + 1;
             const isCompleted = currentStep > index + 1;
 
+            const activeColor = colorMap[index];
+            const connectorColor = connectorColorMap[index];
+            const labelColor = labelColorMap[index];
+
             return (
               <div className="flex items-center" key={step.label}>
                 <div className="flex items-center">
                   <div
                     className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full
                     ${
-                      isActive
-                        ? "bg-primary text-white"
-                        : isCompleted
-                        ? "bg-primary text-white"
+                      isActive || isCompleted
+                        ? activeColor
                         : "bg-gray-100 border-2 border-gray-300"
                     }`}
                   >
@@ -45,11 +69,7 @@ export default function Stepper({ currentStep }) {
                   <div className="ml-0 md:ml-3">
                     <p
                       className={`text-sm hidden md:block font-medium ${
-                        isActive
-                          ? "text-primary"
-                          : isCompleted
-                          ? "text-primary"
-                          : "text-gray-400"
+                        isActive || isCompleted ? labelColor : "text-gray-400"
                       }`}
                     >
                       {step.label}
@@ -61,7 +81,7 @@ export default function Stepper({ currentStep }) {
                 {index !== steps.length - 1 && (
                   <div
                     className={`w-5 md:w-16 h-[3px] ${
-                      isActive || isCompleted ? "bg-primary" : "bg-gray-200"
+                      isActive || isCompleted ? connectorColor : "bg-gray-200"
                     } mx-4`}
                   />
                 )}

@@ -3,8 +3,7 @@ import { MdContentCopy } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStepThree } from "../../store/slices/createTestSlice";
 import { RxCross2 } from "react-icons/rx";
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { emailRegex } from "../../constants";
 
 export default function StepThree({ errors = {} }) {
   const dispatch = useDispatch();
@@ -141,7 +140,7 @@ export default function StepThree({ errors = {} }) {
           )}
         </div>
 
-        <div className="space-y-1">
+        {/* <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">
             Test Link
           </label>
@@ -165,7 +164,7 @@ export default function StepThree({ errors = {} }) {
           {errors.testLink && (
             <p className="text-sm text-red-500">{errors.testLink}</p>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );

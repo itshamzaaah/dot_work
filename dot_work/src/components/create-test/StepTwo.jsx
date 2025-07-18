@@ -1,10 +1,11 @@
-import { FaPlus, FaRegFileAlt, FaTrash } from "react-icons/fa";
+import { FaRegFileAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setDescriptive,
   setMcqs,
   setTrueFalse,
 } from "../../store/slices/createTestSlice";
+import AddBtn from "../AddBtn";
 
 const StepTwo = ({ errors = {} }) => {
   const dispatch = useDispatch();
@@ -12,11 +13,15 @@ const StepTwo = ({ errors = {} }) => {
     (state) => state.testForm.stepTwo
   );
 
+  // ------------------------
+  // MCQ Handlers
+  // ------------------------
+
   const addMcq = () => {
     const newMCQ = {
-      id: window.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       question: "",
-      options: ["", "", "", ""],
+      options: ["", ""], // Start with 2 options
       correctAnswer: "",
       marks: 1,
     };
@@ -24,31 +29,50 @@ const StepTwo = ({ errors = {} }) => {
   };
 
   const updateMcq = (id, field, value) => {
-    const updated = mcqs.map((mcq) =>
-      mcq.id === id ? { ...mcq, [field]: value } : mcq
+    dispatch(
+      setMcqs(
+        mcqs.map((mcq) => (mcq.id === id ? { ...mcq, [field]: value } : mcq))
+      )
     );
-    dispatch(setMcqs(updated));
   };
 
   const updateOption = (id, index, value) => {
-    const updated = mcqs.map((mcq) =>
-      mcq.id === id
-        ? {
-            ...mcq,
-            options: mcq.options.map((opt, i) => (i === index ? value : opt)),
-          }
-        : mcq
+    dispatch(
+      setMcqs(
+        mcqs.map((mcq) =>
+          mcq.id === id
+            ? {
+                ...mcq,
+                options: mcq.options.map((opt, i) =>
+                  i === index ? value : opt
+                ),
+              }
+            : mcq
+        )
+      )
     );
-    dispatch(setMcqs(updated));
   };
 
-  const deleteMcq = (id) => {
-    dispatch(setMcqs(mcqs.filter((mcq) => mcq.id !== id)));
+  const addOption = (id) => {
+    dispatch(
+      setMcqs(
+        mcqs.map((mcq) =>
+          mcq.id === id ? { ...mcq, options: [...mcq.options, ""] } : mcq
+        )
+      )
+    );
   };
+
+  const deleteMcq = (id) =>
+    dispatch(setMcqs(mcqs.filter((mcq) => mcq.id !== id)));
+
+  // ------------------------
+  // True/False Handlers
+  // ------------------------
 
   const addTrueFalse = () => {
     const newTF = {
-      id: window.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       question: "",
       correctAnswer: "",
       marks: 1,
@@ -57,19 +81,23 @@ const StepTwo = ({ errors = {} }) => {
   };
 
   const updateTrueFalse = (id, field, value) => {
-    const updated = trueFalse.map((tf) =>
-      tf.id === id ? { ...tf, [field]: value } : tf
+    dispatch(
+      setTrueFalse(
+        trueFalse.map((tf) => (tf.id === id ? { ...tf, [field]: value } : tf))
+      )
     );
-    dispatch(setTrueFalse(updated));
   };
 
-  const deleteTrueFalse = (id) => {
+  const deleteTrueFalse = (id) =>
     dispatch(setTrueFalse(trueFalse.filter((tf) => tf.id !== id)));
-  };
+
+  // ------------------------
+  // Descriptive Handlers
+  // ------------------------
 
   const addDescriptive = () => {
     const newDesc = {
-      id: window.crypto.randomUUID(),
+      id: crypto.randomUUID(),
       question: "",
       marks: 1,
     };
@@ -77,21 +105,31 @@ const StepTwo = ({ errors = {} }) => {
   };
 
   const updateDescriptive = (id, field, value) => {
-    const updated = descriptive.map((desc) =>
-      desc.id === id ? { ...desc, [field]: value } : desc
+    dispatch(
+      setDescriptive(
+        descriptive.map((desc) =>
+          desc.id === id ? { ...desc, [field]: value } : desc
+        )
+      )
     );
-    dispatch(setDescriptive(updated));
   };
 
-  const deleteDescriptive = (id) => {
+  const deleteDescriptive = (id) =>
     dispatch(setDescriptive(descriptive.filter((desc) => desc.id !== id)));
-  };
+
+  // ------------------------
+  // All Questions Combined
+  // ------------------------
 
   const allQuestions = [
     ...mcqs.map((q, i) => ({ ...q, type: "MCQ", _index: i })),
     ...trueFalse.map((q, i) => ({ ...q, type: "TRUE_FALSE", _index: i })),
     ...descriptive.map((q, i) => ({ ...q, type: "DESCRIPTIVE", _index: i })),
   ].sort((a, b) => a.id.localeCompare(b.id));
+
+  // ------------------------
+  // Render
+  // ------------------------
 
   return (
     <div className="max-w-[17rem] md:max-w-full">
@@ -102,29 +140,14 @@ const StepTwo = ({ errors = {} }) => {
         Create different types of questions for your assessment
       </p>
 
+      {/* Action Buttons */}
       <div className="flex flex-wrap gap-4 mb-12">
-        <button
-          onClick={addMcq}
-          className="flex items-center gap-2 border border-gray-300 text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition"
-        >
-          <FaPlus className="text-gray-500" /> Add MCQ
-        </button>
-
-        <button
-          onClick={addTrueFalse}
-          className="flex items-center gap-2 border border-gray-300 text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition"
-        >
-          <FaPlus className="text-gray-500" /> Add True/False
-        </button>
-
-        <button
-          onClick={addDescriptive}
-          className="flex items-center gap-2 border border-gray-300 text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition"
-        >
-          <FaPlus className="text-gray-500" /> Add Descriptive
-        </button>
+        <AddBtn label="Add MCQ" onClick={addMcq} />
+        <AddBtn label="Add True/False" onClick={addTrueFalse} />
+        <AddBtn label="Add Descriptive" onClick={addDescriptive} />
       </div>
 
+      {/* Empty State */}
       {allQuestions.length === 0 && (
         <div className="flex flex-col items-center text-gray-400">
           <FaRegFileAlt className="text-4xl mb-3" />
@@ -135,6 +158,7 @@ const StepTwo = ({ errors = {} }) => {
         </div>
       )}
 
+      {/* Question Cards */}
       {allQuestions.map((q, index) => {
         const qErrors =
           q.type === "MCQ"
@@ -145,6 +169,7 @@ const StepTwo = ({ errors = {} }) => {
 
         return (
           <div key={q.id} className="bg-gray-50 border rounded-lg p-4 mb-6">
+            {/* Header */}
             <div className="flex justify-between mb-3">
               <div>
                 <span className="text-sm font-medium mr-2">
@@ -167,7 +192,7 @@ const StepTwo = ({ errors = {} }) => {
               </button>
             </div>
 
-            {/* Question Text */}
+            {/* Question Field */}
             <label className="block text-sm font-medium mb-1">Question</label>
             <textarea
               value={q.question}
@@ -187,9 +212,17 @@ const StepTwo = ({ errors = {} }) => {
             {/* MCQ Options */}
             {q.type === "MCQ" && (
               <>
-                <label className="block text-sm font-medium mt-4 mb-1">
-                  Options
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium mt-4 mb-1">
+                    Options
+                  </label>
+                  <AddBtn
+                    label="Add Option"
+                    onClick={() => addOption(q.id)}
+                    width={2}
+                  />
+                </div>
+
                 {q.options.map((opt, i) => (
                   <div key={i} className="flex items-center mb-2">
                     <input type="radio" disabled className="mr-2" />
@@ -202,6 +235,8 @@ const StepTwo = ({ errors = {} }) => {
                     />
                   </div>
                 ))}
+
+                {/* Option Errors */}
                 {Object.entries(qErrors || {}).map(([key, val]) =>
                   key.startsWith("option") ? (
                     <p key={key} className="text-sm text-red-500">
@@ -212,19 +247,20 @@ const StepTwo = ({ errors = {} }) => {
               </>
             )}
 
-            {/* Marks */}
+            {/* Marks Field */}
             <div className="mt-4 flex items-center gap-2">
-              <label className="text-sm font-medium">Marks:</label>
+              <label className="text-sm font-medium">Points:</label>
               <input
                 type="number"
                 value={q.marks}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = Number(e.target.value);
                   q.type === "MCQ"
-                    ? updateMcq(q.id, "marks", Number(e.target.value))
+                    ? updateMcq(q.id, "marks", value)
                     : q.type === "TRUE_FALSE"
-                    ? updateTrueFalse(q.id, "marks", Number(e.target.value))
-                    : updateDescriptive(q.id, "marks", Number(e.target.value))
-                }
+                    ? updateTrueFalse(q.id, "marks", value)
+                    : updateDescriptive(q.id, "marks", value);
+                }}
                 className="w-20 border rounded px-2 py-1 text-sm"
                 min={1}
               />
@@ -233,11 +269,11 @@ const StepTwo = ({ errors = {} }) => {
               )}
             </div>
 
-            {/* Correct Answer for MCQ & True/False */}
+            {/* Correct Answer */}
             {(q.type === "MCQ" || q.type === "TRUE_FALSE") && (
               <div className="mt-4 flex flex-col md:flex-row gap-2 items-start md:items-center">
                 {q.type === "TRUE_FALSE" ? (
-                  <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
+                  <>
                     <label className="text-sm font-medium">
                       Correct Answer:
                     </label>
@@ -252,7 +288,7 @@ const StepTwo = ({ errors = {} }) => {
                       <option value="True">True</option>
                       <option value="False">False</option>
                     </select>
-                  </div>
+                  </>
                 ) : (
                   <input
                     type="text"
@@ -265,7 +301,9 @@ const StepTwo = ({ errors = {} }) => {
                   />
                 )}
                 {qErrors?.correctAnswer && (
-                  <p className="text-sm text-red-500">{qErrors.correctAnswer}</p>
+                  <p className="text-sm text-red-500">
+                    {qErrors.correctAnswer}
+                  </p>
                 )}
               </div>
             )}

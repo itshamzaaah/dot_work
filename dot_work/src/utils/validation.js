@@ -45,8 +45,8 @@ export const validateStepTwo = ({ mcqs, trueFalse, descriptive }) => {
     if (!mcq.correctAnswer?.trim()) {
       questionErrors.correctAnswer = "Correct answer is required";
     }
-    if (!Array.isArray(mcq.options) || mcq.options.length < 4) {
-      questionErrors.options = "At least 4 options are required";
+    if (!Array.isArray(mcq.options) || mcq.options.length < 2) {
+      questionErrors.options = "At least 2 options are required";
     } else {
       mcq.options.forEach((opt, i) => {
         if (!opt?.trim()) {
@@ -134,3 +134,12 @@ export const validateStepThree = (data) => {
   };
 };
 
+
+// get status color
+
+export const getStatusBadge = (status) => {
+  const base = "px-3 py-0.5 text-xs font-semibold rounded-full capitalize";
+  if (status === "graded") return `${base} bg-green-700 text-white`;
+  if (status === "pending") return `${base} bg-yellow-700 text-white`;
+  return base;
+};

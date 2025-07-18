@@ -50,7 +50,9 @@ const StepOne = ({ errors = {} }) => {
               <select
                 value={formData.category}
                 onChange={(e) => handleInputChange("category", e.target.value)}
-                className={`w-full px-4 py-2 border ${errors.category ? "border-red-400": "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm appearance-none bg-white`}
+                className={`w-full px-4 py-2 border ${
+                  errors.category ? "border-red-400" : "border-gray-300"
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm appearance-none bg-white`}
               >
                 <option value="">Select category</option>
                 <option value="programming">Programming</option>
@@ -76,7 +78,7 @@ const StepOne = ({ errors = {} }) => {
             type="number"
             value={formData.duration}
             onChange={handleInputChange}
-             error={errors.duration}
+            error={errors.duration}
           />
           {errors.duration && (
             <p className="text-sm text-red-500 mt-1">{errors.duration}</p>
@@ -94,7 +96,9 @@ const StepOne = ({ errors = {} }) => {
             placeholder="Describe what this test evaluates..."
             rows={4}
             spellcheck="true"
-            className={`w-full px-4 py-3 border ${errors.description ? "border-red-400": "border-gray-300"} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none`}
+            className={`w-full px-4 py-3 border ${
+              errors.description ? "border-red-400" : "border-gray-300"
+            } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none`}
           />
           {errors.description && (
             <p className="text-sm text-red-500 mt-1">{errors.description}</p>
