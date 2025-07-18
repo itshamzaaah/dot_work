@@ -36,7 +36,7 @@ const StatsCard = ({
   const colors = colorMap[color] || colorMap.default;
 
   return (
-    <div className="flex justify-between items-center bg-white rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow w-full md:w-[32%] ">
+    <div className="flex justify-between items-center bg-white rounded-xl border p-5 shadow-sm hover:shadow-md transition-shadow w-full md:w-[32.5%] ">
       <div className="w-full">
         <h4 className="text-sm font-medium text-gray-500">{label}</h4>
         <div className="flex justify-between w-full">
