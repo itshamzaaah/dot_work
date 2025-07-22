@@ -1,4 +1,3 @@
-
 export const validateStepOne = (data) => {
   const errors = {};
 
@@ -24,8 +23,6 @@ export const validateStepOne = (data) => {
     errors,
   };
 };
-
-
 
 export const validateStepTwo = ({ mcqs, trueFalse, descriptive }) => {
   const errors = {
@@ -108,7 +105,6 @@ export const validateStepTwo = ({ mcqs, trueFalse, descriptive }) => {
   };
 };
 
-
 export const validateStepThree = (data) => {
   const errors = {};
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -134,7 +130,6 @@ export const validateStepThree = (data) => {
   };
 };
 
-
 // get status color
 
 export const getStatusBadge = (status) => {
@@ -142,4 +137,15 @@ export const getStatusBadge = (status) => {
   if (status === "graded") return `${base} bg-green-700 text-white`;
   if (status === "pending") return `${base} bg-yellow-700 text-white`;
   return base;
+};
+
+export const getFlagBadge = (flag) => {
+  const base = "px-3 py-0.5 text-xs font-semibold rounded-full capitalize";
+
+  if (flag === "clean") return `${base} bg-green-600 text-white`;
+  if (flag === "suspicious") return `${base} bg-red-600 text-white`;
+  if (flag === "review") return `${base} bg-orange-600 text-white`;
+  if (flag === "network-issue") return `${base} bg-blue-600 text-white`;
+
+  return `${base} bg-gray-400 text-white`; // fallback for unknown flag
 };

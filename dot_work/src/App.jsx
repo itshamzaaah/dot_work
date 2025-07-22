@@ -11,6 +11,8 @@ import Admin from "../pages/admin-dashboard/Admin";
 import MainLayout from "./layouts/MainLayout";
 import CreateTest from "../pages/admin-dashboard/CreateTest";
 import PreviewQuestions from "../pages/preview-questions/PreviewQuestions";
+import ViewSubmissions from "../pages/admin-dashboard/ViewSubmissions";
+import TestReport from "../pages/admin-dashboard/TestReport";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +23,8 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<Admin />} />
         <Route path="/create-test" element={<CreateTest />} />
         <Route path="/preview" element={<PreviewQuestions />} />
+        <Route path="/view-submissions" element={<ViewSubmissions />} />
+        <Route path="/test-report/:id" element={<TestReport />} />
       </Route>
     </>
   )

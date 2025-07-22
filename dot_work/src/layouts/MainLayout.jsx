@@ -4,7 +4,9 @@ import Navbar from "../components/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PageHeader from "../components/PageHeader";
+import PageHeader from "../components/page-headers/CreateTestHeader";
+import ViewSubmissionsHeader from "../components/page-headers/SubmissionsHeader";
+import TestReportHeader from "../components/page-headers/TestReportHeader";
 
 export default function MainLayout() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,9 +14,19 @@ export default function MainLayout() {
 
   const renderNavbar = () => {
     const path = location.pathname;
-    if (path.startsWith("/dashboard")) return <Navbar setIsOpen={setIsOpen} />;
-    if (path.startsWith("/create-test") || path.startsWith("/preview"))
-      return <PageHeader setIsOpen={setIsOpen} />;
+    switch (true) {
+      case path.startsWith("/dashboard"):
+        return <Navbar setIsOpen={setIsOpen} />;
+      case path.startsWith("/create-test"):
+      case path.startsWith("/preview"):
+        return <PageHeader setIsOpen={setIsOpen} />;
+      case path.startsWith("/view-submissions"):
+        return <ViewSubmissionsHeader setIsOpen={setIsOpen} />;
+      case path.startsWith("/test-report/"):
+        return <TestReportHeader setIsOpen={setIsOpen} />;
+      default:
+        return null;
+    }
   };
 
   return (
@@ -22,7 +34,7 @@ export default function MainLayout() {
       <div className="flex h-screen overflow-hidden">
         <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="flex flex-col flex-1">
-             {renderNavbar()}
+          {renderNavbar()}
           <main className="flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
             <Outlet />
           </main>
