@@ -1,7 +1,7 @@
 import { FaBars } from "react-icons/fa";
-import { LuDownload } from "react-icons/lu";
+import { HiPlus } from "react-icons/hi";
 
-const TestReportHeader = ({ setIsOpen }) => {
+const UsersHeader = ({ setIsOpen }) => {
   return (
     <div className="bg-white border-b border-gray-200">
       <div className="w-full md:max-w-7xl mx-auto px-2 md:px-6">
@@ -9,10 +9,10 @@ const TestReportHeader = ({ setIsOpen }) => {
           <div className="flex items-center space-x-4">
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
-                Test Result Report
+                User Management
               </h1>
               <p className="text-sm text-gray-500">
-                John Doe - Front End developer
+                Manage Platform users and their permissions
               </p>
             </div>
             <button
@@ -23,17 +23,9 @@ const TestReportHeader = ({ setIsOpen }) => {
             </button>
           </div>
           <div className="flex items-center space-x-3">
-            <button
-              className="flex items-center px-3 py-2 text-center bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <LuDownload size={12} />
-              <span className="ml-2 text-xs">Download PDF</span>
-            </button>
-            <button
-              className="flex items-center px-3 py-2 text-center bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <LuDownload size={12} />
-              <span className="ml-2 text-xs">Download ZIP</span>
+            <button className="flex items-center px-3 py-2 text-center bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+              <HiPlus size={12} />
+              <span className="ml-2 text-xs">Add User</span>
             </button>
           </div>
         </div>
@@ -42,4 +34,4 @@ const TestReportHeader = ({ setIsOpen }) => {
   );
 };
 
-export default TestReportHeader;
+export default UsersHeader;

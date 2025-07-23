@@ -3,6 +3,7 @@ import TestReportSummary from "../../src/components/TestReportSummary";
 import QuestionsList from "../../src/components/QuestionsList";
 import AIEvaluationSummary from "../../src/components/AIEvaluationSummary";
 import ProctoringScreenshots from "../../src/components/ProctoringScreenshots";
+import AddRemarks from "../../src/components/AddRemarks";
 
 const TestReport = () => {
   const [activeTab, setActiveTab] = useState("questions");
@@ -41,7 +42,12 @@ const TestReport = () => {
           Screenshots
         </button>
       </div>
-      {activeTab === "questions" && <QuestionsList />}
+      {activeTab === "questions" && (
+        <>
+          <QuestionsList />
+          <AddRemarks />
+        </>
+      )}
       {activeTab === "aiEvaluation" && <AIEvaluationSummary />}
       {activeTab === "screenshots" && <ProctoringScreenshots />}
     </div>

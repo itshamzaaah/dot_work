@@ -1,3 +1,9 @@
+import { BiShieldQuarter } from "react-icons/bi";
+import { FaRegClock } from "react-icons/fa";
+import { FiUserCheck } from "react-icons/fi";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { LuCrown, LuUsers } from "react-icons/lu";
+
 export const submissions = [
   {
     id: "sub_001",
@@ -418,3 +424,114 @@ export const sampleQuestions = [
   }
 ];
 
+
+export const userManagementStats = [
+  {
+    label: "Total Admins",
+    value: "24",
+    growthColor: "text-green-600",
+    color: "blue",
+    rightIcon: <LuCrown className="text-xl" />,
+  },
+  {
+    label: "HR",
+    value: "156",
+    growthColor: "text-green-600",
+    color: "green",
+    rightIcon: <BiShieldQuarter className="text-xl" />,
+  },
+  {
+    label: "Active Users",
+    value: "8",
+    growthColor: "text-orange-600",
+    color: "green",
+    rightIcon: <FiUserCheck className="text-xl" />,
+  },
+  {
+    label: "Candidates",
+    value: "8",
+    growthColor: "text-orange-600",
+    color: "orange",
+    rightIcon: <LuUsers className="text-xl" />,
+  },
+];
+
+export const usersData = [
+  {
+    id: "user_001",
+    name: "John Admin",
+    email: "john.admin@company.com",
+    role: "Admin",
+    status: "Active",
+    testsCreated: 12,
+    testsManaged: 45,
+    lastActive: {date: "1/15/2024", time: "9:30:00 AM"},
+  },
+  {
+    id: "user_002",
+    name: "Sarah HR Manager",
+    email: "sarah.hr@company.com",
+    role: "HR",
+    status: "Active",
+    testsCreated: 8,
+    testsManaged: 23,
+    lastActive: {date: "1/15/2024", time: "8:45:00 AM"},
+  },
+  {
+    id: "user_003",
+    name: "Mike HR Specialist",
+    email: "mike.hr@company.com",
+    role: "HR",
+    status: "Inactive",
+    testsCreated: 3,
+    testsManaged: 12,
+    lastActive: {date: "1/10/2024", time: "4:20:00 PM"},
+  },
+  {
+    id: "user_004",
+    name: "Ayesha Khan",
+    email: "ayesha.khan@candidates.com",
+    role: "Candidate",
+    status: "Active",
+    testsAttempted: 2,
+    lastActive: {date: "1/18/2024", time: "2:10:00 PM"},
+  },
+  {
+    id: "user_005",
+    name: "Daniel Smith",
+    email: "daniel.smith@candidates.com",
+    role: "Candidate",
+    status: "Inactive",
+    testsAttempted: 1,
+    lastActive: {date: "1/12/2024", time: "11:00:00 AM"},
+  },
+  {
+    id: "user_006",
+    name: "Fatima Noor",
+    email: "fatima.noor@company.com",
+    role: "HR",
+    status: "Active",
+    testsCreated: 5,
+    testsManaged: 15,
+    lastActive: {date: "1/14/2024", time: "3:00:00 PM"},
+  },
+  {
+    id: "user_007",
+    name: "Ali Raza",
+    email: "ali.raza@candidates.com",
+    role: "Candidate",
+    status: "Active",
+    testsAttempted: 4,
+    lastActive: {date: "1/16/2024", time: "10:00:00 AM"},
+  },
+  {
+    id: "user_008",
+    name: "Nida Hashmi",
+    email: "nida.hashmi@company.com",
+    role: "Admin",
+    status: "Inactive",
+    testsCreated: 7,
+    testsManaged: 20,
+    lastActive: {date: "1/13/2024", time: "5:45:00 PM"},
+  }
+];

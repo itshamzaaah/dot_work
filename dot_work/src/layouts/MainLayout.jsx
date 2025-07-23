@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PageHeader from "../components/page-headers/CreateTestHeader";
 import ViewSubmissionsHeader from "../components/page-headers/SubmissionsHeader";
 import TestReportHeader from "../components/page-headers/TestReportHeader";
+import UsersHeader from "../components/page-headers/UsersHeader";
 
 export default function MainLayout() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,8 @@ export default function MainLayout() {
         return <ViewSubmissionsHeader setIsOpen={setIsOpen} />;
       case path.startsWith("/test-report/"):
         return <TestReportHeader setIsOpen={setIsOpen} />;
+      case path.startsWith("/users"):
+        return <UsersHeader setIsOpen={setIsOpen} />;
       default:
         return null;
     }
