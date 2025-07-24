@@ -1,7 +1,7 @@
 import { FaBars } from "react-icons/fa";
 import { HiPlus } from "react-icons/hi";
 
-const UsersHeader = ({ setIsOpen }) => {
+const UsersHeader = ({ setIsOpen, onAddUser }) => {
   return (
     <div className="bg-white border-b border-gray-200">
       <div className="w-full md:max-w-7xl mx-auto px-2 md:px-6">
@@ -23,7 +23,10 @@ const UsersHeader = ({ setIsOpen }) => {
             </button>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="flex items-center px-3 py-2 text-center bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+            <button
+              className="flex items-center px-3 py-2 text-center bg-primary text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={onAddUser}
+            >
               <HiPlus size={12} />
               <span className="ml-2 text-xs">Add User</span>
             </button>

@@ -4,8 +4,11 @@ import { userManagementStats } from "../../src/constants/data";
 import UsersTable from "../../src/components/UsersTable";
 import { FiSearch } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
+import { useOutletContext } from "react-router-dom";
+import AddUserModal from "../../src/components/AddUserModal";
 
 const Users = () => {
+  const { isUserModalOpen, setIsUserModalOpen } = useOutletContext();
   const [activeTab, setActiveTab] = useState("staff");
   const [search, setSearch] = useState("");
   const [filters, setFilter] = useState({
@@ -21,6 +24,7 @@ const Users = () => {
         ))}
       </div>
 
+      {/* For future use */}
       {/* <div className="bg-gray-200 text-sm rounded w-fit text-white p-1 flex gap-x-2 items-center my-2">
         <button
           className={`${
@@ -89,6 +93,9 @@ const Users = () => {
       </div>
 
       <UsersTable search={search} filters={filters} />
+      {isUserModalOpen && (
+        <AddUserModal onClose={() => setIsUserModalOpen(false)} />
+      )}
     </div>
   );
 };

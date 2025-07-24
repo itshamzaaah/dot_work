@@ -11,6 +11,7 @@ import UsersHeader from "../components/page-headers/UsersHeader";
 
 export default function MainLayout() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const location = useLocation();
 
   const renderNavbar = () => {
@@ -26,7 +27,12 @@ export default function MainLayout() {
       case path.startsWith("/test-report/"):
         return <TestReportHeader setIsOpen={setIsOpen} />;
       case path.startsWith("/users"):
-        return <UsersHeader setIsOpen={setIsOpen} />;
+        return (
+          <UsersHeader
+            setIsOpen={setIsOpen}
+            onAddUser={() => setIsUserModalOpen(true)}
+          />
+        );
       default:
         return null;
     }
@@ -39,7 +45,7 @@ export default function MainLayout() {
         <div className="flex flex-col flex-1">
           {renderNavbar()}
           <main className="flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
-            <Outlet />
+            <Outlet context={{ isUserModalOpen, setIsUserModalOpen }} />
           </main>
         </div>
       </div>
