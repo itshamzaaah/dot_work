@@ -557,3 +557,11 @@ export const statusOptions = [
   { label: "Active", value: "active" },
   { label: "Inactive", value: "inactive" },
 ];
+
+
+export const roleOptionsModal = [
+  { label: "Select Role", value: "" },
+  { label: "Admin", value: "admin" },
+  { label: "HR", value: "hr" },
+  { label: "Candidate", value: "candidate" },
+];

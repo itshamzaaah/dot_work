@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateStepThree } from "../../store/slices/createTestSlice";
 import { RxCross2 } from "react-icons/rx";
 import { emailRegex } from "../../constants";
+import TextInput from "../TextInput";
 
 export default function StepThree({ errors = {} }) {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ export default function StepThree({ errors = {} }) {
       e.preventDefault();
       handleAddEmail();
     } else if (e.key === "Backspace" && inputValue === "" && emails.length) {
-       const updated = emails.slice(0, -1);
+      const updated = emails.slice(0, -1);
       setEmails(updated);
       dispatch(updateStepThree({ candidateEmails: updated }));
     }
@@ -124,16 +125,12 @@ export default function StepThree({ errors = {} }) {
           <label className="block text-sm font-medium text-gray-700">
             Access Deadline
           </label>
-          <input
+          <TextInput
             type="date"
-             min={new Date().toISOString().split("T")[0]}
+            min={new Date().toISOString().split("T")[0]}
             value={accessDeadline}
             onChange={handleDeadlineChange}
-            className={`w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 ${
-              errors.accessDeadline
-                ? "border-red-400"
-                : "border-gray-300 focus:ring-blue-500"
-            }`}
+            error={errors.accessDeadline}
           />
           {errors.accessDeadline && (
             <p className="text-sm text-red-500">{errors.accessDeadline}</p>

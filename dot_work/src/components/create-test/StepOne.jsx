@@ -4,7 +4,6 @@ import { updateStepOne } from "../../store/slices/createTestSlice";
 import SelectDropdown from "../SelectDropdown";
 import { categoryOptions } from "../../constants/data";
 
-
 const StepOne = ({ errors = {} }) => {
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.testForm.stepOne);
@@ -52,6 +51,7 @@ const StepOne = ({ errors = {} }) => {
               value={formData.category}
               onChange={(val) => handleInputChange("category", val)}
               options={categoryOptions}
+              error={errors.category}
             />
             {errors.category && (
               <p className="text-sm text-red-500 mt-1">{errors.category}</p>

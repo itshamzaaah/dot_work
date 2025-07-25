@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import SelectDropdown from "./SelectDropdown";
+import { roleOptionsModal } from "../constants/data";
+import TextInput from "./TextInput";
+import CloseBtn from "./CloseBtn";
 
 const AddUserModal = ({ onClose }) => {
   const [fullName, setFullName] = useState("");
@@ -16,11 +20,7 @@ const AddUserModal = ({ onClose }) => {
         <form onSubmit={handleSubmit}>
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold mb-1">Add New User</h2>
-            <RxCross2
-              onClick={onClose}
-              size={14}
-              className="cursor-pointer text-gray-600 hover:text-gray-800"
-            />
+            <CloseBtn onClose={onClose} />
           </div>
           <p className="text-sm text-gray-500 mb-4">
             Create a new admin or HR user account
@@ -30,12 +30,11 @@ const AddUserModal = ({ onClose }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Full Name
             </label>
-            <input
+            <TextInput
+              placeholder="Enter full name"
               type="text"
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Enter full name"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={setFullName}
               required
             />
           </div>
@@ -44,12 +43,11 @@ const AddUserModal = ({ onClose }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
             </label>
-            <input
+            <TextInput
+              placeholder="Enter email address"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter email address"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+              onChange={setEmail}
               required
             />
           </div>
@@ -58,15 +56,12 @@ const AddUserModal = ({ onClose }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Role
             </label>
-            <select
+            <SelectDropdown
+              options={roleOptionsModal}
               value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black bg-white"
-            >
-              <option value="HR">HR</option>
-              <option value="Admin">Admin</option>
-              <option value="Candidate">Candidate</option>
-            </select>
+              onChange={setRole}
+              required
+            />
           </div>
 
           <div className="flex justify-end gap-3">

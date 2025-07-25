@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { NavLink, useNavigate } from "react-router-dom";
+import CloseBtn from "./CloseBtn";
 
 const links = [
   {
@@ -28,15 +29,15 @@ const links = [
     path: "/view-submissions",
     color: "from-purple-500 to-purple-600",
   },
-  { 
-    name: "Users", 
-    icon: <FaUsers className="w-4 h-4" />, 
+  {
+    name: "Users",
+    icon: <FaUsers className="w-4 h-4" />,
     path: "/users",
     color: "from-orange-500 to-orange-600",
   },
-  { 
-    name: "Settings", 
-    icon: <FaCog className="w-4 h-4" />, 
+  {
+    name: "Settings",
+    icon: <FaCog className="w-4 h-4" />,
     path: "/settings",
     color: "from-gray-500 to-gray-600",
   },
@@ -78,13 +79,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                   <p className="text-xs text-gray-500">Admin Panel</p>
                 </div>
               </div>
-              
-              <button
-                className="lg:hidden p-2 rounded-xl bg-white/80 backdrop-blur-sm border border-gray-200 hover:bg-white transition-all duration-200 shadow-sm"
-                onClick={() => setIsOpen(false)}
-              >
-                <RxCross2 className="w-4 h-4 text-gray-600" />
-              </button>
+              <CloseBtn onClose={() => setIsOpen(false)} hideClass="lg:hidden" />
             </div>
           </div>
 
@@ -111,29 +106,31 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                       {isActive && (
                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-purple-50 opacity-50 animate-pulse" />
                       )}
-                      
+
                       {/* Hover gradient background */}
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 to-purple-50 opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
-                      
+
                       {/* Icon with gradient background */}
-                      <div className={`relative z-10 p-2.5 rounded-lg transition-all duration-300 ${
-                        isActive 
-                          ? `bg-gradient-to-r ${link.color} text-white shadow-lg` 
-                          : "bg-gray-100 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-500 group-hover:text-white group-hover:shadow-lg group-hover:scale-110"
-                      }`}>
+                      <div
+                        className={`relative z-10 p-2.5 rounded-lg transition-all duration-300 ${
+                          isActive
+                            ? `bg-gradient-to-r ${link.color} text-white shadow-lg`
+                            : "bg-gray-100 group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-500 group-hover:text-white group-hover:shadow-lg group-hover:scale-110"
+                        }`}
+                      >
                         {link.icon}
                       </div>
-                      
+
                       {/* Text */}
                       <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-300 group-hover:font-semibold">
                         {link.name}
                       </span>
-                      
+
                       {/* Active indicator */}
                       {isActive && (
                         <div className="absolute right-4 w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
                       )}
-                      
+
                       {/* Hover indicator */}
                       <div className="absolute right-4 w-1 h-1 bg-indigo-400 rounded-full opacity-0 group-hover:opacity-100 group-hover:w-2 group-hover:h-2 transition-all duration-300" />
                     </>
