@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { getStatusBadge } from "../utils/validation";
 import { submissions } from "../constants/data";
+import SearchInput from "./SearchInput";
 
 export default function RecentSubmissions() {
   const [search, setSearch] = useState("");
@@ -53,17 +54,12 @@ export default function RecentSubmissions() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 relative">
-          <div className="relative w-full sm:w-auto">
-            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by candidate or test..."
-              className="w-full sm:w-64 pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search by candidate or test..."
+            containerClass="w-full sm:w-auto"
+          />
           {/* Filter Button with Dropdown */}
           <div className="relative">
             <button

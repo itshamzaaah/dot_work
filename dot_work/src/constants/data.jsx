@@ -535,3 +535,25 @@ export const usersData = [
     lastActive: {date: "1/13/2024", time: "5:45:00 PM"},
   }
 ];
+
+export const categoryOptions = [
+  { value: "", label: "Select category" },
+  { value: "programming", label: "Programming" },
+  { value: "design", label: "Design" },
+  { value: "marketing", label: "Marketing" },
+  { value: "general", label: "General Knowledge" },
+];
+
+
+export const roleOptions = [
+  { label: "All Roles", value: "all" },
+  { label: "Admin", value: "admin" },
+  { label: "HR", value: "hr" },
+  { label: "Candidate", value: "candidate" },
+];
+
+export const statusOptions = [
+  { label: "All Status", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+];
