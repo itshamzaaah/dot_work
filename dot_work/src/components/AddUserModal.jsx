@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { RxCross2 } from "react-icons/rx";
-import SelectDropdown from "./SelectDropdown";
 import { roleOptionsModal } from "../constants/data";
-import TextInput from "./TextInput";
-import CloseBtn from "./CloseBtn";
+import TextInput from "./common/TextInput";
+import SelectDropdown from "./common/SelectDropdown";
+import CloseBtn from "./common/CloseBtn";
 
 const AddUserModal = ({ onClose }) => {
   const [fullName, setFullName] = useState("");

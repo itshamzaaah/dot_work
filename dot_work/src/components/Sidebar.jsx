@@ -6,9 +6,8 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { RxCross2 } from "react-icons/rx";
 import { NavLink, useNavigate } from "react-router-dom";
-import CloseBtn from "./CloseBtn";
+import CloseBtn from "./common/CloseBtn";
 
 const links = [
   {

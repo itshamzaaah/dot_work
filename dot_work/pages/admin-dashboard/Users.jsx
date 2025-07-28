@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import StatsCard from "../../src/components/StatsCard";
 import { roleOptions, statusOptions, userManagementStats } from "../../src/constants/data";
 import UsersTable from "../../src/components/UsersTable";
 import { useOutletContext } from "react-router-dom";
 import AddUserModal from "../../src/components/AddUserModal";
-import SelectDropdown from "../../src/components/SelectDropdown";
-import SearchInput from "../../src/components/SearchInput";
+import SearchInput from "../../src/components/common/SearchInput";
+import SelectDropdown from "../../src/components/common/SelectDropdown";
+
 
 const Users = () => {
   const { isUserModalOpen, setIsUserModalOpen } = useOutletContext();

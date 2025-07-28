@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { FiSearch, FiFilter, FiDownload } from "react-icons/fi";
+import { FiFilter, FiDownload } from "react-icons/fi";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { getStatusBadge } from "../utils/validation";
 import { submissions } from "../constants/data";
-import SearchInput from "./SearchInput";
+import SearchInput from "./common/SearchInput";
 
 export default function RecentSubmissions() {
   const [search, setSearch] = useState("");

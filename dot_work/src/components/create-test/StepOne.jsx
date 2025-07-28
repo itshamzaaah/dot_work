@@ -1,8 +1,8 @@
-import TextInput from "../TextInput";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStepOne } from "../../store/slices/createTestSlice";
-import SelectDropdown from "../SelectDropdown";
 import { categoryOptions } from "../../constants/data";
+import TextInput from "../common/TextInput";
+import SelectDropdown from "../common/SelectDropdown";
 
 const StepOne = ({ errors = {} }) => {
   const dispatch = useDispatch();

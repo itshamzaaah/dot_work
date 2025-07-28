@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiSearch, FiFilter, FiDownload } from "react-icons/fi";
+import { FiFilter, FiDownload } from "react-icons/fi";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { getFlagBadge, getStatusBadge } from "../utils/validation";
@@ -10,7 +10,7 @@ import { IoSendOutline } from "react-icons/io5";
 import { BiTrash } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { viewSubmissionData } from "../constants/data";
-import SearchInput from "./SearchInput";
+import SearchInput from "./common/SearchInput";
 
 export default function Submissions() {
   const [search, setSearch] = useState("");

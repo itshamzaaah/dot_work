@@ -1,10 +1,9 @@
-import React, { useState, useRef } from "react";
-import { MdContentCopy } from "react-icons/md";
+import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStepThree } from "../../store/slices/createTestSlice";
 import { RxCross2 } from "react-icons/rx";
 import { emailRegex } from "../../constants";
-import TextInput from "../TextInput";
+import TextInput from "../common/TextInput";
 
 export default function StepThree({ errors = {} }) {
   const dispatch = useDispatch();
