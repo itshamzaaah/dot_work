@@ -1,41 +1,59 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PageHeader from "../components/page-headers/CreateTestHeader";
-import ViewSubmissionsHeader from "../components/page-headers/SubmissionsHeader";
-import TestReportHeader from "../components/page-headers/TestReportHeader";
-import UsersHeader from "../components/page-headers/UsersHeader";
+import { pageHeaderConfig } from "../config/pageHeaderConfig";
+import PageHeader from "../components/common/PageHeader";
 
 export default function MainLayout() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const location = useLocation();
 
+  const actionHandlers = {
+    publishTest: () => console.log("Publishing Test..."),
+    sendResults: () => console.log("Sending Results..."),
+    downloadPDF: () => console.log("Downloading PDF..."),
+    downloadZIP: () => console.log("Downloading ZIP..."),
+    openAddUserModal: () => setIsUserModalOpen(true),
+  };
+
   const renderNavbar = () => {
     const path = location.pathname;
-    switch (true) {
-      case path.startsWith("/dashboard"):
-        return <Navbar setIsOpen={setIsOpen} />;
-      case path.startsWith("/create-test"):
-      case path.startsWith("/preview"):
-        return <PageHeader setIsOpen={setIsOpen} />;
-      case path.startsWith("/view-submissions"):
-        return <ViewSubmissionsHeader setIsOpen={setIsOpen} />;
-      case path.startsWith("/test-report/"):
-        return <TestReportHeader setIsOpen={setIsOpen} />;
-      case path.startsWith("/users"):
-        return (
-          <UsersHeader
-            setIsOpen={setIsOpen}
-            onAddUser={() => setIsUserModalOpen(true)}
-          />
-        );
-      default:
-        return null;
+
+    const matchedConfig = pageHeaderConfig.find((config) => {
+      if (config.matchType === "startsWith") {
+        return path.startsWith(config.path);
+      } else if (config.matchType === "exact") {
+        return path === config.path;
+      }
+      return false;
+    });
+
+    if (!matchedConfig) return null;
+
+    // If custom component exists (like Navbar), render it
+    if (matchedConfig.component) {
+      const Component = matchedConfig.component;
+      return <Component setIsOpen={setIsOpen} />;
     }
+
+    const actions = matchedConfig.actions.map((action) => {
+      if (action.actionType && actionHandlers[action.actionType]) {
+        return { ...action, onClick: actionHandlers[action.actionType] };
+      }
+      return action;
+    });
+
+    return (
+      <PageHeader
+        title={matchedConfig.title}
+        subtitle={matchedConfig.subtitle}
+        setIsOpen={setIsOpen}
+        actions={actions}
+      />
+    );
   };
 
   return (

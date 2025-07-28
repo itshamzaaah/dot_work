@@ -14,6 +14,7 @@ import PreviewQuestions from "../pages/preview-questions/PreviewQuestions";
 import ViewSubmissions from "../pages/admin-dashboard/ViewSubmissions";
 import TestReport from "../pages/admin-dashboard/TestReport";
 import Users from "../pages/admin-dashboard/Users";
+import Settings from "../pages/admin-dashboard/Settings";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
         <Route path="/view-submissions" element={<ViewSubmissions />} />
         <Route path="/test-report/:id" element={<TestReport />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/settings" element={<Settings />} />
       </Route>
     </>
   )

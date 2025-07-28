@@ -1,5 +1,5 @@
 import { FaRegClock } from "react-icons/fa";
-import StatsCard from "../../src/components/StatsCard";
+import StatsCard from "../../src/components/common/StatsCard";
 import { FiFileText } from "react-icons/fi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import Submissions from "../../src/components/Submissions";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import StatsCard from "../../src/components/StatsCard";
+import StatsCard from "../../src/components/common/StatsCard";
 import { roleOptions, statusOptions, userManagementStats } from "../../src/constants/data";
 import UsersTable from "../../src/components/UsersTable";
 import { useOutletContext } from "react-router-dom";

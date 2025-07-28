@@ -4,8 +4,9 @@ import {
   FiFileText,
   FiAlertCircle,
 } from "react-icons/fi";
-import StatsCard from "../../src/components/StatsCard";
+import StatsCard from "../../src/components/common/StatsCard";
 import RecentSubmissions from "../../src/components/RecentSubmissons";
+import Navbar from "../../src/components/Navbar";
 
 export const stats = [
   {
@@ -39,13 +40,15 @@ export const stats = [
 
 export default function Dashboard() {
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
-        {stats.map((stat, index) => (
-          <StatsCard key={index} {...stat} />
-        ))}
+    <>
+      <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
+          {stats.map((stat, index) => (
+            <StatsCard key={index} {...stat} />
+          ))}
+        </div>
+        <RecentSubmissions />
       </div>
-      <RecentSubmissions />
-    </div>
+    </>
   );
 }

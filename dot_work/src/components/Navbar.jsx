@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaBell, FaBars } from "react-icons/fa";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 export default function Navbar({ setIsOpen }) {
   const [shake, setShake] = useState(false);
@@ -8,7 +9,7 @@ export default function Navbar({ setIsOpen }) {
   useEffect(() => {
     const triggerShake = () => {
       setShake(true);
-      setTimeout(() => setShake(false), 3000); 
+      setTimeout(() => setShake(false), 3000);
     };
 
     const interval = setInterval(triggerShake, 30000);
@@ -39,16 +40,18 @@ export default function Navbar({ setIsOpen }) {
           <FaBell className="w-5 h-5" />
         </button>
 
-        <button
-          type="button"
-          aria-label="Create a new test"
-          className={`hidden md:inline-flex gap-x-2 text-white bg-primary hover:bg-primary/90 focus:ring-2 font-medium rounded-lg text-sm px-3 py-2 text-center items-center transition ${
-            shake ? "animate-shake" : ""
-          }`}
-        >
-          <AiOutlinePlusCircle size={15} />
-          Create test
-        </button>
+        <Link to="/create-test">
+          <button
+            type="button"
+            aria-label="Create a new test"
+            className={`hidden md:inline-flex gap-x-2 text-white bg-primary hover:bg-primary/90 focus:ring-2 font-medium rounded-lg text-xs px-3 py-2 text-center items-center transition ${
+              shake ? "animate-shake" : ""
+            }`}
+          >
+            <AiOutlinePlusCircle size={15} />
+            Create test
+          </button>
+        </Link>
 
         <button
           className="block lg:hidden p-2 text-primary"
