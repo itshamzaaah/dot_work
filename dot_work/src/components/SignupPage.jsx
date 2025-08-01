@@ -1,23 +1,69 @@
 import { useState } from "react";
 import signUpImg from "../assets/images/signup.png";
 import { useNavigate } from "react-router-dom";
+import { signUp } from "../services";
+import { toast } from "react-toastify";
 
 const SignupPage = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [agreed, setAgreed] = useState(false);
-  const [fullNameTouched, setFullNameTouched] = useState(false);
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
   const navigate = useNavigate();
-  const isNameValid = /^[A-Za-z\s]*$/.test(fullName) && fullName.trim() !== "";
-  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isPasswordValid =
-    /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(password);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    agreed: false,
+  });
 
-  const canSubmit = agreed && isNameValid && isEmailValid && isPasswordValid;
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+  });
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await signUp(formData);
+      console.log(response);
+      if (response.status === 201) {
+        toast.success(response.message);
+        setTimeout(() => {
+          navigate("/verify-otp", { state: {name: formData.name, email: formData.email } });
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isNameValid =
+    /^[A-Za-z\s]*$/.test(formData.name) && formData.name.trim() !== "";
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  const isPasswordValid =
+    /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(
+      formData.password
+    );
+
+  const canSubmit =
+    formData.agreed && isNameValid && isEmailValid && isPasswordValid;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white p-6">
@@ -32,84 +78,74 @@ const SignupPage = () => {
               Study Online, Learn Online
             </p>
             <h1 className="text-xl md:text-3xl font-extrabold leading-tight mb-0 md:mb-10">
-              AI Based <br />
-              Evaluation <br />
-              of the assessments
+              AI Based <br /> Evaluation <br /> of the assessments
             </h1>
           </div>
-
           <div className="hidden md:block w-60 mx-auto">
             <img
               src={signUpImg}
               alt="Illustration"
               className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform hover:scale-110"
-            //className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
 
         {/* Right Part */}
-        <div className="w-full md:w-9/12 bg-indigo-400 ">
-          <div className="bg-white p-4 md:p-10 rounded-3xl shadow-md relative shadow-2xl ">
-            {/* Language Selector */}
-            {/* <div className="absolute top-6 right-6 text-sm text-gray-500 cursor-pointer select-none">
-            English(USA) ▼
-          </div> */}
+        <div className="w-full md:w-9/12 bg-indigo-400">
+          <div className="bg-white p-4 md:p-10 rounded-3xl relative shadow-2xl">
+            <h2 className="text-2xl font-semibold mb-8">Create Account</h2>
 
-            <h2 className="text-2xl font-semibold mb-8">Create Accout</h2>
-
-            <form>
+            <form onSubmit={handleSubmit}>
               {/* Full Name */}
-              <label className="block mb-2 text-gray-700 text-sm font-medium">
+              <label className="block text-gray-700 text-sm font-medium">
                 Full Name
                 <input
                   type="text"
+                  name="name"
                   placeholder="Full Name"
-                  value={fullName}
-                  onChange={(e) => {
-                    const input = e.target.value;
-                    if (/^[A-Za-z\s]*$/.test(input) || input === "") {
-                      setFullName(input);
-                    }
-                  }}
-                  onBlur={() => setFullNameTouched(true)}
+                  value={formData.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   className="mt-1 block w-full border-b border-gray-300 focus:border-indigo-600 focus:outline-none py-2 placeholder-gray-400"
                   required
                 />
               </label>
-              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500">
-                {fullNameTouched && !isNameValid && (
+              <div className="h-5 text-xs text-red-500">
+                {touched.name && !isNameValid && (
                   <p>Full name must contain only alphabets and spaces.</p>
                 )}
               </div>
 
               {/* Email */}
-              <label className="block mb-2 text-gray-700 text-sm font-medium">
+              <label className="block mt-3 text-gray-700 text-sm font-medium">
                 Email Address
                 <input
                   type="email"
+                  name="email"
                   placeholder="Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onBlur={() => setEmailTouched(true)}
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   className="mt-1 block w-full border-b border-gray-300 focus:border-indigo-600 focus:outline-none py-2 placeholder-gray-400"
                   required
                 />
               </label>
-              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500">
-                {emailTouched && !isEmailValid && (
+              <div className="h-5 text-xs text-red-500">
+                {touched.email && !isEmailValid && (
                   <p>Enter a valid email address (e.g. user@example.com).</p>
                 )}
               </div>
+
               {/* Password */}
-              <label className="block mb-2 text-gray-700 text-sm font-medium relative">
+              <label className="block mt-3 text-gray-700 text-sm font-medium relative">
                 Password
                 <input
                   type={passwordVisible ? "text" : "password"}
+                  name="password"
                   placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onBlur={() => setPasswordTouched(true)}
+                  value={formData.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                   className="mt-1 block w-full border-b border-gray-300 focus:border-indigo-600 focus:outline-none py-2 placeholder-gray-400"
                   required
                 />
@@ -164,17 +200,22 @@ const SignupPage = () => {
                   )}
                 </button>
               </label>
-              <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500">
-                {passwordTouched && !isPasswordValid && (
-                  <p>Password must be at least 6 characters, include 1 capital letter and 1 special character.</p>
+              <div className="h-5 text-xs text-red-500">
+                {touched.password && !isPasswordValid && (
+                  <p>
+                    Password must be at least 6 characters, include 1 capital
+                    letter and 1 special character.
+                  </p>
                 )}
               </div>
+
               {/* Checkbox */}
               <label className="flex items-center text-xs text-gray-600 mb-8">
                 <input
                   type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
+                  name="agreed"
+                  checked={formData.agreed}
+                  onChange={handleChange}
                   className="mr-2 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   required
                 />
@@ -212,99 +253,6 @@ const SignupPage = () => {
                 Sign Up
               </button>
             </form>
-
-            <div className="flex items-center mt-8 mb-6 text-gray-300 text-sm">
-              <div className="bg-gray-200 flex-1 h-px"></div>
-              <span className="mx-4">Or Sign Up With</span>
-              <div className="bg-gray-200 flex-1 h-px"></div>
-            </div>
-
-            <div className="flex justify-center space-x-6 text-gray-500">
-              {/* Use below SVG icons or image URLs for social icons */}
-              <a href="#" aria-label="Google" className="hover:text-indigo-600">
-                <svg
-                  className="w-6 h-6"
-                  viewBox="0 0 533.5 544.3"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill="#4285f4"
-                    d="M533.5 278.4c0-18.6-1.5-37-4.2-54.6H272v103.6h146.9c-6.4 34.6-25.8 63.9-55 83.3v68h88.7c51.9-47.9 81.9-118.2 81.9-200.3z"
-                  />
-                  <path
-                    fill="#34a853"
-                    d="M272 544.3c74.5 0 137-24.5 182.6-66.3l-88.7-68c-24.7 16.6-56.2 26.3-93.9 26.3-72 0-133.1-48.6-155-113.8H27v71.5c44.9 88.4 137.1 150.3 245 150.3z"
-                  />
-                  <path
-                    fill="#fbbc04"
-                    d="M117 324.5c-11.8-34.6-11.8-71.9 0-106.5V146H27c-39.6 77.1-39.6 169.1 0 246.2l90-67.7z"
-                  />
-                  <path
-                    fill="#ea4335"
-                    d="M272 107.7c39.9 0 75.8 13.7 104.2 40.7l78.1-78.1C408.8 24.5 346.3 0 272 0 164.1 0 71.9 61.9 27 150.3l90 68c21.7-65.2 83-113.8 155-113.8z"
-                  />
-                </svg>
-              </a>
-              <a
-                href="#"
-                aria-label="Facebook"
-                className="hover:text-indigo-600"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M22.675 0h-21.35c-.735 0-1.325.589-1.325 1.324v21.352c0 .734.59 1.324 1.324 1.324h11.494v-9.294H9.691v-3.622h3.008V8.413c0-2.978 1.917-4.6 4.72-4.6 1.343 0 2.498.1 2.835.144v3.292l-1.947.001c-1.527 0-1.823.726-1.823 1.792v2.35h3.646l-.475 3.622h-3.171V24h6.215c.736 0 1.326-.59 1.326-1.324V1.325c0-.735-.59-1.325-1.325-1.325z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                aria-label="Instagram"
-                className="hover:text-indigo-600"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  viewBox="0 0 24 24"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                  <path d="M16 11.37a4 4 0 11-4.3-4.31 4 4 0 014.3 4.31z" />
-                  <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                aria-label="Twitter"
-                className="hover:text-indigo-600"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M24 4.557a9.83 9.83 0 01-2.828.775 4.932 4.932 0 002.164-2.724c-.949.564-2.002.974-3.127 1.195A4.918 4.918 0 0016.616 3a4.92 4.92 0 00-4.917 4.917c0 .385.045.76.127 1.121C7.728 8.806 4.1 6.864 1.671 3.905a4.822 4.822 0 00-.666 2.475 4.917 4.917 0 002.188 4.096 4.904 4.904 0 01-2.229-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 01-2.224.084 4.922 4.922 0 004.6 3.417 9.868 9.868 0 01-6.102 2.104c-.396 0-.788-.023-1.174-.067a13.945 13.945 0 007.557 2.212c9.054 0 14.002-7.498 14.002-14 0-.213-.005-.425-.014-.636A10.012 10.012 0 0024 4.557z" />
-                </svg>
-              </a>
-              <a
-                href="#"
-                aria-label="LinkedIn"
-                className="hover:text-indigo-600"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.784 1.764-1.75 1.764zm13.5 11.268h-3v-5.604c0-1.337-.476-2.252-1.666-2.252-0.909 0-1.452.61-1.691 1.2-.087.211-.108.506-.108.802v5.854h-3v-10h3v1.367c.398-.614 1.109-1.485 2.695-1.485 1.965 0 3.438 1.282 3.438 4.043v5.075z" />
-                </svg>
-              </a>
-            </div>
 
             <p className="text-center text-sm text-gray-400 mt-6">
               Already Have an account?{" "}

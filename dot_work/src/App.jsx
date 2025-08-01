@@ -15,12 +15,16 @@ import ViewSubmissions from "../pages/admin-dashboard/ViewSubmissions";
 import TestReport from "../pages/admin-dashboard/TestReport";
 import Users from "../pages/admin-dashboard/Users";
 import Settings from "../pages/admin-dashboard/Settings";
+import OTP from "../pages/auth/Otp";
+import ThankYou from "../pages/auth/ThankYou";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Signup />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/verify-otp" element={<OTP />} />
+      <Route path="/thank-you" element={<ThankYou />} />
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Admin />} />
         <Route path="/create-test" element={<CreateTest />} />
