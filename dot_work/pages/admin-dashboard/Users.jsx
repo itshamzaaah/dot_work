@@ -1,21 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StatsCard from "../../src/components/common/StatsCard";
-import { roleOptions, statusOptions, userManagementStats } from "../../src/constants/data";
+import {
+  roleOptions,
+  statusOptions,
+  userManagementStats,
+} from "../../src/constants/data";
 import UsersTable from "../../src/components/UsersTable";
 import { useOutletContext } from "react-router-dom";
 import AddUserModal from "../../src/components/AddUserModal";
 import SearchInput from "../../src/components/common/SearchInput";
 import SelectDropdown from "../../src/components/common/SelectDropdown";
-
+import { getAllUsers } from "../../src/services";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const { isUserModalOpen, setIsUserModalOpen } = useOutletContext();
   const [activeTab, setActiveTab] = useState("staff");
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({
     role: "all",
     status: "all",
   });
+  
+  const fetchUser = async () => {
+    const res = await getAllUsers();
+    setUsers(res?.data);
+  };
+
+  useEffect(() => {
+    try {
+      fetchUser();
+    } catch (error) {
+      toast.error(error);
+    }
+  }, []);
 
   return (
     <div className="w-full">
@@ -73,7 +92,7 @@ const Users = () => {
         </div>
       </div>
 
-      <UsersTable search={search} filters={filters} />
+      <UsersTable search={search} filters={filters} data={users} refreshUsers={fetchUser} />
       {isUserModalOpen && (
         <AddUserModal onClose={() => setIsUserModalOpen(false)} />
       )}

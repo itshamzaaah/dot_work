@@ -1,13 +1,16 @@
 import axios from "axios";
-import { signInEndPoint, signUpEndPoint, verifyOtpEndPoint } from "./config";
+import {
+  approveUserEndPoint,
+  getAllUserEndPoint,
+  signInEndPoint,
+  signUpEndPoint,
+  verifyOtpEndPoint,
+} from "./config";
+import api from "../utils/api";
 
 export const post = async (endPoint, data = {}) => {
   try {
-    const response = await axios.post(endPoint, data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await api.post(endPoint, data);
     return response.data;
   } catch (error) {
     console.error("Error making post request:", error);
@@ -15,17 +18,22 @@ export const post = async (endPoint, data = {}) => {
   }
 };
 
-export const get = async (endPoint, token) => {
+export const get = async (endPoint) => {
   try {
-    const response = await axios.get(endPoint, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await api.get(endPoint);
     return response.data;
   } catch (error) {
-    console.error("Error fetch data", data);
+    console.error("Error fetch data", error);
+    throw error;
+  }
+};
+
+export const patch = async (endPoint, data) => {
+  try {
+    const response = await api.patch(endPoint, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetch data", error);
     throw error;
   }
 };
@@ -42,5 +50,16 @@ export async function verifyOtp(data) {
 
 export async function signIn(data) {
   const result = await post(signInEndPoint, data);
+  return result;
+}
+
+export async function getAllUsers(data) {
+  const result = await get(getAllUserEndPoint, data);
+  return result;
+}
+
+export async function approveUser({ userId, email, role }) {
+  console.log(userId, email, role);
+  const result = await patch(approveUserEndPoint(userId), {email, role});
   return result;
 }

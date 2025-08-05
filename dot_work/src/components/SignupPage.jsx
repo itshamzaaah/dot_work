@@ -46,11 +46,13 @@ const SignupPage = () => {
       if (response.status === 201) {
         toast.success(response.message);
         setTimeout(() => {
-          navigate("/verify-otp", { state: {name: formData.name, email: formData.email } });
+          navigate("/verify-otp", {
+            state: { name: formData.name, email: formData.email },
+          });
         }, 1000);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.response?.data.error);
     }
   };
 
