@@ -6,10 +6,15 @@ import { BiTrash } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { approveUser } from "../services";
 import { IoCheckmarkDone } from "react-icons/io5";
+import { approvedRoles } from "../constants/data";
+import SelectDropdown from "./common/SelectDropdown";
 
 const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
   const [exported, setExported] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [selectedRole, setSelectedRole] = useState({});
+  const [activeRolePopover, setActiveRolePopover] = useState(null);
+  const [loadingUserId, setLoadingUserId] = useState(null);
 
   const { role = "all", status = "all" } = filters || {};
 
@@ -46,17 +51,16 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
     setExported(true);
     setTimeout(() => setExported(false), 2000);
   };
-
   const handleActionClick = async (user, actionType) => {
     try {
       if (actionType === "approve") {
         const response = await approveUser({
           userId: user._id,
           email: user.email,
-          role: user.role,
+          role: selectedRole[user._id], 
         });
         toast.success(response.message);
-        if (refreshUsers) refreshUsers(); // Refresh after approval
+        if (refreshUsers) refreshUsers();
       } else if (actionType === "delete") {
         console.log("Delete user:", user._id);
       }
@@ -65,9 +69,6 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
     }
   };
 
-  const toggleDropdown = (userId) => {
-    setActiveDropdown(activeDropdown === userId ? null : userId);
-  };
 
   return (
     <div className="w-[300px] md:min-w-full bg-white rounded-xl border p-6 shadow-sm mt-6">
@@ -119,36 +120,56 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
                     {user.updatedAt.slice(11, 19)}
                   </div>
                 </td>
-                <td className="py-4 px-4 text-right">
-                  <div className="relative inline-block">
-                    <button
-                      onClick={() => toggleDropdown(user._id)}
-                      className="p-2 border border-gray-200 rounded hover:bg-gray-100"
-                    >
-                      <HiOutlineDotsHorizontal className="w-4 h-4" />
-                    </button>
+                <td className="py-4 px-4 text-gray-700 relative">
+                  <button
+                    disabled={user.active}
+                    onClick={() =>
+                      setActiveRolePopover(
+                        activeRolePopover === user._id ? null : user._id
+                      )
+                    }
+                    className="px-3 py-1 border rounded text-sm hover:bg-gray-100 disabled:opacity-50"
+                  >
+                    {user.role}
+                  </button>
 
-                    {activeDropdown === user._id && (
-                      <div className="absolute right-0 z-10 mt-2 w-42 bg-white border border-gray-200 rounded-md shadow-lg">
-                        <ul className="text-sm">
-                          <li
-                            onClick={() => handleActionClick(user, "approve")}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-green-500 flex items-center gap-2"
-                          >
-                            <IoCheckmarkDone className="w-4 h-4" /> Approve
-                          </li>
-
-                          <li
-                            onClick={() => handleActionClick(user, "delete")}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-red-600 border-t border-gray-200"
-                          >
-                            <BiTrash className="w-4 h-4" />
-                            Delete
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+                  {activeRolePopover === user._id && (
+                    <div className="absolute z-10 mt-2 w-32 bg-white border rounded shadow-lg p-3">
+                      <p className="text-xs mb-2 text-gray-500">Select Role</p>
+                      {approvedRoles.map((role) => (
+                        <button
+                          key={role.value}
+                          className={`block w-full text-left px-2 py-1 rounded text-sm hover:bg-gray-100 ${
+                            selectedRole[user._id] === role.value
+                              ? "bg-gray-200 font-semibold"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            setSelectedRole((prev) => ({
+                              ...prev,
+                              [user._id]: role.value,
+                            }))
+                          }
+                        >
+                          {role.label}
+                        </button>
+                      ))}
+                      <button
+                        onClick={async () => {
+                          setLoadingUserId(user._id);
+                          await handleActionClick(user, "approve");
+                          setLoadingUserId(null);
+                          setActiveRolePopover(null);
+                        }}
+                        className="mt-2 w-full bg-primary text-white text-sm py-1 rounded hover:bg-primary-dark disabled:opacity-50"
+                        disabled={!selectedRole[user._id]}
+                      >
+                        {loadingUserId === user._id
+                          ? "Approving..."
+                          : "Approve"}
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

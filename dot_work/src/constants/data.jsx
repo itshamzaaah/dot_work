@@ -274,7 +274,7 @@ export const submissions = [
     status: "graded",
     date: "2024-01-09",
     time: "13:10",
-  }
+  },
 ];
 
 export const viewSubmissionData = [
@@ -390,7 +390,6 @@ export const viewSubmissionData = [
   },
 ];
 
-
 export const sampleQuestions = [
   {
     id: 1,
@@ -418,38 +417,39 @@ export const sampleQuestions = [
     marks: 5,
     awardedMarks: 5,
     question: "Explain the concept of closures in JavaScript.",
-    candidateAnswer: "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
-    correctAnswer: "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
+    candidateAnswer:
+      "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
+    correctAnswer:
+      "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
     aiRemarks: "Excellent explanation of closures.",
-  }
+  },
 ];
-
 
 export const userManagementStats = [
   {
+    key: "totalAdmins",
     label: "Total Admins",
-    value: "24",
     growthColor: "text-green-600",
     color: "blue",
     rightIcon: <LuCrown className="text-xl" />,
   },
   {
+    key: "totalHRs",
     label: "HR",
-    value: "156",
     growthColor: "text-green-600",
     color: "green",
     rightIcon: <BiShieldQuarter className="text-xl" />,
   },
   {
+    key: "totalActiveUsers",
     label: "Active Users",
-    value: "8",
     growthColor: "text-orange-600",
     color: "green",
     rightIcon: <FiUserCheck className="text-xl" />,
   },
   {
+    key: "totalCandidates",
     label: "Candidates",
-    value: "8",
     growthColor: "text-orange-600",
     color: "orange",
     rightIcon: <LuUsers className="text-xl" />,
@@ -465,7 +465,7 @@ export const usersData = [
     status: "Active",
     testsCreated: 12,
     testsManaged: 45,
-    lastActive: {date: "1/15/2024", time: "9:30:00 AM"},
+    lastActive: { date: "1/15/2024", time: "9:30:00 AM" },
   },
   {
     id: "user_002",
@@ -475,7 +475,7 @@ export const usersData = [
     status: "Active",
     testsCreated: 8,
     testsManaged: 23,
-    lastActive: {date: "1/15/2024", time: "8:45:00 AM"},
+    lastActive: { date: "1/15/2024", time: "8:45:00 AM" },
   },
   {
     id: "user_003",
@@ -485,7 +485,7 @@ export const usersData = [
     status: "Inactive",
     testsCreated: 3,
     testsManaged: 12,
-    lastActive: {date: "1/10/2024", time: "4:20:00 PM"},
+    lastActive: { date: "1/10/2024", time: "4:20:00 PM" },
   },
   {
     id: "user_004",
@@ -494,7 +494,7 @@ export const usersData = [
     role: "Candidate",
     status: "Active",
     testsAttempted: 2,
-    lastActive: {date: "1/18/2024", time: "2:10:00 PM"},
+    lastActive: { date: "1/18/2024", time: "2:10:00 PM" },
   },
   {
     id: "user_005",
@@ -503,7 +503,7 @@ export const usersData = [
     role: "Candidate",
     status: "Inactive",
     testsAttempted: 1,
-    lastActive: {date: "1/12/2024", time: "11:00:00 AM"},
+    lastActive: { date: "1/12/2024", time: "11:00:00 AM" },
   },
   {
     id: "user_006",
@@ -513,7 +513,7 @@ export const usersData = [
     status: "Active",
     testsCreated: 5,
     testsManaged: 15,
-    lastActive: {date: "1/14/2024", time: "3:00:00 PM"},
+    lastActive: { date: "1/14/2024", time: "3:00:00 PM" },
   },
   {
     id: "user_007",
@@ -522,7 +522,7 @@ export const usersData = [
     role: "Candidate",
     status: "Active",
     testsAttempted: 4,
-    lastActive: {date: "1/16/2024", time: "10:00:00 AM"},
+    lastActive: { date: "1/16/2024", time: "10:00:00 AM" },
   },
   {
     id: "user_008",
@@ -532,8 +532,8 @@ export const usersData = [
     status: "Inactive",
     testsCreated: 7,
     testsManaged: 20,
-    lastActive: {date: "1/13/2024", time: "5:45:00 PM"},
-  }
+    lastActive: { date: "1/13/2024", time: "5:45:00 PM" },
+  },
 ];
 
 export const categoryOptions = [
@@ -543,7 +543,6 @@ export const categoryOptions = [
   { value: "marketing", label: "Marketing" },
   { value: "general", label: "General Knowledge" },
 ];
-
 
 export const roleOptions = [
   { label: "All Roles", value: "all" },
@@ -558,10 +557,14 @@ export const statusOptions = [
   { label: "Inactive", value: "inactive" },
 ];
 
-
 export const roleOptionsModal = [
   { label: "Select Role", value: "" },
   { label: "Admin", value: "admin" },
   { label: "HR", value: "hr" },
   { label: "Candidate", value: "candidate" },
+];
+
+export const approvedRoles = [
+  { label: "Candidate", value: "CANDIDATE" },
+  { label: "HR", value: "HR" },
 ];

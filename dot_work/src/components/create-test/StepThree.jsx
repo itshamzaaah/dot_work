@@ -135,32 +135,6 @@ export default function StepThree({ errors = {} }) {
             <p className="text-sm text-red-500">{errors.accessDeadline}</p>
           )}
         </div>
-
-        {/* <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">
-            Test Link
-          </label>
-          <div className="flex">
-            <input
-              type="text"
-              value={testLink}
-              readOnly
-              className={`flex-1 px-3 py-2 border rounded-l-md bg-gray-50 text-sm text-gray-600 focus:outline-none ${
-                errors.testLink ? "border-red-400" : "border-gray-300"
-              }`}
-            />
-            <button
-              onClick={handleCopyLink}
-              className="px-4 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium text-gray-700 flex items-center gap-2"
-            >
-              <MdContentCopy size={16} />
-              <span className="hidden lg:inline">Copy</span>
-            </button>
-          </div>
-          {errors.testLink && (
-            <p className="text-sm text-red-500">{errors.testLink}</p>
-          )}
-        </div> */}
       </div>
     </>
   );

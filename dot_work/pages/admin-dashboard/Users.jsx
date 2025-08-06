@@ -17,15 +17,28 @@ const Users = () => {
   const { isUserModalOpen, setIsUserModalOpen } = useOutletContext();
   const [activeTab, setActiveTab] = useState("staff");
   const [users, setUsers] = useState([]);
+  const [userStats, setUserStats] = useState([]);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState({
     role: "all",
     status: "all",
   });
-  
+
   const fetchUser = async () => {
-    const res = await getAllUsers();
-    setUsers(res?.data);
+    try {
+      const res = await getAllUsers();
+      setUsers(res?.data);
+      const apiStats = res?.stats || {};
+
+      const updatedStats = userManagementStats.map((item) => ({
+        ...item,
+        value: apiStats[item.key] || 0,
+      }));
+
+      setUserStats(updatedStats);
+    } catch (error) {
+      toast.error(error.message || "Failed to fetch users");
+    }
   };
 
   useEffect(() => {
@@ -39,32 +52,11 @@ const Users = () => {
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        {userManagementStats.map((stat, index) => (
+        {userStats.map((stat, index) => (
           <StatsCard key={index} {...stat} />
         ))}
       </div>
 
-      {/* For future use */}
-      {/* <div className="bg-gray-200 text-sm rounded w-fit text-white p-1 flex gap-x-2 items-center my-2">
-        <button
-          className={`${
-            activeTab === "staff" ? "bg-primary text-white" : "text-gray-600"
-          } px-2 py-2 rounded`}
-          onClick={() => setActiveTab("staff")}
-        >
-          Staff Users
-        </button>
-        <button
-          className={`${
-            activeTab === "candidates"
-              ? "bg-primary text-white"
-              : "text-gray-600"
-          } px-2 py-2 rounded`}
-          onClick={() => setActiveTab("candidates")}
-        >
-          Candidates
-        </button>
-      </div> */}
       <div className="border-2 mt-2 rounded-lg flex items-center gap-x-2 bg-white border-gray-300 mb-4 p-3 flex-wrap sm:flex-nowrap">
         {/* Search Input */}
         <SearchInput
@@ -92,7 +84,12 @@ const Users = () => {
         </div>
       </div>
 
-      <UsersTable search={search} filters={filters} data={users} refreshUsers={fetchUser} />
+      <UsersTable
+        search={search}
+        filters={filters}
+        data={users}
+        refreshUsers={fetchUser}
+      />
       {isUserModalOpen && (
         <AddUserModal onClose={() => setIsUserModalOpen(false)} />
       )}

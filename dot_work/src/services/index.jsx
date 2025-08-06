@@ -59,7 +59,6 @@ export async function getAllUsers(data) {
 }
 
 export async function approveUser({ userId, email, role }) {
-  console.log(userId, email, role);
-  const result = await patch(approveUserEndPoint(userId), {email, role});
+  const result = await patch(approveUserEndPoint(userId), { email, role });
   return result;
 }

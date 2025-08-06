@@ -8,10 +8,12 @@ const SelectDropdown = ({
   className = "",
   error = null,
   required,
+  disable = false,
 }) => {
   return (
     <div className={`relative w-full ${className}`}>
       <select
+        disabled={disable}
         className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm appearance-none bg-white ${
           error ? "border-red-500" : "border-gray-300"
         }`}
