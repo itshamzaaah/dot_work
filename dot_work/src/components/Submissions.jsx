@@ -2,20 +2,27 @@ import { useState } from "react";
 import { FiFilter, FiDownload } from "react-icons/fi";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { getStatusBadge } from "../utils/validation";
-import { submissions } from "../constants/data";
+import { getFlagBadge, getStatusBadge } from "../utils/validation";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { AiOutlineFilePdf, AiOutlineFileZip } from "react-icons/ai";
+import { IoSendOutline } from "react-icons/io5";
+import { BiTrash } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { viewSubmissionData } from "../constants/data";
 import SearchInput from "./common/SearchInput";
 
-export default function RecentSubmissions() {
+export default function Submissions() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [exported, setExported] = useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
-  const filteredSubmissions = submissions.filter((sub) => {
+  const filteredSubmissions = viewSubmissionData.filter((sub) => {
     const matchSearch =
       sub.name.toLowerCase().includes(search.toLowerCase()) ||
-      sub.test.toLowerCase().includes(search.toLowerCase());
+      sub.test.name.toLowerCase().includes(search.toLowerCase());
 
     const matchStatus = statusFilter === "all" || sub.status === statusFilter;
 
@@ -42,15 +49,20 @@ export default function RecentSubmissions() {
     exportToExcel([submission], `${submission.name}_submission.xlsx`);
   };
 
+  const toggleDropdown = (submissionId) => {
+    setActiveDropdown(activeDropdown === submissionId ? null : submissionId);
+  };
+
   return (
     <div className="w-[300px] md:min-w-full bg-white rounded-xl border p-6 shadow-sm mt-6">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-800">
-            Recent Submissions
+            Test Submissions
           </h2>
           <p className="text-sm text-gray-500">
-            Latest test submissions and their status
+            Showing {filteredSubmissions.length} submissions
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 relative">
@@ -60,6 +72,7 @@ export default function RecentSubmissions() {
             placeholder="Search by candidate or test..."
             containerClass="w-full sm:w-auto"
           />
+
           {/* Filter Button with Dropdown */}
           <div className="relative">
             <button
@@ -138,7 +151,9 @@ export default function RecentSubmissions() {
               <th className="py-3 px-4">Test</th>
               <th className="py-3 px-4">Score</th>
               <th className="py-3 px-4">Status</th>
-              <th className="py-3 px-4">Date & Time</th>
+              <th className="py-3 px-4">Progress</th>
+              <th className="py-3 px-4">Submitted</th>
+              <th className="py-3 px-4">Flags</th>
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -153,7 +168,12 @@ export default function RecentSubmissions() {
                 <td className="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
                   {sub.name}
                 </td>
-                <td className="py-4 px-4 text-gray-700">{sub.test}</td>
+                <td className="py-4 px-4 text-gray-700 flex flex-col">
+                  <span className="">{sub.test.name}</span>
+                  <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
+                    {sub.test.category}
+                  </span>
+                </td>
                 <td className="py-4 px-4 font-semibold text-gray-900">
                   {sub.score}
                 </td>
@@ -162,26 +182,98 @@ export default function RecentSubmissions() {
                     {sub.status}
                   </span>
                 </td>
+                <td className="py-4 px-4 text-gray-700 flex flex-col">
+                  <span className="">
+                    {sub.progress.totalQuestions}/
+                    {sub.progress.attemptedQuestions}
+                  </span>
+                  <span className="text-xs text-gray-400">Questions</span>
+                </td>
                 <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
                   <div>{sub.date}</div>
                   <div className="text-xs text-gray-400">{sub.time}</div>
                 </td>
+                <td className="py-4 px-4">
+                  <span className={getFlagBadge(sub.flag)}>{sub.flag}</span>
+                </td>
                 <td className="py-4 px-4 text-right space-x-2 whitespace-nowrap">
-                  {/* <button className="px-3 py-1 text-sm border border-gray-200 rounded hover:bg-gray-100">
-                    View
-                  </button> */}
-                  <button
-                    onClick={() => handleIndividualExport(sub)}
-                    className="p-2 border border-gray-200 rounded hover:bg-gray-100"
-                  >
-                    <FiDownload className="w-4 h-4" />
-                  </button>
+                  <Link to={`/test-report/${sub.id}`}>
+                    <button className="p-2 border border-gray-200 rounded hover:bg-gray-100">
+                      <MdOutlineRemoveRedEye className="w-4 h-4" title="View" />
+                    </button>
+                  </Link>
+
+                  {/* Dropdown Button */}
+                  <div className="relative inline-block">
+                    <button
+                      onClick={() => toggleDropdown(sub.id)}
+                      className="p-2 border border-gray-200 rounded hover:bg-gray-100"
+                    >
+                      <HiOutlineDotsHorizontal
+                        className="w-4 h-4"
+                        title="More Actions"
+                      />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {activeDropdown === sub.id && (
+                      <div className="absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
+                        <ul className="text-sm">
+                          <li
+                            onClick={() =>
+                              handleActionClick(sub.id, "downloadPDF")
+                            }
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                          >
+                            <AiOutlineFilePdf className="w-4 h-4 text-red-500" />
+                            Download PDF
+                          </li>
+                          <li
+                            onClick={() =>
+                              handleActionClick(sub.id, "downloadZIP")
+                            }
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                          >
+                            <AiOutlineFileZip className="w-4 h-4 text-blue-500" />
+                            Download ZIP
+                          </li>
+                          <li
+                            onClick={() =>
+                              handleActionClick(sub.id, "sendResults")
+                            }
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                          >
+                            <IoSendOutline className="w-4 h-4 text-green-500" />
+                            Send Results
+                          </li>
+                          <li
+                            onClick={() => handleActionClick(sub.id, "delete")}
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-red-600 border-t border-gray-200"
+                          >
+                            <BiTrash className="w-4 h-4" />
+                            Delete
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Click outside to close dropdowns */}
+      {(activeDropdown || showStatusDropdown) && (
+        <div
+          className="fixed inset-0 z-5"
+          onClick={() => {
+            setActiveDropdown(null);
+            setShowStatusDropdown(false);
+          }}
+        />
+      )}
     </div>
   );
 }

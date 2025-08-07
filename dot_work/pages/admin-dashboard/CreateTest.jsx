@@ -1,41 +1,105 @@
 import { useState } from "react";
 import StepOne from "../../src/components/create-test/StepOne";
-import PageHeader from "../../src/components/PageHeader";
 import Stepper from "../../src/components/Stepper";
-import { IoSaveOutline } from "react-icons/io5";
 import StepTwo from "../../src/components/create-test/StepTwo";
 import StepThree from "../../src/components/create-test/StepThree";
 import StepFour from "../../src/components/create-test/StepFour";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentStep } from "../../src/store/slices/createTestSlice";
+import {
+  validateStepOne,
+  validateStepThree,
+  validateStepTwo,
+} from "../../src/utils/validation";
+import { createTest } from "../../src/services";
+import { prepareTestPayload } from "../../src/utils/TestPayload";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CreateTest = () => {
-  const dispatch = useDispatch();
-  const currentStep = useSelector(state => state.testForm.currentStep);
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
 
-  const next = () => dispatch(setCurrentStep( Math.min(currentStep + 1, 4)));
+  const dispatch = useDispatch();
+  const currentStep = useSelector((state) => state.testForm.currentStep);
+  const formData = useSelector((state) => state.testForm);
+
+  const payload = prepareTestPayload(formData);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await createTest(payload);
+      if (response.status === 201) {
+        toast.success(response.message);
+        setTimeout(() => {
+          navigate("/tests");
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const next = async () => {
+    if (currentStep === 1) {
+      const { success, errors } = validateStepOne(formData.stepOne);
+      if (!success) {
+        setErrors(errors);
+        return;
+      }
+    }
+
+    if (currentStep === 2) {
+      const { success, errors } = validateStepTwo(formData.stepTwo);
+      if (!success) {
+        setErrors(errors);
+        return;
+      }
+    }
+
+    // if (currentStep === 3) {
+    //   const { success, errors } = validateStepThree(formData.stepThree);
+    //   if (!success) {
+    //     setErrors(errors);
+    //     return;
+    //   }
+    //   // Move to step 4 after validation
+    //   setErrors({});
+    //   dispatch(setCurrentStep(4));
+    //   return;
+    // }
+
+    if (currentStep === 3) {
+      await handleSubmit();
+      return;
+    }
+
+    setErrors({});
+    dispatch(setCurrentStep(Math.min(currentStep + 1, 3)));
+  };
+
   const previous = () => dispatch(setCurrentStep(Math.max(currentStep - 1, 1)));
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return <StepOne />;
+        return <StepOne errors={errors} />;
       case 2:
-        return <StepTwo />;
+        return <StepTwo errors={errors} />;
+      // case 3:
+      //   return <StepThree errors={errors} />;
       case 3:
-        return <StepThree />;
-      case 4:
         return <StepFour />;
       default:
-        return <StepOne />;
+        return <StepOne errors={errors} />;
     }
   };
 
   const renderButtons = (currentStep, next, previous) => {
     const buttonTextMap = {
       1: "Continue to Questions",
-      2: "Continue to Proctoring",
-      3: "Continue to Sharing",
+      2: "Continue to Scheduling",
+      3: "Create test",
       4: "Generate and Send Invitations",
     };
 
