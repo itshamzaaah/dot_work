@@ -1,9 +1,13 @@
 import axios from "axios";
 import {
+  addCandidatesEndPoint,
   approveUserEndPoint,
+  createTestEndPoint,
+  getAllTestsEndPoint,
   getAllUserEndPoint,
   signInEndPoint,
   signUpEndPoint,
+  testDetailsEndPoint,
   verifyOtpEndPoint,
 } from "./config";
 import api from "../utils/api";
@@ -60,5 +64,24 @@ export async function getAllUsers(data) {
 
 export async function approveUser({ userId, email, role }) {
   const result = await patch(approveUserEndPoint(userId), { email, role });
+  return result;
+}
+
+export async function createTest(data) {
+  const result = await post(createTestEndPoint, data);
+  return result;
+}
+
+export async function getAllTests(data) {
+  const result = await get(getAllTestsEndPoint, data);
+  return result;
+}
+
+export async function addCandidates({ testId, data }) {
+  const result = await patch(addCandidatesEndPoint(testId), data);
+  return result;
+}
+export async function getTestDetails(testId) {
+  const result = await get(testDetailsEndPoint(testId));
   return result;
 }

@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import CloseBtn from "./common/CloseBtn";
+import { MdAssessment } from "react-icons/md";
 
 const links = [
   {
@@ -21,6 +22,12 @@ const links = [
     icon: <FaPlusSquare className="w-4 h-4" />,
     path: "/create-test",
     color: "from-green-500 to-green-600",
+  },
+  {
+    name: "All Tests",
+    icon: <MdAssessment className="w-4 h-4" />,
+    path: "/tests",
+    color: "from-violet-500 to-violet-600",
   },
   {
     name: "View Submissions",

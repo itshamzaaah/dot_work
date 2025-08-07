@@ -8,7 +8,7 @@ import { MdSchedule } from "react-icons/md";
 const steps = [
   { label: "Basic Info", icon: <IoDocumentTextOutline size={20} /> },
   { label: "Add Questions", icon: <IoAddOutline size={20} /> },
-  { label: "Scheduling", icon: <MdSchedule size={20} /> },
+  // { label: "Scheduling", icon: <MdSchedule size={20} /> },
   { label: "Proctoring", icon: <IoCameraOutline size={20} /> },
 ];
 

@@ -14,11 +14,11 @@ const initialState = {
     trueFalse: [],
     descriptive: [],
   },
-  stepThree: {
-    candidateEmails: [],
-    accessDeadline: "",
-    testLink: "https://assessai.pro/test/abcl123xyz",
-  },
+  // stepThree: {
+  //   candidateEmails: [],
+  //   accessDeadline: "",
+  //   testLink: "https://assessai.pro/test/abcl123xyz",
+  // },
   stepFour: {
     enableProctoring: true,
     screenShotFrequency: 5,

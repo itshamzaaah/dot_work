@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IoChevronDown } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStepFour } from "../../store/slices/createTestSlice";
+import { toast } from "react-toastify";
 
 export default function StepFour() {
   const dispatch = useDispatch();
@@ -11,16 +12,15 @@ export default function StepFour() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const frequencyOptions = [
-    {title: "Every 5 seconds", value: 5},
-    {title: "Every 10 seconds", value: 10},
-    {title: "Every 30 seconds", value: 30},
-    {title: "Every 60 seconds", value: 60},
+    { title: "Every 5 seconds", value: 5 },
+    { title: "Every 10 seconds", value: 10 },
+    { title: "Every 30 seconds", value: 30 },
+    { title: "Every 60 seconds", value: 60 },
   ];
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
-
 
   const ToggleSwitch = ({ checked, onChange }) => (
     <div className="relative">
@@ -98,7 +98,9 @@ export default function StepFour() {
                 <button
                   key={option}
                   onClick={() => {
-                    dispatch(updateStepFour({ screenShotFrequency: option.value })),
+                    dispatch(
+                      updateStepFour({ screenShotFrequency: option.value })
+                    ),
                       setDropdownOpen(false);
                   }}
                   className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 first:rounded-t-md last:rounded-b-md"

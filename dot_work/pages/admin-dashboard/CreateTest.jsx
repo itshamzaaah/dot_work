@@ -11,15 +11,36 @@ import {
   validateStepThree,
   validateStepTwo,
 } from "../../src/utils/validation";
+import { createTest } from "../../src/services";
+import { prepareTestPayload } from "../../src/utils/TestPayload";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CreateTest = () => {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
   const dispatch = useDispatch();
   const currentStep = useSelector((state) => state.testForm.currentStep);
   const formData = useSelector((state) => state.testForm);
 
-  const next = () => {
+  const payload = prepareTestPayload(formData);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await createTest(payload);
+      if (response.status === 201) {
+        toast.success(response.message);
+        setTimeout(() => {
+          navigate("/tests");
+        }, 1000);
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const next = async () => {
     if (currentStep === 1) {
       const { success, errors } = validateStepOne(formData.stepOne);
       if (!success) {
@@ -36,15 +57,25 @@ const CreateTest = () => {
       }
     }
 
+    // if (currentStep === 3) {
+    //   const { success, errors } = validateStepThree(formData.stepThree);
+    //   if (!success) {
+    //     setErrors(errors);
+    //     return;
+    //   }
+    //   // Move to step 4 after validation
+    //   setErrors({});
+    //   dispatch(setCurrentStep(4));
+    //   return;
+    // }
+
     if (currentStep === 3) {
-      const { success, errors } = validateStepThree(formData.stepThree);
-      if (!success) {
-        setErrors(errors);
-        return;
-      }
+      await handleSubmit();
+      return;
     }
+
     setErrors({});
-    dispatch(setCurrentStep(Math.min(currentStep + 1, 4)));
+    dispatch(setCurrentStep(Math.min(currentStep + 1, 3)));
   };
 
   const previous = () => dispatch(setCurrentStep(Math.max(currentStep - 1, 1)));
@@ -55,9 +86,9 @@ const CreateTest = () => {
         return <StepOne errors={errors} />;
       case 2:
         return <StepTwo errors={errors} />;
+      // case 3:
+      //   return <StepThree errors={errors} />;
       case 3:
-        return <StepThree errors={errors} />;
-      case 4:
         return <StepFour />;
       default:
         return <StepOne errors={errors} />;
@@ -68,7 +99,7 @@ const CreateTest = () => {
     const buttonTextMap = {
       1: "Continue to Questions",
       2: "Continue to Scheduling",
-      3: "Continue to Proctoring",
+      3: "Create test",
       4: "Generate and Send Invitations",
     };
 
@@ -121,4 +152,3 @@ const CreateTest = () => {
 };
 
 export default CreateTest;
-

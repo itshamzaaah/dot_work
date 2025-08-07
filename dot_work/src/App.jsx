@@ -17,6 +17,9 @@ import Users from "../pages/admin-dashboard/Users";
 import Settings from "../pages/admin-dashboard/Settings";
 import OTP from "../pages/auth/Otp";
 import ThankYou from "../pages/auth/ThankYou";
+import Tests from "../pages/admin-dashboard/Tests";
+import AddCandidatesForm from "../pages/admin-dashboard/AddCandidatesForm";
+import TestDetails from "../pages/admin-dashboard/TestDetails";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,6 +31,12 @@ const router = createBrowserRouter(
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<Admin />} />
         <Route path="/create-test" element={<CreateTest />} />
+        <Route path="/tests" element={<Tests />} />
+        <Route path="/test/details/:testId" element={<TestDetails />} />
+        <Route
+          path="/test/add-candidates/:testId"
+          element={<AddCandidatesForm />}
+        />
         <Route path="/preview" element={<PreviewQuestions />} />
         <Route path="/view-submissions" element={<ViewSubmissions />} />
         <Route path="/test-report/:id" element={<TestReport />} />
