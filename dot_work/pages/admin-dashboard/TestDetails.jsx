@@ -29,7 +29,7 @@ const TestDetails = () => {
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
           {testDetails.testName}
         </h1>
-        <p className="text-gray-600 mt-2">{testDetails.description}</p>
+        <p className="text-gray-600 mt-2 text-sm">{testDetails.description}</p>
         <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-700">
           <div>
             <strong>Duration:</strong> {testDetails.duration} mins
@@ -50,16 +50,6 @@ const TestDetails = () => {
             sec
           </div>
         </div>
-        <div className="mt-4">
-          <a
-            href={testDetails.testLink}
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            Open Test Link
-          </a>
-        </div>
       </div>
 
       {/* Candidates */}
@@ -70,10 +60,10 @@ const TestDetails = () => {
             {testDetails.candidates.map((candidate) => (
               <li
                 key={candidate._id}
-                className="py-2 flex justify-between items-center"
+                className="py-2 flex justify-between items-center text-sm"
               >
                 <span>{candidate.email}</span>
-                <span className="text-sm text-gray-500">
+                <span className="text-gray-500">
                   {candidate.hasAttempted ? "Attempted" : "Not Attempted"}
                 </span>
               </li>

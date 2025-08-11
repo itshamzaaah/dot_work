@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { RxCross2 } from "react-icons/rx";
-
 import { useParams } from "react-router-dom";
 import TextInput from "../../src/components/common/TextInput";
 import { emailRegex } from "../../src/constants";
-import { addCandidates } from "../../src/services";
+import { addCandidates, getAllUsers } from "../../src/services";
+
+let debounceTimeout;
 
 export default function AddCandidatesForm() {
   const { testId } = useParams();
@@ -12,6 +13,7 @@ export default function AddCandidatesForm() {
 
   const [inputValue, setInputValue] = useState("");
   const [emails, setEmails] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [accessDeadline, setAccessDeadline] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,27 +21,18 @@ export default function AddCandidatesForm() {
 
   const isValidEmail = (email) => emailRegex.test(email);
 
-  const handleAddEmail = () => {
-    const value = inputValue.trim().replace(/,$/, "");
-    if (!value) return;
-
-    const chunks = value.split(/[\s,]+/).filter(Boolean);
-    const newEmails = [...emails];
-
-    chunks.forEach((email) => {
-      if (!newEmails.includes(email)) {
-        newEmails.push(email);
-      }
-    });
-
-    setEmails(newEmails);
+  const handleAddEmail = (email) => {
+    if (!email || emails.includes(email)) return;
+    setEmails((prev) => [...prev, email]);
     setInputValue("");
+    setSuggestions([]);
   };
 
   const handleKeyDown = (e) => {
     if (["Enter", ","].includes(e.key)) {
       e.preventDefault();
-      handleAddEmail();
+      const val = inputValue.trim();
+      if (isValidEmail(val)) handleAddEmail(val);
     } else if (e.key === "Backspace" && inputValue === "" && emails.length) {
       setEmails(emails.slice(0, -1));
     }
@@ -49,12 +42,32 @@ export default function AddCandidatesForm() {
     setEmails(emails.filter((e) => e !== email));
   };
 
+  // Debounced fetch for registered candidates
+  useEffect(() => {
+    if (!inputValue) {
+      setSuggestions([]);
+      return;
+    }
+
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(async () => {
+      try {
+        const response = await getAllUsers({ search: inputValue, role: "CANDIDATE" });
+        const candidates = response.data || [];
+
+        const emailList = candidates.map((user) => user.email).filter((email) => !emails.includes(email));
+        setSuggestions(emailList);
+      } catch (error) {
+        console.error("Error fetching suggestions", error);
+      }
+    }, 300);
+  }, [inputValue]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     setSuccessMessage("");
 
-    // Simple validation
     if (emails.length === 0) {
       return setErrors({ candidateEmails: "Please enter at least one email." });
     }
@@ -69,15 +82,9 @@ export default function AddCandidatesForm() {
 
     try {
       setIsSubmitting(true);
-
-      //   await axios.patch(`/api/test/${testId}/add-candidates`, {
-      //     candidateEmails: emails,
-      //   });
-      const payload = {
-        candidateEmails: emails,
-        accessDeadline,
-      };
+      const payload = { candidateEmails: emails, accessDeadline };
       const response = await addCandidates({ testId, data: payload });
+
       if (response.status === 200) {
         setSuccessMessage("Candidates added successfully. Invitations sent.");
         setEmails([]);
@@ -92,14 +99,12 @@ export default function AddCandidatesForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 max-w-xl mx-auto space-y-6">
+    <form onSubmit={handleSubmit} className="p-6 max-w-xl mx-auto space-y-6 relative">
       <h2 className="text-xl font-semibold">Add Candidates to Test</h2>
 
-      {/* Email Tags */}
+      {/* Email Field */}
       <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
-          Candidate Emails
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Candidate Emails</label>
         <div
           className={`min-h-[3rem] w-full flex flex-wrap items-center gap-2 px-3 py-2 border rounded-md text-sm focus-within:ring-2 ${
             errors.candidateEmails
@@ -107,48 +112,49 @@ export default function AddCandidatesForm() {
               : "border-gray-300 focus-within:ring-blue-500"
           }`}
         >
-          {emails.map((email, i) => {
-            const isValid = isValidEmail(email);
-            return (
-              <span
-                key={i}
-                className={`flex items-center px-2 py-1 rounded-full text-sm ${
-                  isValid
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-red-100 text-red-700"
-                }`}
-              >
-                {email}
-                <button
-                  type="button"
-                  className="ml-2 text-xs"
-                  onClick={() => removeEmail(email)}
-                >
-                  <RxCross2 size={15} />
-                </button>
-              </span>
-            );
-          })}
+          {emails.map((email, i) => (
+            <span
+              key={i}
+              className="flex items-center px-2 py-1 rounded-full bg-blue-100 text-blue-800"
+            >
+              {email}
+              <button type="button" className="ml-2" onClick={() => removeEmail(email)}>
+                <RxCross2 size={15} />
+              </button>
+            </span>
+          ))}
           <input
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            onBlur={handleAddEmail}
-            placeholder="Type email and press enter"
+            placeholder="Type name/email"
             className="flex-1 outline-none text-sm min-w-[120px]"
           />
         </div>
         {errors.candidateEmails && (
           <p className="text-sm text-red-500">{errors.candidateEmails}</p>
         )}
+
+        {/* Suggestion Dropdown */}
+        {suggestions.length > 0 && (
+          <ul className="absolute z-10 bg-white border border-gray-200 shadow-md rounded-md mt-1 max-h-40 overflow-y-auto w-auto">
+            {suggestions.map((email, index) => (
+              <li
+                key={index}
+                onClick={() => handleAddEmail(email)}
+                className="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm"
+              >
+                {email}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
-      {/* Access Deadline */}
+      {/* Deadline Field */}
       <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
-          Access Deadline
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Access Deadline</label>
         <TextInput
           type="date"
           min={new Date().toISOString().split("T")[0]}
@@ -156,21 +162,15 @@ export default function AddCandidatesForm() {
           onChange={(e) => setAccessDeadline(e.target.value)}
           error={errors.accessDeadline}
         />
-        {errors.accessDeadline && (
-          <p className="text-sm text-red-500">{errors.accessDeadline}</p>
-        )}
       </div>
 
       {errors.submit && <p className="text-sm text-red-500">{errors.submit}</p>}
-
-      {successMessage && (
-        <p className="text-sm text-green-600">{successMessage}</p>
-      )}
+      {successMessage && <p className="text-sm text-green-600">{successMessage}</p>}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+        className="bg-primary hover:bg-blue-700 text-white px-3 text-sm py-2 rounded-lg"
       >
         {isSubmitting ? "Submitting..." : "Add Candidates"}
       </button>

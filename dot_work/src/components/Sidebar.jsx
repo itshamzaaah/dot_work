@@ -9,6 +9,8 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import CloseBtn from "./common/CloseBtn";
 import { MdAssessment } from "react-icons/md";
+import { selectAuth } from "../store/slices/authSlice";
+import { useSelector } from "react-redux";
 
 const links = [
   {
@@ -50,6 +52,8 @@ const links = [
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const { user } = useSelector(selectAuth);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -85,7 +89,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                   <p className="text-xs text-gray-500">Admin Panel</p>
                 </div>
               </div>
-              <CloseBtn onClose={() => setIsOpen(false)} hideClass="lg:hidden" />
+              <CloseBtn
+                onClose={() => setIsOpen(false)}
+                hideClass="lg:hidden"
+              />
             </div>
           </div>
 
