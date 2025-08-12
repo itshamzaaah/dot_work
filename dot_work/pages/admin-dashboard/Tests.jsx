@@ -10,7 +10,6 @@ const Tests = () => {
     const response = await getAllTests();
     setTests(response);
   };
-  console.log("tests", tests);
   useEffect(() => {
     try {
       fetchTests();

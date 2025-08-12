@@ -5,6 +5,7 @@ import {
   createTestEndPoint,
   getAllTestsEndPoint,
   getAllUserEndPoint,
+  getMyTestsEndPoint,
   signInEndPoint,
   signUpEndPoint,
   testDetailsEndPoint,
@@ -83,5 +84,9 @@ export async function addCandidates({ testId, data }) {
 }
 export async function getTestDetails(testId) {
   const result = await get(testDetailsEndPoint(testId));
+  return result;
+}
+export async function getMyTests() {
+  const result = await get(getMyTestsEndPoint);
   return result;
 }
