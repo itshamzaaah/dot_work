@@ -9,8 +9,8 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import CloseBtn from "./common/CloseBtn";
 import { MdAssessment } from "react-icons/md";
-import { selectAuth } from "../store/slices/authSlice";
-import { useSelector } from "react-redux";
+import { logoutCurrentUser, selectAuth } from "../store/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export const sidebarLinks = [
   {
@@ -65,17 +65,15 @@ export const sidebarLinks = [
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const dispatch = useDispatch()
   const { user } = useSelector(selectAuth);
   const filteredLinks = sidebarLinks.filter((link) => {
     return user && link.roles.includes(user.role);
   });
 
-  const navigate = useNavigate();
-  console.log("user", user);
-
 
   const handleLogout = () => {
-    navigate("/login"); // Redirect to login
+    dispatch(logoutCurrentUser())
   };
 
   return (

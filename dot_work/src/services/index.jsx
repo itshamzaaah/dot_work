@@ -5,7 +5,9 @@ import {
   createTestEndPoint,
   getAllTestsEndPoint,
   getAllUserEndPoint,
+  getCurrentUserEndPoint,
   getMyTestsEndPoint,
+  logoutEndPoint,
   signInEndPoint,
   signUpEndPoint,
   testDetailsEndPoint,
@@ -88,5 +90,14 @@ export async function getTestDetails(testId) {
 }
 export async function getMyTests() {
   const result = await get(getMyTestsEndPoint);
+  return result;
+}
+
+export async function getCurrentUser() {
+  const result = await get(getCurrentUserEndPoint);
+  return result;
+}
+export async function logoutUser() {
+  const result = await post(logoutEndPoint);
   return result;
 }

@@ -21,6 +21,10 @@ import Tests from "../pages/admin-dashboard/Tests";
 import AddCandidatesForm from "../pages/admin-dashboard/AddCandidatesForm";
 import TestDetails from "../pages/admin-dashboard/TestDetails";
 import MyTests from "../pages/admin-dashboard/MyTests";
+import { useDispatch } from "react-redux";
+import { fetchCurrentUser } from "./store/slices/authSlice";
+import { useEffect } from "react";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,27 +33,35 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/verify-otp" element={<OTP />} />
       <Route path="/thank-you" element={<ThankYou />} />
-      <Route element={<MainLayout />}>
-        <Route path="/dashboard" element={<Admin />} />
-        <Route path="/create-test" element={<CreateTest />} />
-        <Route path="/tests" element={<Tests />} />
-        <Route path="/my-tests" element={<MyTests />} />
-        <Route path="/test/details/:testId" element={<TestDetails />} />
-        <Route
-          path="/test/add-candidates/:testId"
-          element={<AddCandidatesForm />}
-        />
-        <Route path="/preview" element={<PreviewQuestions />} />
-        <Route path="/view-submissions" element={<ViewSubmissions />} />
-        <Route path="/test-report/:id" element={<TestReport />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/settings" element={<Settings />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Admin />} />
+          <Route path="/create-test" element={<CreateTest />} />
+          <Route path="/tests" element={<Tests />} />
+          <Route path="/my-tests" element={<MyTests />} />
+          <Route path="/test/details/:testId" element={<TestDetails />} />
+          <Route
+            path="/test/add-candidates/:testId"
+            element={<AddCandidatesForm />}
+          />
+          <Route path="/preview" element={<PreviewQuestions />} />
+          <Route path="/view-submissions" element={<ViewSubmissions />} />
+          <Route path="/test-report/:id" element={<TestReport />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
       </Route>
     </>
   )
 );
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
   return <RouterProvider router={router} />;
 };
 
