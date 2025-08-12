@@ -8,6 +8,7 @@ export const approveUserEndPoint = (userId) =>
   `${baseUrl}/user/approve/${userId}`;
 export const createTestEndPoint = `${baseUrl}/test/create`;
 export const getAllTestsEndPoint = `${baseUrl}/test/getAll`;
+export const getMyTestsEndPoint = `${baseUrl}/test/my-tests`;
 export const addCandidatesEndPoint = (testId) =>
   `${baseUrl}/test/add-candidates/${testId}`;
 export const testDetailsEndPoint = (testId) => `${baseUrl}/test/${testId}`;

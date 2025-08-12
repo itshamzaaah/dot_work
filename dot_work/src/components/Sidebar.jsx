@@ -9,48 +9,70 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import CloseBtn from "./common/CloseBtn";
 import { MdAssessment } from "react-icons/md";
+import { selectAuth } from "../store/slices/authSlice";
+import { useSelector } from "react-redux";
 
-const links = [
+export const sidebarLinks = [
   {
     name: "Dashboard",
-    icon: <FaHome className="w-4 h-4" />,
     path: "/dashboard",
+    icon: <FaHome className="w-4 h-4" />,
     color: "from-blue-500 to-blue-600",
+    roles: ["ADMIN", "HR"],
   },
   {
     name: "Create Test",
-    icon: <FaPlusSquare className="w-4 h-4" />,
     path: "/create-test",
+    icon: <FaPlusSquare className="w-4 h-4" />,
     color: "from-green-500 to-green-600",
+    roles: ["ADMIN", "HR"],
   },
   {
     name: "All Tests",
-    icon: <MdAssessment className="w-4 h-4" />,
     path: "/tests",
+    icon: <MdAssessment className="w-4 h-4" />,
     color: "from-violet-500 to-violet-600",
+    roles: ["ADMIN", "HR"],
+  },
+  {
+    name: "My Tests",
+    path: "/my-tests",
+    icon: <MdAssessment className="w-4 h-4" />,
+    color: "from-violet-500 to-violet-600",
+    roles: ["CANDIDATE"],
   },
   {
     name: "View Submissions",
-    icon: <FaFileAlt className="w-4 h-4" />,
     path: "/view-submissions",
+    icon: <FaFileAlt className="w-4 h-4" />,
     color: "from-purple-500 to-purple-600",
+    roles: ["ADMIN", "HR", "CANDIDATE"],
   },
   {
     name: "Users",
-    icon: <FaUsers className="w-4 h-4" />,
     path: "/users",
+    icon: <FaUsers className="w-4 h-4" />,
     color: "from-orange-500 to-orange-600",
+    roles: ["ADMIN"],
   },
   {
     name: "Settings",
-    icon: <FaCog className="w-4 h-4" />,
     path: "/settings",
+    icon: <FaCog className="w-4 h-4" />,
     color: "from-gray-500 to-gray-600",
+    roles: ["ADMIN"],
   },
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const { user } = useSelector(selectAuth);
+  const filteredLinks = sidebarLinks.filter((link) => {
+    return user && link.roles.includes(user.role);
+  });
+
   const navigate = useNavigate();
+  console.log("user", user);
+
 
   const handleLogout = () => {
     navigate("/login"); // Redirect to login
@@ -85,14 +107,17 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                   <p className="text-xs text-gray-500">Admin Panel</p>
                 </div>
               </div>
-              <CloseBtn onClose={() => setIsOpen(false)} hideClass="lg:hidden" />
+              <CloseBtn
+                onClose={() => setIsOpen(false)}
+                hideClass="lg:hidden"
+              />
             </div>
           </div>
 
           {/* Scrollable Navigation */}
           <div className="flex-1 overflow-y-auto px-6 pb-4">
             <nav className="space-y-2">
-              {links.map((link, index) => (
+              {filteredLinks.map((link, index) => (
                 <NavLink
                   key={link.name}
                   to={link.path}

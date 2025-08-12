@@ -20,6 +20,7 @@ import ThankYou from "../pages/auth/ThankYou";
 import Tests from "../pages/admin-dashboard/Tests";
 import AddCandidatesForm from "../pages/admin-dashboard/AddCandidatesForm";
 import TestDetails from "../pages/admin-dashboard/TestDetails";
+import MyTests from "../pages/admin-dashboard/MyTests";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<Admin />} />
         <Route path="/create-test" element={<CreateTest />} />
         <Route path="/tests" element={<Tests />} />
+        <Route path="/my-tests" element={<MyTests />} />
         <Route path="/test/details/:testId" element={<TestDetails />} />
         <Route
           path="/test/add-candidates/:testId"

@@ -5,6 +5,7 @@ import {
   createTestEndPoint,
   getAllTestsEndPoint,
   getAllUserEndPoint,
+  getMyTestsEndPoint,
   signInEndPoint,
   signUpEndPoint,
   testDetailsEndPoint,
@@ -22,9 +23,9 @@ export const post = async (endPoint, data = {}) => {
   }
 };
 
-export const get = async (endPoint) => {
+export const get = async (endPoint, params = {}) => {
   try {
-    const response = await api.get(endPoint);
+    const response = await api.get(endPoint, { params });
     return response.data;
   } catch (error) {
     console.error("Error fetch data", error);
@@ -57,8 +58,8 @@ export async function signIn(data) {
   return result;
 }
 
-export async function getAllUsers(data) {
-  const result = await get(getAllUserEndPoint, data);
+export async function getAllUsers(params = {}) {
+  const result = await get(getAllUserEndPoint, params);
   return result;
 }
 
@@ -83,5 +84,9 @@ export async function addCandidates({ testId, data }) {
 }
 export async function getTestDetails(testId) {
   const result = await get(testDetailsEndPoint(testId));
+  return result;
+}
+export async function getMyTests() {
+  const result = await get(getMyTestsEndPoint);
   return result;
 }

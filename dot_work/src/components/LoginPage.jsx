@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import loginImg from "../assets/images/signup.png";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { signIn } from "../services";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginUser,
+  selectAuthError,
+  selectAuthLoading,
+  selectUser,
+} from "../store/slices/authSlice";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
+  const loading = useSelector(selectAuthLoading);
+  const user = useSelector(selectUser);
+  const error = useSelector(selectAuthError);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -13,21 +22,18 @@ const LoginPage = () => {
 
   const isValid = email.trim() !== "" && password.trim() !== "";
 
+  console.log("user", user);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isValid) return;
-    try {
-      const response = await signIn({ email, password });
-      console.log(response);
-      if (response.status === 200) {
-        toast.success(response.message);
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 1000);
-      }
-    } catch (error) {
-      toast.error(error.response?.data.error);
-    }
+    dispatch(loginUser({ email, password }));
   };
 
   return (
@@ -153,7 +159,7 @@ const LoginPage = () => {
                     : "bg-indigo-300 cursor-not-allowed"
                 } transition duration-200`}
               >
-                Sign In
+                {loading ? "Logging in..." : "Login"}
               </button>
             </form>
 

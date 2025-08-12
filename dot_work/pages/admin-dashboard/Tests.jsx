@@ -10,7 +10,6 @@ const Tests = () => {
     const response = await getAllTests();
     setTests(response);
   };
-  console.log("tests", tests);
   useEffect(() => {
     try {
       fetchTests();
@@ -50,7 +49,7 @@ const Tests = () => {
                   </Link>
                   <Link
                     to={`/test/details/${test._id}`}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                   >
                     View Details
                   </Link>
