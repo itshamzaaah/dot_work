@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import { fetchCurrentUser } from "./store/slices/authSlice";
 import { useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AttemptTest from "../pages/test/AttemptTest";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,6 +45,7 @@ const router = createBrowserRouter(
             path="/test/add-candidates/:testId"
             element={<AddCandidatesForm />}
           />
+          <Route path="/test/:slug" element={<AttemptTest />} />
           <Route path="/preview" element={<PreviewQuestions />} />
           <Route path="/view-submissions" element={<ViewSubmissions />} />
           <Route path="/test-report/:id" element={<TestReport />} />

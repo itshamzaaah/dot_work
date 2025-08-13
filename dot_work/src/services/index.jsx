@@ -7,9 +7,11 @@ import {
   getAllUserEndPoint,
   getCurrentUserEndPoint,
   getMyTestsEndPoint,
+  getTestEndPoint,
   logoutEndPoint,
   signInEndPoint,
   signUpEndPoint,
+  submitTestEndPoint,
   testDetailsEndPoint,
   verifyOtpEndPoint,
 } from "./config";
@@ -99,5 +101,20 @@ export async function getCurrentUser() {
 }
 export async function logoutUser() {
   const result = await post(logoutEndPoint);
+  return result;
+}
+
+export async function getTestBySlug(slug) {
+  const result = await get(getTestEndPoint(slug));
+  return result;
+}
+
+// export async function submitTest(payload) {
+//   const result = await post(submitTestEndPoint);
+//   return result;
+// }
+
+export async function submitTest(data) {
+  const result = await post(submitTestEndPoint, data);
   return result;
 }

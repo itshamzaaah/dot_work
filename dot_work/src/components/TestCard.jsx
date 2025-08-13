@@ -1,7 +1,13 @@
-import { MdCalendarToday, MdAccessTime, MdOpenInNew, MdError } from 'react-icons/md';
-
+import {
+  MdCalendarToday,
+  MdAccessTime,
+  MdOpenInNew,
+  MdError,
+} from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const TestCard = ({ testData }) => {
+  const navigate = useNavigate();
   const {
     accessDeadline,
     category,
@@ -9,23 +15,24 @@ const TestCard = ({ testData }) => {
     duration,
     testLink,
     testName,
-    _id
+    _id,
+    slug
   } = testData;
 
   // Format the deadline date
   const formatDeadline = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric',
-      hour: '2-digit', 
-      minute: '2-digit'
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const handleTestAccess = () => {
-    window.open(testLink, '_blank');
+    navigate(`/test/${slug}`); 
   };
 
   const isDeadlinePassed = new Date(accessDeadline) < new Date();
@@ -44,20 +51,24 @@ const TestCard = ({ testData }) => {
       </div>
 
       {/* Test Name */}
-      <h3 className="text-xl font-semibold text-gray-900 mb-3">
-        {testName}
-      </h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-3">{testName}</h3>
 
       {/* Description */}
-      <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-        {description}
-      </p>
+      <p className="text-gray-600 text-sm mb-4 line-clamp-3">{description}</p>
 
       {/* Deadline */}
       <div className="flex items-center text-sm mb-6">
-        <MdCalendarToday className={`w-4 h-4 mr-2 ${isDeadlinePassed ? 'text-red-500' : 'text-gray-500'}`} />
-        <span className={isDeadlinePassed ? 'text-red-600 font-medium' : 'text-gray-600'}>
-          {isDeadlinePassed ? 'Expired: ' : 'Deadline: '}
+        <MdCalendarToday
+          className={`w-4 h-4 mr-2 ${
+            isDeadlinePassed ? "text-red-500" : "text-gray-500"
+          }`}
+        />
+        <span
+          className={
+            isDeadlinePassed ? "text-red-600 font-medium" : "text-gray-600"
+          }
+        >
+          {isDeadlinePassed ? "Expired: " : "Deadline: "}
           {formatDeadline(accessDeadline)}
         </span>
       </div>
@@ -68,11 +79,11 @@ const TestCard = ({ testData }) => {
         disabled={isDeadlinePassed}
         className={`w-full py-2 px-6 rounded-lg font-semibold text-lg transition-all duration-200 flex items-center justify-center space-x-2 ${
           isDeadlinePassed
-            ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-            : 'bg-primary text-white hover:bg-blue-700 hover:shadow-md active:bg-blue-800'
+            ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+            : "bg-primary text-white hover:bg-blue-700 hover:shadow-md active:bg-blue-800"
         }`}
       >
-        <span>{isDeadlinePassed ? 'Test Expired' : 'Perform Test'}</span>
+        <span>{isDeadlinePassed ? "Test Expired" : "Perform Test"}</span>
         {!isDeadlinePassed && <MdOpenInNew className="w-5 h-5" />}
       </button>
     </div>
@@ -100,9 +111,12 @@ const EmptyState = () => (
     <div className="bg-gray-100 rounded-full p-6 mb-4">
       <MdError className="w-12 h-12 text-gray-400" />
     </div>
-    <h3 className="text-xl font-semibold text-gray-900 mb-2">No Tests Available</h3>
+    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+      No Tests Available
+    </h3>
     <p className="text-gray-600 text-center max-w-md">
-      You don't have any tests assigned yet. Check back later or contact your administrator.
+      You don't have any tests assigned yet. Check back later or contact your
+      administrator.
     </p>
   </div>
 );
@@ -112,7 +126,9 @@ const ErrorState = ({ onRetry }) => (
     <div className="bg-red-100 rounded-full p-6 mb-4">
       <AlertCircle className="w-12 h-12 text-red-500" />
     </div>
-    <h3 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Tests</h3>
+    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+      Failed to Load Tests
+    </h3>
     <p className="text-gray-600 text-center max-w-md mb-4">
       There was an error loading your tests. Please try again.
     </p>
