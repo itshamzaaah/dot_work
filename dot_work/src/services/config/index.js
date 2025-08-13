@@ -12,3 +12,7 @@ export const getMyTestsEndPoint = `${baseUrl}/test/my-tests`;
 export const addCandidatesEndPoint = (testId) =>
   `${baseUrl}/test/add-candidates/${testId}`;
 export const testDetailsEndPoint = (testId) => `${baseUrl}/test/${testId}`;
+export const getCurrentUserEndPoint = `${baseUrl}/auth/me`;
+export const logoutEndPoint = `${baseUrl}/auth/logout`;
+export const getTestEndPoint = (slug) => `${baseUrl}/test/slug/${slug}`;
+export const submitTestEndPoint = `${baseUrl}/test/submit`;
