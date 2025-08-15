@@ -3,6 +3,7 @@ import {
   addCandidatesEndPoint,
   approveUserEndPoint,
   createTestEndPoint,
+  getAllAttemptsEndPoint,
   getAllTestsEndPoint,
   getAllUserEndPoint,
   getCurrentUserEndPoint,
@@ -109,12 +110,12 @@ export async function getTestBySlug(slug) {
   return result;
 }
 
-// export async function submitTest(payload) {
-//   const result = await post(submitTestEndPoint);
-//   return result;
-// }
-
 export async function submitTest(data) {
   const result = await post(submitTestEndPoint, data);
+  return result;
+}
+
+export async function getAllAttempts(params = {}) {
+  const result = await get(getAllAttemptsEndPoint, params);
   return result;
 }

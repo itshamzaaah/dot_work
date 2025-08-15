@@ -134,7 +134,7 @@ export const validateStepThree = (data) => {
 
 export const getStatusBadge = (status) => {
   const base = "px-3 py-0.5 text-xs font-semibold rounded-full capitalize";
-  if (status === "graded") return `${base} bg-green-700 text-white`;
+  if (status === "evaluated") return `${base} bg-green-700 text-white`;
   if (status === "pending") return `${base} bg-yellow-700 text-white`;
   return base;
 };

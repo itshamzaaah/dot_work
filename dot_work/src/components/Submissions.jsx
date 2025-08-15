@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { viewSubmissionData } from "../constants/data";
 import SearchInput from "./common/SearchInput";
 
-export default function Submissions() {
+export default function Submissions({ data = [] }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [exported, setExported] = useState(false);
@@ -153,29 +153,41 @@ export default function Submissions() {
               <th className="py-3 px-4">Status</th>
               <th className="py-3 px-4">Progress</th>
               <th className="py-3 px-4">Submitted</th>
-              <th className="py-3 px-4">Flags</th>
+              {/* <th className="py-3 px-4">Flags</th> */}
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredSubmissions.map((sub) => (
+            {data?.map((sub) => (
               <tr
                 key={sub.id}
                 className={`border-b ${
                   sub.status === "pending" ? "bg-gray-50" : ""
                 }`}
               >
-                <td className="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
-                  {sub.name}
+                {/* <td className="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
+                  {sub?.candidate?.name}
+                </td> */}
+                <td className="py-4 px-4 text-gray-700">
+                  <span className="flex flex-col">{sub?.candidate?.name}</span>
+                  <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
+                    {sub?.candidate?.email}
+                  </span>
                 </td>
                 <td className="py-4 px-4 text-gray-700 flex flex-col">
-                  <span className="">{sub.test.name}</span>
+                  <span className="">{sub?.submission?.testName}</span>
                   <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
                     {sub.test.category}
                   </span>
                 </td>
-                <td className="py-4 px-4 font-semibold text-gray-900">
-                  {sub.score}
+                <td className="py-4 px-4">
+                  <span className="text-gray-700">
+                    {sub?.evaluation?.totalAwarded}/
+                    {sub?.evaluation?.totalPossible}
+                  </span>
+                  <span className="font-semibold text-gray-900 flex flex-col">
+                    {sub?.evaluation?.percentage}%
+                  </span>
                 </td>
                 <td className="py-4 px-4">
                   <span className={getStatusBadge(sub.status)}>
@@ -184,20 +196,22 @@ export default function Submissions() {
                 </td>
                 <td className="py-4 px-4 text-gray-700 flex flex-col">
                   <span className="">
-                    {sub.progress.totalQuestions}/
-                    {sub.progress.attemptedQuestions}
+                    {sub?.evaluation?.totalAwarded}/
+                    {sub?.evaluation?.totalPossible}
                   </span>
                   <span className="text-xs text-gray-400">Questions</span>
                 </td>
                 <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
-                  <div>{sub.date}</div>
-                  <div className="text-xs text-gray-400">{sub.time}</div>
+                  <div>{sub.submittedAt?.slice(0, 10)}</div>
+                  <div className="text-xs text-gray-400">
+                    {sub.submittedAt?.slice(11, 19)}
+                  </div>
                 </td>
-                <td className="py-4 px-4">
+                {/* <td className="py-4 px-4">
                   <span className={getFlagBadge(sub.flag)}>{sub.flag}</span>
-                </td>
+                </td> */}
                 <td className="py-4 px-4 text-right space-x-2 whitespace-nowrap">
-                  <Link to={`/test-report/${sub.id}`}>
+                  <Link to={`/test-report/${sub._id}`}>
                     <button className="p-2 border border-gray-200 rounded hover:bg-gray-100">
                       <MdOutlineRemoveRedEye className="w-4 h-4" title="View" />
                     </button>
@@ -217,8 +231,8 @@ export default function Submissions() {
 
                     {/* Dropdown Menu */}
                     {activeDropdown === sub.id && (
-                      <div className="absolute right-0 z-10 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-                        <ul className="text-sm">
+                      <div className="absolute right-0 z-10 mt-2 w-42 bg-white border border-gray-200 rounded-md shadow-lg">
+                        <ul className="text-xs">
                           <li
                             onClick={() =>
                               handleActionClick(sub.id, "downloadPDF")
@@ -227,15 +241,6 @@ export default function Submissions() {
                           >
                             <AiOutlineFilePdf className="w-4 h-4 text-red-500" />
                             Download PDF
-                          </li>
-                          <li
-                            onClick={() =>
-                              handleActionClick(sub.id, "downloadZIP")
-                            }
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                          >
-                            <AiOutlineFileZip className="w-4 h-4 text-blue-500" />
-                            Download ZIP
                           </li>
                           <li
                             onClick={() =>

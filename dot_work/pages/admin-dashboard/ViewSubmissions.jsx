@@ -3,6 +3,8 @@ import StatsCard from "../../src/components/common/StatsCard";
 import { FiFileText } from "react-icons/fi";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import Submissions from "../../src/components/Submissions";
+import { useEffect, useState } from "react";
+import { getAllAttempts } from "../../src/services";
 
 export const stats = [
   {
@@ -29,6 +31,28 @@ export const stats = [
 ];
 
 const ViewSubmissions = () => {
+  const [submissions, SetSubmissions] = useState([]);
+
+  console.log("submissions", submissions);
+
+  const fetchSubmissions = async () => {
+    try {
+      const response = await getAllAttempts();
+      if (response.status === 200) {
+        SetSubmissions(response?.data);
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to fetch submissions");
+    }
+  };
+
+  useEffect(() => {
+    try {
+      fetchSubmissions();
+    } catch (error) {
+      toast.error(error);
+    }
+  }, []);
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
@@ -36,7 +60,7 @@ const ViewSubmissions = () => {
           <StatsCard key={index} {...stat} />
         ))}
       </div>
-      <Submissions />
+      <Submissions data={submissions} />
     </div>
   );
 };

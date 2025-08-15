@@ -26,7 +26,7 @@ const TestDetails = () => {
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
       {/* Header */}
       <div className="bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
           {testDetails.testName}
         </h1>
         <p className="text-gray-600 mt-2 text-sm">{testDetails.description}</p>
