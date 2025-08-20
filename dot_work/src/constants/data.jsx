@@ -390,41 +390,6 @@ export const viewSubmissionData = [
   },
 ];
 
-export const sampleQuestions = [
-  {
-    id: 1,
-    type: "MCQ",
-    marks: 2,
-    awardedMarks: 2,
-    question: "What is the primary purpose of React hooks?",
-    candidateAnswer: "To manage state and lifecycle in functional components",
-    correctAnswer: "To manage state and lifecycle in functional components",
-    aiRemarks: "Correct understanding of React hooks concept.",
-  },
-  {
-    id: 2,
-    type: "TRUE_FALSE",
-    marks: 1,
-    awardedMarks: 1,
-    question: "JavaScript is a statically typed programming language.",
-    candidateAnswer: "False",
-    correctAnswer: "False",
-    aiRemarks: "Correct, JavaScript is dynamically typed.",
-  },
-  {
-    id: 3,
-    type: "DESCRIPTIVE",
-    marks: 5,
-    awardedMarks: 5,
-    question: "Explain the concept of closures in JavaScript.",
-    candidateAnswer:
-      "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
-    correctAnswer:
-      "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
-    aiRemarks: "Excellent explanation of closures.",
-  },
-];
-
 export const userManagementStats = [
   {
     key: "totalAdmins",

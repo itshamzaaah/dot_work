@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet, useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { pageHeaderConfig } from "../config/pageHeaderConfig";
 import PageHeader from "../components/common/PageHeader";
@@ -12,10 +12,10 @@ export default function MainLayout() {
   const location = useLocation();
 
   const actionHandlers = {
-    publishTest: () => console.log("Publishing Test..."),
-    sendResults: () => console.log("Sending Results..."),
-    downloadPDF: () => console.log("Downloading PDF..."),
-    downloadZIP: () => console.log("Downloading ZIP..."),
+    publishTest: () => toast.info("Publishing Test..."),
+    sendResults: () => toast.info("Sending Results..."),
+    downloadPDF: () => toast.info("Downloading PDF..."),
+    downloadZIP: () => toast.info("Downloading ZIP..."),
     openAddUserModal: () => setIsUserModalOpen(true),
   };
 

@@ -1,6 +1,10 @@
 import { FiUser, FiClock, FiFileText, FiTrendingUp } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { selectAttempt } from "../store/slices/attemptSlice";
+import { extractDateTime } from "../helpers";
 
 const TestReportSummary = () => {
+  const attempt = useSelector(selectAttempt);
   return (
     <div className="bg-white border rounded-md px-6 py-4">
       <div className="flex flex-col md:flex-row items-center justify-between gap-8">
@@ -12,9 +16,11 @@ const TestReportSummary = () => {
           <div className="flex flex-col">
             <span className="text-xs text-blue-600 font-medium">Candidate</span>
             <span className="text-sm font-semibold text-gray-900">
-              John Doe
+              {attempt?.candidate?.name}
             </span>
-            <span className="text-xs text-gray-500">john.doe@example.com</span>
+            <span className="text-xs text-gray-500">
+              {attempt?.candidate?.email}
+            </span>
           </div>
         </div>
 
@@ -26,10 +32,10 @@ const TestReportSummary = () => {
           <div className="flex flex-col">
             <span className="text-xs text-green-600 font-medium">Duration</span>
             <span className="text-sm font-semibold text-gray-900">
-              45 minutes
+              {attempt?.submission?.raw?.test?.duration} minutes
             </span>
-            <span className="text-xs text-gray-500">Submitted: 2024-01-15</span>
-            <span className="text-xs text-gray-500">14:30:20</span>
+            <span className="text-xs text-gray-500">Submitted: {attempt?.submittedAt.slice(0, 10)}</span>
+            <span className="text-xs text-gray-500">{attempt?.submittedAt.slice(11, 19)}</span>
           </div>
         </div>
 
@@ -41,10 +47,10 @@ const TestReportSummary = () => {
           <div className="flex flex-col">
             <span className="text-xs text-purple-600 font-medium">Test</span>
             <span className="text-sm font-semibold text-gray-900">
-              Frontend Developer
+              {attempt?.submission?.raw?.test?.testName}
             </span>
             <span className="inline-block text-xs bg-gray-100 text-black px-2 py-0.5 rounded-xl mt-1 w-fit">
-              graded
+              {attempt?.status}
             </span>
           </div>
         </div>
@@ -56,8 +62,8 @@ const TestReportSummary = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-xs text-orange-600 font-medium">Score</span>
-            <span className="text-xl font-bold text-orange-600">85%</span>
-            <span className="text-xs text-gray-500">85/100 points</span>
+            <span className="text-xl font-bold text-orange-600">{attempt?.evaluation?.percentage}%</span>
+            <span className="text-xs text-gray-500">{attempt?.evaluation?.totalAwarded} / {attempt?.evaluation?.totalPossible} points</span>
           </div>
         </div>
       </div>

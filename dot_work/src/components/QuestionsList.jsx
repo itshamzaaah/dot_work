@@ -1,10 +1,13 @@
-import { sampleQuestions } from "../constants/data";
+import { useSelector } from "react-redux";
+import { selectAttempt } from "../store/slices/attemptSlice";
 import AnswerEvaluationCard from "./AnswerEvaluationCard";
 
 const QuestionsList = () => {
+  const attempt = useSelector(selectAttempt);
+
   return (
     <div className="mx-auto">
-      {sampleQuestions.map((q, idx) => (
+      {attempt?.evaluation?.perQuestion.map((q, idx) => (
         <AnswerEvaluationCard key={q.id} question={q} index={idx} />
       ))}
     </div>

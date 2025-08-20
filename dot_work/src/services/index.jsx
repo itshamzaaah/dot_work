@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   addCandidatesEndPoint,
   approveUserEndPoint,
+  attemptDetailsEndPoint,
   createTestEndPoint,
   getAllAttemptsEndPoint,
   getAllTestsEndPoint,
@@ -117,5 +118,10 @@ export async function submitTest(data) {
 
 export async function getAllAttempts(params = {}) {
   const result = await get(getAllAttemptsEndPoint, params);
+  return result;
+}
+
+export async function getAttemptDetails(attemptId) {
+  const result = await get(attemptDetailsEndPoint(attemptId));
   return result;
 }

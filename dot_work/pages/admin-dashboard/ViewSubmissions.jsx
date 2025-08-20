@@ -33,7 +33,6 @@ export const stats = [
 const ViewSubmissions = () => {
   const [submissions, SetSubmissions] = useState([]);
 
-  console.log("submissions", submissions);
 
   const fetchSubmissions = async () => {
     try {

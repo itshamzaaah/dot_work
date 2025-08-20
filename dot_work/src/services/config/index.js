@@ -17,3 +17,4 @@ export const logoutEndPoint = `${baseUrl}/auth/logout`;
 export const getTestEndPoint = (slug) => `${baseUrl}/test/slug/${slug}`;
 export const submitTestEndPoint = `${baseUrl}/test/submit`;
 export const getAllAttemptsEndPoint = `${baseUrl}/attempt/getAll`;
+export const attemptDetailsEndPoint = (attemptId) => `${baseUrl}/attempt/${attemptId}`;

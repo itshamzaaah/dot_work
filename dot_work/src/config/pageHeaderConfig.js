@@ -63,14 +63,6 @@ export const pageHeaderConfig = [
         actionType: "downloadPDF",
         variant: "primary",
       },
-      // {
-      //   label: "Download ZIP",
-      //   icon: LuDownload,
-      //   iconSize: 16,
-      //   textSize: "text-xs",
-      //   actionType: "downloadZIP",
-      //   variant: "primary",
-      // },
     ],
   },
   {

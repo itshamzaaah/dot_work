@@ -88,7 +88,9 @@ const AttemptTest = () => {
     const payload = { test, answers };
     try {
       const response = await submitTest(payload);
-      console.log("response", response);
+      if (response.status === 200) {
+        toast.success("Test submitted successfully");
+      }
     } catch (error) {
       toast.error(error);
     }

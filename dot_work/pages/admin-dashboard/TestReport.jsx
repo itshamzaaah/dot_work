@@ -1,12 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TestReportSummary from "../../src/components/TestReportSummary";
 import QuestionsList from "../../src/components/QuestionsList";
 import AIEvaluationSummary from "../../src/components/AIEvaluationSummary";
 import ProctoringScreenshots from "../../src/components/ProctoringScreenshots";
 import AddRemarks from "../../src/components/AddRemarks";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchAttemptDetails,
+  selectAttempt,
+  selectError,
+} from "../../src/store/slices/attemptSlice";
 
 const TestReport = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const attempt = useSelector(selectAttempt);
+  const error = useSelector(selectError);
   const [activeTab, setActiveTab] = useState("questions");
+
+  useEffect(() => {
+    if (id) dispatch(fetchAttemptDetails(id));
+  }, [id]);
+
+  useEffect(() => {});
+
   return (
     <div className="flex flex-col gap-y-3">
       <TestReportSummary />
