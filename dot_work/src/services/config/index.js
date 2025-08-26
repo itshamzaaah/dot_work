@@ -18,3 +18,6 @@ export const getTestEndPoint = (slug) => `${baseUrl}/test/slug/${slug}`;
 export const submitTestEndPoint = `${baseUrl}/test/submit`;
 export const getAllAttemptsEndPoint = `${baseUrl}/attempt/getAll`;
 export const attemptDetailsEndPoint = (attemptId) => `${baseUrl}/attempt/${attemptId}`;
+export const getMyAttemptsEndPoint = `${baseUrl}/attempt/mine`;
+export const uploadScreenShotEndPoint = `${baseUrl}/proctoring/upload-screenshot`;
+export const getScreenshotsEndPoint = (attemptId) => `${baseUrl}/proctoring/${attemptId}`;

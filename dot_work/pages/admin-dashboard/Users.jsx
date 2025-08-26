@@ -14,7 +14,6 @@ import { getAllUsers } from "../../src/services";
 import { toast } from "react-toastify";
 
 const Users = () => {
-  const { isUserModalOpen, setIsUserModalOpen } = useOutletContext();
   const [activeTab, setActiveTab] = useState("staff");
   const [users, setUsers] = useState([]);
   const [userStats, setUserStats] = useState([]);
@@ -90,9 +89,7 @@ const Users = () => {
         data={users}
         refreshUsers={fetchUser}
       />
-      {isUserModalOpen && (
-        <AddUserModal onClose={() => setIsUserModalOpen(false)} />
-      )}
+
     </div>
   );
 };

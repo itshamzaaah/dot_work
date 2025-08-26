@@ -8,13 +8,16 @@ import {
   getAllTestsEndPoint,
   getAllUserEndPoint,
   getCurrentUserEndPoint,
+  getMyAttemptsEndPoint,
   getMyTestsEndPoint,
+  getScreenshotsEndPoint,
   getTestEndPoint,
   logoutEndPoint,
   signInEndPoint,
   signUpEndPoint,
   submitTestEndPoint,
   testDetailsEndPoint,
+  uploadScreenShotEndPoint,
   verifyOtpEndPoint,
 } from "./config";
 import api from "../utils/api";
@@ -116,12 +119,23 @@ export async function submitTest(data) {
   return result;
 }
 
-export async function getAllAttempts(params = {}) {
-  const result = await get(getAllAttemptsEndPoint, params);
+export async function getAllAttemptsByRole(role, params = {}) {
+  const endpoint = role === "CANDIDATE" ? getMyAttemptsEndPoint : getAllAttemptsEndPoint;
+  const result = await get(endpoint, params);
   return result;
 }
 
 export async function getAttemptDetails(attemptId) {
   const result = await get(attemptDetailsEndPoint(attemptId));
+  return result;
+}
+
+export async function uploadScreenshot(data) {
+  const result = await post(uploadScreenShotEndPoint, data);
+  return result;
+}
+
+export async function getAttemptScreenshots(attemptId) {
+  const result = await get(getScreenshotsEndPoint(attemptId));
   return result;
 }

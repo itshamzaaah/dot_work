@@ -16,7 +16,7 @@ const AnswerEvaluationCard = ({ question, index }) => {
     type,
     maxMarks,
     awardedMarks,
-    question: text,
+    prompt,
     candidateAnswer,
     correctness,
     feedback,
@@ -43,7 +43,7 @@ const AnswerEvaluationCard = ({ question, index }) => {
         </div>
       </div>
 
-      <p className="font-medium text-gray-800">{text}</p>
+      <p className="text-gray-800 font-semibold">{prompt}</p>
 
       <div className="grid md:grid-cols-2 gap-4 text-sm">
         <div>
@@ -54,7 +54,13 @@ const AnswerEvaluationCard = ({ question, index }) => {
         </div>
         <div>
           <p className="font-semibold text-gray-600 mb-1">Status</p>
-          <div className="bg-green-50 border border-green-200 rounded p-2 text-gray-800">
+          <div
+            className={`border ${
+              correctness === "correct"
+                ? "bg-green-50 border-green-200"
+                : "border-red-200 bg-red-50"
+            } rounded p-2 text-gray-800`}
+          >
             {correctness}
           </div>
         </div>

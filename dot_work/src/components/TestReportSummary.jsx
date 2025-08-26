@@ -1,7 +1,6 @@
 import { FiUser, FiClock, FiFileText, FiTrendingUp } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { selectAttempt } from "../store/slices/attemptSlice";
-import { extractDateTime } from "../helpers";
 
 const TestReportSummary = () => {
   const attempt = useSelector(selectAttempt);

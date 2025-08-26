@@ -4,11 +4,11 @@ import AnswerEvaluationCard from "./AnswerEvaluationCard";
 
 const QuestionsList = () => {
   const attempt = useSelector(selectAttempt);
-
+  
   return (
-    <div className="mx-auto">
+    <div className="mx-auto w-full">
       {attempt?.evaluation?.perQuestion.map((q, idx) => (
-        <AnswerEvaluationCard key={q.id} question={q} index={idx} />
+        <AnswerEvaluationCard key={q._id} question={q} index={idx} />
       ))}
     </div>
   );

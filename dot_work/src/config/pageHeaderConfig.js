@@ -8,64 +8,75 @@ import { VscCloudUpload } from "react-icons/vsc";
 export const pageHeaderConfig = [
   {
     path: "/dashboard",
-    matchType: "startsWith",
-    component: Navbar,
+    matchType: "exact",
+    title: "Dashboard",
+    subtitle: "Your overview of the platform",
+    actions: [
+      {
+        label: "Create Test",
+        icon: HiPlus,
+        actionType: "viewDetails",
+        variant: "primary",
+      },
+    ],
   },
   {
     path: "/create-test",
-    matchType: "startsWith",
+    matchType: "exact",
     title: "Create New Test",
-    subtitle: "Design and configure your assessment",
+    subtitle: (data) => `${data?.userName ? `Hello, ${data.userName}` : "Design your assessment"}`,
     actions: [
       {
-        label: "Preview",
-        icon: IoEyeOutline,
-        to: "/preview",
-        variant: "text",
-      },
-      {
-        label: "Publish",
+        label: "Publish Test",
         icon: VscCloudUpload,
-        iconSize: 16,
-        textSize: "text-xs",
         actionType: "publishTest",
         variant: "primary",
       },
     ],
   },
   {
-    path: "/view-submissions",
-    matchType: "startsWith",
-    title: "View Submissions",
-    subtitle: "Monitor and manage test submissions",
+    path: "/tests",
+    matchType: "exact",
+    title: "All Tests",
+    subtitle: (data) => `${data?.userName ? `Hello, ${data.userName}` : "Design your assessment"}`,
     actions: [
-      {
-        label: "Send Results",
-        icon: TbSend,
-        iconSize: 16,
-        textSize: "text-xs",
-        actionType: "sendResults",
-        variant: "primary",
-      },
+      // {
+      //   label: "Publish Test",
+      //   icon: VscCloudUpload,
+      //   actionType: "publishTest",
+      //   variant: "primary",
+      // },
     ],
   },
   {
     path: "/test-report/",
     matchType: "startsWith",
-    title: "Test Result Report",
-    subtitle: "John Doe - Front End developer",
+    title: "Test Report",
+    subtitle: ({ candidateName, testName }) => `${candidateName} - ${testName}`,
     actions: [
       {
         label: "Download PDF",
         icon: LuDownload,
-        iconSize: 16,
-        textSize: "text-xs",
         actionType: "downloadPDF",
         variant: "primary",
       },
     ],
   },
   {
+    path: "/view-submissions",
+    matchType: "exact",
+    title: "View Submissions",
+    subtitle: "Monitor and manage test submissions",
+    actions: [
+      {
+        label: "Send Results",
+        icon: TbSend,
+        actionType: "sendResults",
+        variant: "primary",
+      },
+    ],
+  },
+    {
     path: "/users",
     matchType: "startsWith",
     title: "User Management",
@@ -82,3 +93,4 @@ export const pageHeaderConfig = [
     ],
   },
 ];
+

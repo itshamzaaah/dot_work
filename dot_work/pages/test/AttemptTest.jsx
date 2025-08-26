@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getTestBySlug, submitTest } from "../../src/services";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  getTestBySlug,
+  submitTest,
+  uploadScreenshot,
+} from "../../src/services";
 import { toast } from "react-toastify";
 import { normalizeQuestions } from "../../src/utils/normalizeQuestions";
 import MCQQuestion from "../../src/components/question-types/MCQquestion";
 import TrueFalseQuestion from "../../src/components/question-types/TrueFalseQuestion";
 import DescriptiveQuestion from "../../src/components/question-types/DescriptiveQuestion";
-import AddBtn from "../../src/components/AddBtn";
+import { proctoringStore } from "../../src/proctoring/proctoringStore";
+import ProctoringFrame from "../../src/components/proctoring/ProctoringFrame";
+import ProctoringOverlay from "../../src/components/proctoring/ProctoringOverlay";
+import { canvasToBlob, getScaledImages } from "../../src/helpers";
 
 const AttemptTest = () => {
   const [test, setTest] = useState({});
@@ -14,6 +21,153 @@ const AttemptTest = () => {
   const [answers, setAnswers] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const stopShotsRef = useRef(false);
+  const shotsCountRef = useRef(0);
+  const isBusyRef = useRef(false);
+  const intervalIdRef = useRef(null);
+
+  const MAX_SHOTS_PER_ATTEMPT = 120;
+
+  // Guard: ensure we came from consent and have active streams
+  useEffect(() => {
+    const cam = proctoringStore.getWebcamStream();
+    const scr = proctoringStore.getScreenStream();
+    if (!cam || !scr) {
+      navigate(`/consent/${slug}`, { replace: true });
+    }
+  }, [slug, navigate]);
+
+  useEffect(() => {
+    // 🔑 IMPORTANT: reset guards on (re)mount — needed for React 18 StrictMode
+    stopShotsRef.current = false;
+    isBusyRef.current = false;
+    shotsCountRef.current = 0;
+    if (intervalIdRef.current) {
+      clearInterval(intervalIdRef.current);
+      intervalIdRef.current = null;
+    }
+
+    const screen = proctoringStore.getScreenStream();
+    if (!screen) {
+      console.warn("[proctoring] No screen stream; not starting screenshots");
+      return;
+    }
+
+    const sessionId = localStorage.getItem("proctoringSessionId") || "";
+    const testSlug = localStorage.getItem("proctoringTestSlug") || "";
+
+    // Hidden video attached to DOM (helps avoid black frames)
+    const video = document.createElement("video");
+    video.srcObject = screen;
+    video.muted = true;
+    video.playsInline = true;
+    video.style.position = "fixed";
+    video.style.left = "-10000px";
+    video.style.top = "-10000px";
+    video.setAttribute("aria-hidden", "true");
+    document.body.appendChild(video);
+
+    const track = screen.getVideoTracks()[0];
+    const canGrabFrame = typeof window.ImageCapture === "function" && track;
+    const grabber = canGrabFrame ? new window.ImageCapture(track) : null;
+
+    const ensureFrameReady = async () => {
+      if (video.readyState < 2) {
+        await new Promise((r) => (video.onloadedmetadata = r));
+      }
+      try {
+        await video.play();
+      } catch {}
+      await new Promise((r) => requestAnimationFrame(r));
+    };
+
+    const INTERVAL_MS = 20000;
+
+    const takeShot = async () => {
+      console.log("[proctoring] tick");
+      if (stopShotsRef.current) {
+        console.log("[proctoring] skip: stop flag");
+        return;
+      }
+      if (shotsCountRef.current >= MAX_SHOTS_PER_ATTEMPT) {
+        console.log("[proctoring] skip: max shots");
+        return;
+      }
+      if (isBusyRef.current) {
+        console.log("[proctoring] skip: busy");
+        return;
+      }
+      isBusyRef.current = true;
+
+      try {
+        await ensureFrameReady();
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (grabber) {
+          const bitmap = await grabber.grabFrame();
+          canvas.width = bitmap.width;
+          canvas.height = bitmap.height;
+          ctx.drawImage(bitmap, 0, 0);
+        } else {
+          const vw = video.videoWidth || 1280;
+          const vh = video.videoHeight || 720;
+          const { w, h } = getScaledImages(vw, vh);
+          canvas.width = w;
+          canvas.height = h;
+          ctx.drawImage(video, 0, 0, w, h);
+        }
+
+        const blob = await canvasToBlob(canvas);
+        if (!blob) {
+          console.warn("[proctoring] canvasToBlob null");
+          return;
+        }
+
+        const takenAt = new Date().toISOString();
+        const form = new FormData();
+        form.append(
+          "file",
+          blob,
+          `shot-${takenAt}.${blob.type === "image/webp" ? "webp" : "jpg"}`
+        );
+        form.append("sessionId", sessionId);
+        form.append("testSlug", testSlug);
+        form.append("takenAt", takenAt);
+
+        console.log(
+          `[proctoring] uploading screenshot #${shotsCountRef.current + 1}`
+        );
+        await uploadScreenshot(form); // ensure this sends auth & uses /api/proctoring/screenshot
+        shotsCountRef.current += 1;
+      } catch (err) {
+        console.warn("[proctoring] snap/upload error:", err);
+      } finally {
+        isBusyRef.current = false;
+      }
+    };
+
+    // one immediate shot, then every 20s
+    takeShot();
+    intervalIdRef.current = setInterval(takeShot, INTERVAL_MS);
+
+    const onEnded = () => {
+      stopShotsRef.current = true; // only stop due to user ending share
+      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+      console.log("[proctoring] screen share ended; stopped screenshots");
+    };
+    track?.addEventListener("ended", onEnded);
+
+    // 🔧 Cleanup: DO NOT set stopShotsRef here (StrictMode would persist it)
+    return () => {
+      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+      track?.removeEventListener("ended", onEnded);
+      document.body.removeChild(video);
+      console.log("[proctoring] cleanup");
+    };
+  }, []);
 
   const fetchTest = async () => {
     try {
@@ -35,6 +189,7 @@ const AttemptTest = () => {
   const handleAnswerChange = (questionId, value) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
+
   const handleNext = () => {
     if (currentStep < questions?.length - 1) {
       setCurrentStep((prev) => prev + 1);
@@ -60,7 +215,6 @@ const AttemptTest = () => {
             setAnswer={(val) => handleAnswerChange(currentQuestion?._id, val)}
           />
         );
-
       case "trueFalse":
         return (
           <TrueFalseQuestion
@@ -69,7 +223,6 @@ const AttemptTest = () => {
             setAnswer={(val) => handleAnswerChange(currentQuestion._id, val)}
           />
         );
-
       case "descriptive":
         return (
           <DescriptiveQuestion
@@ -78,129 +231,146 @@ const AttemptTest = () => {
             setAnswer={(val) => handleAnswerChange(currentQuestion._id, val)}
           />
         );
-
       default:
-        null;
+        return null;
     }
   };
 
   const handleSubmit = async () => {
-    const payload = { test, answers };
+    const payload = {
+      test,
+      answers,
+      // optional: attach proctoring session id so backend can link screenshots later
+      metadata: {
+        proctoringSessionId:
+          localStorage.getItem("proctoringSessionId") || null,
+      },
+    };
     try {
       const response = await submitTest(payload);
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         toast.success("Test submitted successfully");
+        // OPTIONAL: stop streams when test is done
+        proctoringStore.stopAll();
+        navigate("/my-tests");
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error?.message || "Submission failed");
     }
   };
 
   return (
-    <div className="min-h-[70vh] w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 p-4 sm:p-8">
-      <div className="mx-auto max-w-3xl">
-        <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white/90 backdrop-blur shadow-[0_10px_30px_rgba(2,6,23,0.08)] dark:border-slate-800 dark:bg-slate-900/60">
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500" />
-          <div className="flex items-start justify-between gap-4 p-5 sm:p-6">
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:ring-indigo-900/60">
-                <span className="inline-block h-2 w-2 rounded-full bg-indigo-500" />
-                <span>Assessment</span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-                {test?.testName}
-              </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Question{" "}
-                <span className="font-semibold text-slate-900 dark:text-slate-200">
-                  {Math.min((currentStep || 0) + 1, questions?.length || 1)}
-                </span>{" "}
-                of {questions?.length || 1}
-              </p>
-            </div>
+    // RED BORDER AROUND THE TEST AREA
+    <ProctoringFrame>
+      {/* WEBCAM PIP TOP-LEFT (tl|tr|bl|br) */}
+      <ProctoringOverlay corner="bl" width={180} height={120} />
 
-            <div className="shrink-0 text-right">
-              <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
-                Progress
+      <div className="min-h-[70vh] w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 p-4 sm:p-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white/90 backdrop-blur shadow-[0_10px_30px_rgba(2,6,23,0.08)] dark:border-slate-800 dark:bg-slate-900/60">
+            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500" />
+            <div className="flex items-start justify-between gap-4 p-5 sm:p-6">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:ring-indigo-900/60">
+                  <span className="inline-block h-2 w-2 rounded-full bg-indigo-500" />
+                  <span>Assessment</span>
+                </div>
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                  {test?.testName}
+                </h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Question{" "}
+                  <span className="font-semibold text-slate-900 dark:text-slate-200">
+                    {Math.min((currentStep || 0) + 1, questions?.length || 1)}
+                  </span>{" "}
+                  of {questions?.length || 1}
+                </p>
               </div>
-              <div className="w-36 h-2 rounded-full bg-slate-200/70 dark:bg-slate-800 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500 transition-[width] duration-300 ease-out"
-                  style={{
-                    width: `${Math.min(
+
+              <div className="shrink-0 text-right">
+                <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
+                  Progress
+                </div>
+                <div className="w-36 h-2 rounded-full bg-slate-200/70 dark:bg-slate-800 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500 transition-[width] duration-300 ease-out"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (((currentStep || 0) + 1) / (questions?.length || 1)) *
+                          100
+                      )}%`,
+                    }}
+                  />
+                </div>
+                <div className="text-xs mt-1 font-semibold text-slate-700 dark:text-slate-200">
+                  {Math.round(
+                    Math.min(
                       100,
                       (((currentStep || 0) + 1) / (questions?.length || 1)) *
                         100
-                    )}%`,
-                  }}
-                />
+                    )
+                  )}
+                  %
+                </div>
               </div>
-              <div className="text-xs mt-1 font-semibold text-slate-700 dark:text-slate-200">
-                {Math.round(
-                  Math.min(
-                    100,
-                    (((currentStep || 0) + 1) / (questions?.length || 1)) * 100
-                  )
+            </div>
+
+            <div className="px-5 sm:px-6 pb-6">
+              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-sm">
+                <div className="p-4 sm:p-6">{renderQuestion()}</div>
+              </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <button
+                  onClick={handlePrevious}
+                  disabled={currentStep === 0}
+                  className="group relative inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all
+                        border border-slate-200 dark:border-slate-800
+                        bg-white text-slate-700 hover:bg-slate-50 active:scale-[0.98]
+                        dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800
+                        disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Previous question"
+                  title="Previous"
+                >
+                  <span className="mr-2 inline-block h-0 w-0 border-y-4 border-y-transparent border-r-8 border-r-slate-600 dark:border-r-slate-300 group-disabled:border-r-slate-400" />
+                  Previous
+                </button>
+
+                {currentStep < (questions?.length || 1) - 1 ? (
+                  <button
+                    onClick={handleNext}
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all
+                          bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.98] shadow
+                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                          dark:focus:ring-offset-slate-900"
+                    aria-label="Next question"
+                    title="Next"
+                  >
+                    Next
+                    <span className="ml-2 inline-block h-0 w-0 border-y-4 border-y-transparent border-l-8 border-l-white/90" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold transition-all
+                          bg-primary text-white
+                          hover:brightness-110 active:scale-[0.98] shadow-lg
+                          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fuchsia-500
+                          dark:focus:ring-offset-slate-900"
+                    aria-label="Submit test"
+                    title="Submit Test"
+                  >
+                    <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-white/90"></span>
+                    Submit Test
+                  </button>
                 )}
-                %
               </div>
-            </div>
-          </div>
-
-          <div className="px-5 sm:px-6 pb-6">
-            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-sm">
-              <div className="p-4 sm:p-6">{renderQuestion()}</div>
-            </div>
-
-            <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <button
-                onClick={handlePrevious}
-                disabled={currentStep === 0}
-                className="group relative inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all
-                       border border-slate-200 dark:border-slate-800
-                       bg-white text-slate-700 hover:bg-slate-50 active:scale-[0.98]
-                       dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800
-                       disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Previous question"
-                title="Previous"
-              >
-                <span className="mr-2 inline-block h-0 w-0 border-y-4 border-y-transparent border-r-8 border-r-slate-600 dark:border-r-slate-300 group-disabled:border-r-slate-400" />
-                Previous
-              </button>
-
-              {currentStep < (questions?.length || 1) - 1 ? (
-                <button
-                  onClick={handleNext}
-                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all
-                         bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.98] shadow
-                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-                         dark:focus:ring-offset-slate-900"
-                  aria-label="Next question"
-                  title="Next"
-                >
-                  Next
-                  <span className="ml-2 inline-block h-0 w-0 border-y-4 border-y-transparent border-l-8 border-l-white/90" />
-                </button>
-              ) : (
-                <button
-                  onClick={handleSubmit}
-                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold transition-all
-                         bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-cyan-600 text-white
-                         hover:brightness-110 active:scale-[0.98] shadow-lg
-                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fuchsia-500
-                         dark:focus:ring-offset-slate-900"
-                  aria-label="Submit test"
-                  title="Submit Test"
-                >
-                  <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-white/90"></span>
-                  Submit Test
-                </button>
-              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ProctoringFrame>
   );
 };
 
