@@ -13,6 +13,7 @@ import AuthTextInput from "./common/AuthTextInput";
 import AuthPasswordInput from "./common/AuthPasswordInput";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const loading = useSelector(selectAuthLoading);
   const user = useSelector(selectUser);
@@ -20,13 +21,11 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate();
-
   const isValid = email.trim() !== "" && password.trim() !== "";
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate(user?.role === "CANDIDATE" ? "/my-tests" : "/dashboard");
     }
   }, [user, navigate]);
 

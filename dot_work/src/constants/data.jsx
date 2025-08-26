@@ -390,41 +390,6 @@ export const viewSubmissionData = [
   },
 ];
 
-export const sampleQuestions = [
-  {
-    id: 1,
-    type: "MCQ",
-    marks: 2,
-    awardedMarks: 2,
-    question: "What is the primary purpose of React hooks?",
-    candidateAnswer: "To manage state and lifecycle in functional components",
-    correctAnswer: "To manage state and lifecycle in functional components",
-    aiRemarks: "Correct understanding of React hooks concept.",
-  },
-  {
-    id: 2,
-    type: "TRUE_FALSE",
-    marks: 1,
-    awardedMarks: 1,
-    question: "JavaScript is a statically typed programming language.",
-    candidateAnswer: "False",
-    correctAnswer: "False",
-    aiRemarks: "Correct, JavaScript is dynamically typed.",
-  },
-  {
-    id: 3,
-    type: "DESCRIPTIVE",
-    marks: 5,
-    awardedMarks: 5,
-    question: "Explain the concept of closures in JavaScript.",
-    candidateAnswer:
-      "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
-    correctAnswer:
-      "Closures are functions that retain access to their lexical scope, even when the function is executed outside that scope.",
-    aiRemarks: "Excellent explanation of closures.",
-  },
-];
-
 export const userManagementStats = [
   {
     key: "totalAdmins",
@@ -453,86 +418,6 @@ export const userManagementStats = [
     growthColor: "text-orange-600",
     color: "orange",
     rightIcon: <LuUsers className="text-xl" />,
-  },
-];
-
-export const usersData = [
-  {
-    id: "user_001",
-    name: "John Admin",
-    email: "john.admin@company.com",
-    role: "Admin",
-    status: "Active",
-    testsCreated: 12,
-    testsManaged: 45,
-    lastActive: { date: "1/15/2024", time: "9:30:00 AM" },
-  },
-  {
-    id: "user_002",
-    name: "Sarah HR Manager",
-    email: "sarah.hr@company.com",
-    role: "HR",
-    status: "Active",
-    testsCreated: 8,
-    testsManaged: 23,
-    lastActive: { date: "1/15/2024", time: "8:45:00 AM" },
-  },
-  {
-    id: "user_003",
-    name: "Mike HR Specialist",
-    email: "mike.hr@company.com",
-    role: "HR",
-    status: "Inactive",
-    testsCreated: 3,
-    testsManaged: 12,
-    lastActive: { date: "1/10/2024", time: "4:20:00 PM" },
-  },
-  {
-    id: "user_004",
-    name: "Ayesha Khan",
-    email: "ayesha.khan@candidates.com",
-    role: "Candidate",
-    status: "Active",
-    testsAttempted: 2,
-    lastActive: { date: "1/18/2024", time: "2:10:00 PM" },
-  },
-  {
-    id: "user_005",
-    name: "Daniel Smith",
-    email: "daniel.smith@candidates.com",
-    role: "Candidate",
-    status: "Inactive",
-    testsAttempted: 1,
-    lastActive: { date: "1/12/2024", time: "11:00:00 AM" },
-  },
-  {
-    id: "user_006",
-    name: "Fatima Noor",
-    email: "fatima.noor@company.com",
-    role: "HR",
-    status: "Active",
-    testsCreated: 5,
-    testsManaged: 15,
-    lastActive: { date: "1/14/2024", time: "3:00:00 PM" },
-  },
-  {
-    id: "user_007",
-    name: "Ali Raza",
-    email: "ali.raza@candidates.com",
-    role: "Candidate",
-    status: "Active",
-    testsAttempted: 4,
-    lastActive: { date: "1/16/2024", time: "10:00:00 AM" },
-  },
-  {
-    id: "user_008",
-    name: "Nida Hashmi",
-    email: "nida.hashmi@company.com",
-    role: "Admin",
-    status: "Inactive",
-    testsCreated: 7,
-    testsManaged: 20,
-    lastActive: { date: "1/13/2024", time: "5:45:00 PM" },
   },
 ];
 

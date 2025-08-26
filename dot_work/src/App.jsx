@@ -26,6 +26,8 @@ import { fetchCurrentUser } from "./store/slices/authSlice";
 import { useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AttemptTest from "../pages/test/AttemptTest";
+import ProctoringConsent from "../pages/test/ProctoringConsent";
+import TestProctoringDebug from "../pages/TestProctoringDebug";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,6 +48,8 @@ const router = createBrowserRouter(
             element={<AddCandidatesForm />}
           />
           <Route path="/test/:slug" element={<AttemptTest />} />
+          <Route path="/consent/:slug" element={<ProctoringConsent />} />
+          <Route path="/test-debug/:slug" element={<TestProctoringDebug />} />
           <Route path="/preview" element={<PreviewQuestions />} />
           <Route path="/view-submissions" element={<ViewSubmissions />} />
           <Route path="/test-report/:id" element={<TestReport />} />

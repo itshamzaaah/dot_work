@@ -2,17 +2,22 @@ import axios from "axios";
 import {
   addCandidatesEndPoint,
   approveUserEndPoint,
+  attemptDetailsEndPoint,
   createTestEndPoint,
+  getAllAttemptsEndPoint,
   getAllTestsEndPoint,
   getAllUserEndPoint,
   getCurrentUserEndPoint,
+  getMyAttemptsEndPoint,
   getMyTestsEndPoint,
+  getScreenshotsEndPoint,
   getTestEndPoint,
   logoutEndPoint,
   signInEndPoint,
   signUpEndPoint,
   submitTestEndPoint,
   testDetailsEndPoint,
+  uploadScreenShotEndPoint,
   verifyOtpEndPoint,
 } from "./config";
 import api from "../utils/api";
@@ -109,12 +114,28 @@ export async function getTestBySlug(slug) {
   return result;
 }
 
-// export async function submitTest(payload) {
-//   const result = await post(submitTestEndPoint);
-//   return result;
-// }
-
 export async function submitTest(data) {
   const result = await post(submitTestEndPoint, data);
+  return result;
+}
+
+export async function getAllAttemptsByRole(role, params = {}) {
+  const endpoint = role === "CANDIDATE" ? getMyAttemptsEndPoint : getAllAttemptsEndPoint;
+  const result = await get(endpoint, params);
+  return result;
+}
+
+export async function getAttemptDetails(attemptId) {
+  const result = await get(attemptDetailsEndPoint(attemptId));
+  return result;
+}
+
+export async function uploadScreenshot(data) {
+  const result = await post(uploadScreenShotEndPoint, data);
+  return result;
+}
+
+export async function getAttemptScreenshots(attemptId) {
+  const result = await get(getScreenshotsEndPoint(attemptId));
   return result;
 }

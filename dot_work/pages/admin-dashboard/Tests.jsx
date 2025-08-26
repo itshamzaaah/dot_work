@@ -19,8 +19,6 @@ const Tests = () => {
   }, []);
   return (
     <div>
-      <h2 className="text-3xl font-bold text-gray-900 mb-8">All Tests</h2>
-
       <div className="space-y-4">
         {tests.tests?.length === 0 ? (
           <div className="text-center py-12">

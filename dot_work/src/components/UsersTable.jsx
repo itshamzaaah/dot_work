@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { HiOutlineDotsCircleHorizontal, HiOutlineDotsHorizontal } from "react-icons/hi";
 import { BiTrash } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { approveUser } from "../services";
@@ -65,7 +65,7 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
         console.log("Delete user:", user._id);
       }
     } catch (error) {
-      toast.error(error.response?.data.message || "Action failed");
+      toast.error(error.response?.data.error || "Action failed");
     }
   };
 
@@ -130,11 +130,11 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
                     }
                     className="px-3 py-1 border rounded text-sm hover:bg-gray-100 disabled:opacity-50"
                   >
-                    {user.role}
+                    <HiOutlineDotsCircleHorizontal size={18} />
                   </button>
 
                   {activeRolePopover === user._id && (
-                    <div className="absolute z-10 mt-2 w-32 bg-white border rounded shadow-lg p-3">
+                    <div className="absolute z-10 mt-2 w-28 bg-white border rounded shadow-lg p-3">
                       <p className="text-xs mb-2 text-gray-500">Select Role</p>
                       {approvedRoles.map((role) => (
                         <button

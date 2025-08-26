@@ -10,9 +10,7 @@ const OTP = () => {
   const inputsRef = useRef([]);
 
   const { name, email } = location.state;
-  console.log("email", email);
-  console.log("name", name);
-  // Focus first input on component mount
+
   useEffect(() => {
     if (inputsRef.current[0]) {
       inputsRef.current[0].focus();
@@ -127,7 +125,6 @@ const OTP = () => {
     if (enteredOtp.length === 6) {
       try {
         const response = await verifyOtp({ email, otp: enteredOtp });
-        console.log(response);
         if (response.status === 200) {
           toast.success(response.message);
           setTimeout(() => {
@@ -135,22 +132,11 @@ const OTP = () => {
           }, 1000);
         }
       } catch (error) {
-        console.log(error);
+        toast.error(error.message || "Failed to verify OTP");
       }
     } else {
       alert("Please enter complete 6-digit OTP");
     }
-  };
-
-  const handleResend = () => {
-    console.log("Resending OTP...");
-    // Clear current OTP
-    setOtp(new Array(6).fill(""));
-    // Focus first input
-    if (inputsRef.current[0]) {
-      inputsRef.current[0].focus();
-    }
-    // API call to resend OTP...
   };
 
   const isComplete = otp.every((digit) => digit !== "");

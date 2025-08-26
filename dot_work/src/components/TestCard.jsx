@@ -13,9 +13,7 @@ const TestCard = ({ testData }) => {
     category,
     description,
     duration,
-    testLink,
     testName,
-    _id,
     slug
   } = testData;
 
@@ -32,7 +30,7 @@ const TestCard = ({ testData }) => {
   };
 
   const handleTestAccess = () => {
-    navigate(`/test/${slug}`); 
+    navigate(`/consent/${slug}`); 
   };
 
   const isDeadlinePassed = new Date(accessDeadline) < new Date();
@@ -92,51 +90,3 @@ const TestCard = ({ testData }) => {
 
 export default TestCard;
 
-const LoadingCard = () => (
-  <div className="bg-white rounded-lg shadow-md p-6 border animate-pulse">
-    <div className="flex justify-between items-start mb-4">
-      <div className="bg-gray-200 h-6 w-20 rounded-full"></div>
-      <div className="bg-gray-200 h-4 w-16 rounded"></div>
-    </div>
-    <div className="bg-gray-200 h-6 w-3/4 rounded mb-3"></div>
-    <div className="bg-gray-200 h-4 w-full rounded mb-2"></div>
-    <div className="bg-gray-200 h-4 w-2/3 rounded mb-6"></div>
-    <div className="bg-gray-200 h-4 w-1/2 rounded mb-6"></div>
-    <div className="bg-gray-200 h-12 w-full rounded"></div>
-  </div>
-);
-
-const EmptyState = () => (
-  <div className="col-span-full flex flex-col items-center justify-center py-16">
-    <div className="bg-gray-100 rounded-full p-6 mb-4">
-      <MdError className="w-12 h-12 text-gray-400" />
-    </div>
-    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-      No Tests Available
-    </h3>
-    <p className="text-gray-600 text-center max-w-md">
-      You don't have any tests assigned yet. Check back later or contact your
-      administrator.
-    </p>
-  </div>
-);
-
-const ErrorState = ({ onRetry }) => (
-  <div className="col-span-full flex flex-col items-center justify-center py-16">
-    <div className="bg-red-100 rounded-full p-6 mb-4">
-      <AlertCircle className="w-12 h-12 text-red-500" />
-    </div>
-    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-      Failed to Load Tests
-    </h3>
-    <p className="text-gray-600 text-center max-w-md mb-4">
-      There was an error loading your tests. Please try again.
-    </p>
-    <button
-      onClick={onRetry}
-      className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-    >
-      Try Again
-    </button>
-  </div>
-);

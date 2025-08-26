@@ -2,9 +2,9 @@ import clsx from "clsx";
 
 const getTypeBadge = (type) => {
   switch (type) {
-    case "MCQ":
+    case "mcq":
       return "bg-blue-100 text-blue-800";
-    case "TRUE_FALSE":
+    case "trueFalse":
       return "bg-yellow-100 text-yellow-800";
     default:
       return "bg-gray-100 text-gray-800";
@@ -14,12 +14,12 @@ const getTypeBadge = (type) => {
 const AnswerEvaluationCard = ({ question, index }) => {
   const {
     type,
-    marks,
+    maxMarks,
     awardedMarks,
-    question: text,
+    prompt,
     candidateAnswer,
-    correctAnswer,
-    aiRemarks,
+    correctness,
+    feedback,
   } = question;
 
   return (
@@ -38,33 +38,39 @@ const AnswerEvaluationCard = ({ question, index }) => {
             {type}
           </span>
           <span className="px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 font-medium">
-            {awardedMarks}/{marks} marks
+            {awardedMarks}/{maxMarks} maxMarks
           </span>
         </div>
       </div>
 
-      <p className="font-medium text-gray-800">{text}</p>
+      <p className="text-gray-800 font-semibold">{prompt}</p>
 
       <div className="grid md:grid-cols-2 gap-4 text-sm">
         <div>
           <p className="font-semibold text-gray-600 mb-1">Candidate Answer</p>
           <div className="bg-blue-50 border border-blue-200 rounded p-2 text-gray-800">
-            {candidateAnswer}
+            {candidateAnswer?.toString()}
           </div>
         </div>
         <div>
-          <p className="font-semibold text-gray-600 mb-1">Correct Answer</p>
-          <div className="bg-green-50 border border-green-200 rounded p-2 text-gray-800">
-            {correctAnswer}
+          <p className="font-semibold text-gray-600 mb-1">Status</p>
+          <div
+            className={`border ${
+              correctness === "correct"
+                ? "bg-green-50 border-green-200"
+                : "border-red-200 bg-red-50"
+            } rounded p-2 text-gray-800`}
+          >
+            {correctness}
           </div>
         </div>
       </div>
 
-      {aiRemarks && (
+      {feedback && (
         <div className="mt-4">
           <p className="text-xs text-gray-400 mb-1">AI Remarks</p>
           <div className="text-sm bg-gray-50 border border-gray-200 rounded p-2 text-gray-700">
-            {aiRemarks}
+            {feedback}
           </div>
         </div>
       )}
