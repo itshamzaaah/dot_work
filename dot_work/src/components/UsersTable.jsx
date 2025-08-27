@@ -1,7 +1,10 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { HiOutlineDotsCircleHorizontal, HiOutlineDotsHorizontal } from "react-icons/hi";
+import {
+  HiOutlineDotsCircleHorizontal,
+  HiOutlineDotsHorizontal,
+} from "react-icons/hi";
 import { BiTrash } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { approveUser } from "../services";
@@ -57,7 +60,7 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
         const response = await approveUser({
           userId: user._id,
           email: user.email,
-          role: selectedRole[user._id], 
+          role: selectedRole[user._id],
         });
         toast.success(response.message);
         if (refreshUsers) refreshUsers();
@@ -65,10 +68,10 @@ const UsersTable = ({ search, filters, data = [], refreshUsers }) => {
         console.log("Delete user:", user._id);
       }
     } catch (error) {
-      toast.error(error.response?.data.error || "Action failed");
+      console.error("Error occurred while performing action:", error);
+      toast.error(error?.response?.data?.error || "Action failed");
     }
   };
-
 
   return (
     <div className="w-[300px] md:min-w-full bg-white rounded-xl border p-6 shadow-sm mt-6">

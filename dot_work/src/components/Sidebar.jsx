@@ -11,6 +11,7 @@ import CloseBtn from "./common/CloseBtn";
 import { MdAssessment } from "react-icons/md";
 import { logoutCurrentUser, selectAuth } from "../store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "../store/slices/uiSlice";
 
 export const sidebarLinks = [
   {
@@ -64,31 +65,33 @@ export const sidebarLinks = [
   },
 ];
 
-export default function Sidebar({ isOpen, setIsOpen }) {
-  const dispatch = useDispatch()
+export default function Sidebar() {
+  const dispatch = useDispatch();
   const { user } = useSelector(selectAuth);
+  const { isSidebarOpen } = useSelector((state) => state.ui);
   const filteredLinks = sidebarLinks.filter((link) => {
     return user && link.roles.includes(user.role);
   });
 
-
   const handleLogout = () => {
-    dispatch(logoutCurrentUser())
+    dispatch(logoutCurrentUser());
   };
 
   return (
     <>
       {/* Overlay for mobile */}
-      {isOpen && (
+      {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 lg:hidden"
-          onClick={() => setIsOpen(false)}
+          onClick={() => dispatch(toggleSidebar())}
         />
       )}
 
       <aside
         className={`fixed lg:static top-0 left-0 z-40 h-full w-64 bg-gradient-to-br from-slate-50 to-white border-r border-slate-200/60 shadow-xl lg:shadow-none transform transition-all duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
+          ${
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0`}
       >
         <div className="flex flex-col h-full">
           {/* Fixed Header */}
@@ -106,7 +109,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 </div>
               </div>
               <CloseBtn
-                onClose={() => setIsOpen(false)}
+                onClose={() => dispatch(toggleSidebar())}
                 hideClass="lg:hidden"
               />
             </div>
@@ -126,7 +129,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                         : "text-gray-700 hover:bg-white hover:shadow-xl hover:shadow-indigo-500/20 hover:border hover:border-indigo-100 hover:text-indigo-600 hover:scale-95"
                     }`
                   }
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => toggleSidebar()}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {({ isActive }) => (

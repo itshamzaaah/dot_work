@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import signUpImg from "../assets/images/signup.png";
-import { signUp } from "../services";
+import signUpImg from "../../src/assets/images/signup.png";
+import { signUp } from "../../src/services";
 import { toast } from "react-toastify";
-import AuthLayout from "../layouts/AuthLayout";
-import AuthTextInput from "./common/AuthTextInput";
-import AuthPasswordInput from "./common/AuthPasswordInput";
+import AuthLayout from "../../src/layouts/AuthLayout";
+import AuthTextInput from "../../src/components/common/AuthTextInput";
+import AuthPasswordInput from "../../src/components/common/AuthPasswordInput";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -42,7 +42,9 @@ const SignupPage = () => {
     /^[A-Za-z\s]*$/.test(formData.name) && formData.name.trim() !== "";
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
   const isPasswordValid =
-    /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(formData.password);
+    /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(
+      formData.password
+    );
 
   const canSubmit =
     formData.agreed && isNameValid && isEmailValid && isPasswordValid;
@@ -84,7 +86,11 @@ const SignupPage = () => {
           onBlur={handleBlur}
           placeholder="Full Name"
           required
-          error={touched.name && !isNameValid ? "Full name must contain only alphabets and spaces." : ""}
+          error={
+            touched.name && !isNameValid
+              ? "Full name must contain only alphabets and spaces."
+              : ""
+          }
         />
 
         <AuthTextInput
@@ -96,7 +102,11 @@ const SignupPage = () => {
           onBlur={handleBlur}
           placeholder="Email Address"
           required
-          error={touched.email && !isEmailValid ? "Enter a valid email address (e.g. user@example.com)." : ""}
+          error={
+            touched.email && !isEmailValid
+              ? "Enter a valid email address (e.g. user@example.com)."
+              : ""
+          }
         />
 
         <AuthPasswordInput
@@ -123,25 +133,7 @@ const SignupPage = () => {
             className="mr-2 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
             required
           />
-          I agree to the{" "}
-          <a
-            href="#"
-            className="text-indigo-600 underline mx-1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            terms of service
-          </a>{" "}
-          and{" "}
-          <a
-            href="#"
-            className="text-indigo-600 underline ml-1"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            privacy policy
-          </a>
-          .
+          I agree to the terms of service and privacy policy.
         </label>
 
         <button
@@ -149,8 +141,8 @@ const SignupPage = () => {
           disabled={!canSubmit}
           className={`w-full py-3 rounded-full text-white font-semibold ${
             canSubmit
-              ? "bg-indigo-600 hover:bg-indigo-700"
-              : "bg-indigo-300 cursor-not-allowed"
+              ? "bg-primary hover:bg-indigo-700"
+              : "bg-gray-400 cursor-not-allowed"
           } transition duration-200`}
         >
           Sign Up

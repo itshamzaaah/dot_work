@@ -42,7 +42,6 @@ export const canvasToBlob = async (canvas, webpQ = 0.7, jpegQ = 0.65) => {
     });
     return webp;
   } catch (error) {
-    console.log('WebP failed, trying JPEG:', error.message);
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
         if (blob) resolve(blob);

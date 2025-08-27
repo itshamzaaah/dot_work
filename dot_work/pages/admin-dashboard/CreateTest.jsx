@@ -15,6 +15,9 @@ import { createTest } from "../../src/services";
 import { prepareTestPayload } from "../../src/utils/TestPayload";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PageHeader from "../../src/components/common/PageHeader";
+import { VscCloudUpload } from "react-icons/vsc";
+import { BsEye } from "react-icons/bs";
 
 const CreateTest = () => {
   const navigate = useNavigate();
@@ -136,18 +139,33 @@ const CreateTest = () => {
     );
   };
 
+  const handleTest = () => {
+    console.log("Testing click");
+  };
+
   return (
-    <div className="w-full">
-      <Stepper currentStep={currentStep} />
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            {renderCurrentStep()}
-            {renderButtons(currentStep, next, previous)}
+    <>
+      <PageHeader
+        title="Create New Test"
+        description="Set up a new test"
+        button={{
+          label: "Preview Test",
+          icon: BsEye,
+          to: "/preview",
+        }}
+      />
+      <div className="w-full flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+        <Stepper currentStep={currentStep} />
+        <div className="min-h-screen bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+              {renderCurrentStep()}
+              {renderButtons(currentStep, next, previous)}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

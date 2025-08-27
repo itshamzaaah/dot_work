@@ -14,7 +14,6 @@ export default function TestProctoringDebug() {
     const screen = proctoringStore.getScreenStream();
 
     if (!webcam || !screen) {
-      // If streams are missing (e.g. direct open), send back to consent
       navigate(`/consent/${slug}`, { replace: true });
       return;
     }
