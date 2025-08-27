@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import loginImg from "../assets/images/signup.png";
+import loginImg from "../../src/assets/images/signup.png";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,10 +7,10 @@ import {
   selectAuthError,
   selectAuthLoading,
   selectUser,
-} from "../store/slices/authSlice";
-import AuthLayout from "../layouts/AuthLayout";
-import AuthTextInput from "./common/AuthTextInput";
-import AuthPasswordInput from "./common/AuthPasswordInput";
+} from "../../src/store/slices/authSlice";
+import AuthLayout from "../../src/layouts/AuthLayout";
+import AuthTextInput from "../../src/components/common/AuthTextInput";
+import AuthPasswordInput from "../../src/components/common/AuthPasswordInput";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -64,7 +64,6 @@ const LoginPage = () => {
           required
         />
         <div className="h-5 mt-1 transition-all duration-300 text-xs text-red-500"></div>
-        <div className="block h-3 mb-4 text-gray-700 text-sm font-medium"></div>
 
         {/* Sign In Button */}
         <button
@@ -72,8 +71,8 @@ const LoginPage = () => {
           disabled={!isValid}
           className={`w-full py-3 rounded-full text-white font-semibold transition duration-200 ${
             isValid
-              ? "bg-indigo-600 hover:bg-indigo-700"
-              : "bg-indigo-300 cursor-not-allowed"
+              ? "bg-primary hover:bg-indigo-700"
+              : "bg-gray-400 cursor-not-allowed"
           } transition duration-200`}
         >
           {loading ? "Logging in..." : "Login"}

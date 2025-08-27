@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { getAllTests } from "../../src/services";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import PageHeader from "../../src/components/common/PageHeader";
+import { FaPlus } from "react-icons/fa";
+import { HiPlus } from "react-icons/hi";
 
 const Tests = () => {
   const [tests, setTests] = useState([]);
@@ -18,8 +21,17 @@ const Tests = () => {
     }
   }, []);
   return (
-    <div>
-      <div className="space-y-4">
+    <>
+      <PageHeader
+        title="All Tests"
+        description="Manage all tests"
+        button={{
+          label: "Create Test",
+          icon: HiPlus,
+          to: "/create-test",
+        }}
+      />
+      <div className="space-y-4 flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
         {tests.tests?.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No tests available.</p>
@@ -57,7 +69,7 @@ const Tests = () => {
           ))
         )}
       </div>
-    </div>
+    </>
   );
 };
 

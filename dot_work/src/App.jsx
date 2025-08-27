@@ -4,9 +4,8 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
-
-import Signup from "./components/SignupPage";
-import LoginPage from "./components/LoginPage";
+import Signup from "../pages/auth/SignupPage";
+import LoginPage from "../pages/auth/LoginPage";
 import Admin from "../pages/admin-dashboard/Admin";
 import MainLayout from "./layouts/MainLayout";
 import CreateTest from "../pages/admin-dashboard/CreateTest";

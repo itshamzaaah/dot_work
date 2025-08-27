@@ -9,14 +9,18 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAttemptDetails,
   fetchAttemptScreenshots,
+  selectAttempt,
 } from "../../src/store/slices/attemptSlice";
 import { selectUser } from "../../src/store/slices/authSlice";
 import TabsBar from "../../src/components/common/TabsBar";
+import PageHeader from "../../src/components/common/PageHeader";
+import { LuDownload } from "react-icons/lu";
 
 const TestReport = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const attempt = useSelector(selectAttempt);
   const [activeTab, setActiveTab] = useState("questions");
 
   useEffect(() => {
@@ -33,23 +37,31 @@ const TestReport = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-y-3">
-      <TestReportSummary />
+    <>
+      <PageHeader
+        title="Test Report"
+        description={`${attempt?.candidate?.name} - ${attempt?.submission?.raw?.test?.testName}`}
+        button={{
+          label: "Download PDF",
+          icon: LuDownload,
+        }}
+      />
+      <div className="flex flex-col gap-y-3 flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+        <TestReportSummary />
 
-      <TabsBar tabs={tabs} value={activeTab} onChange={setActiveTab} />
-      {activeTab === "questions" && (
-        <>
-          <QuestionsList />
-          {user?.role !== "CANDIDATE" && <AddRemarks />}
-        </>
-      )}
-      {activeTab === "aiEvaluation" && <AIEvaluationSummary />}
-      {activeTab === "screenshots" && user?.role !== "CANDIDATE" ? (
-        <ProctoringScreenshots />
-      ) : (
-        <h2 className="flex justify-center items-center font-semibold">You don't have access to this tab</h2>
-      )}
-    </div>
+        <TabsBar tabs={tabs} value={activeTab} onChange={setActiveTab} />
+        {activeTab === "questions" && (
+          <>
+            <QuestionsList />
+            {user?.role !== "CANDIDATE" && <AddRemarks />}
+          </>
+        )}
+        {activeTab === "aiEvaluation" && <AIEvaluationSummary />}
+        {activeTab === "screenshots" && user?.role !== "CANDIDATE" && (
+          <ProctoringScreenshots />
+        )}
+      </div>
+    </>
   );
 };
 

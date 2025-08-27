@@ -8,11 +8,14 @@ import { getAllAttemptsByRole } from "../../src/services";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../src/store/slices/authSlice";
 import { toast } from "react-toastify";
+import PageHeader from "../../src/components/common/PageHeader";
+import { useLocation } from "react-router-dom";
 
 const ViewSubmissions = () => {
+  const location = useLocation();
   const user = useSelector(selectUser);
   const [submissions, setSubmissions] = useState([]);
-  const [statsData, setStatsData] = useState({}); 
+  const [statsData, setStatsData] = useState({});
 
   const fetchSubmissions = async () => {
     try {
@@ -21,7 +24,7 @@ const ViewSubmissions = () => {
 
       if (status === 200) {
         setStatsData(stats || {});
-        setSubmissions(data || []); 
+        setSubmissions(data || []);
       } else {
         throw new Error(data?.message || "Failed to fetch submissions");
       }
@@ -72,14 +75,22 @@ const ViewSubmissions = () => {
   }, [statsData]);
 
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
-        {stats.map((stat) => (
-          <StatsCard key={stat.label} {...stat} />
-        ))}
+    <>
+      {location.pathname !== "/dashboard" && (
+        <PageHeader
+          title="View Submissions"
+          description="Monitor and manage test submissions"
+        />
+      )}
+      <div className="w-full flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
+          {stats.map((stat) => (
+            <StatsCard key={stat.label} {...stat} />
+          ))}
+        </div>
+        <Submissions data={submissions} />
       </div>
-      <Submissions data={submissions} />
-    </div>
+    </>
   );
 };
 

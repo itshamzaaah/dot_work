@@ -82,20 +82,16 @@ const AttemptTest = () => {
       await new Promise((r) => requestAnimationFrame(r));
     };
 
-    const INTERVAL_MS = 20000;
+    const INTERVAL_MS = test?.screenShotFrequency * 1000 || 10000;
 
     const takeShot = async () => {
-      console.log("[proctoring] tick");
       if (stopShotsRef.current) {
-        console.log("[proctoring] skip: stop flag");
         return;
       }
       if (shotsCountRef.current >= MAX_SHOTS_PER_ATTEMPT) {
-        console.log("[proctoring] skip: max shots");
         return;
       }
       if (isBusyRef.current) {
-        console.log("[proctoring] skip: busy");
         return;
       }
       isBusyRef.current = true;
@@ -136,11 +132,7 @@ const AttemptTest = () => {
         form.append("sessionId", sessionId);
         form.append("testSlug", testSlug);
         form.append("takenAt", takenAt);
-
-        console.log(
-          `[proctoring] uploading screenshot #${shotsCountRef.current + 1}`
-        );
-        await uploadScreenshot(form); // ensure this sends auth & uses /api/proctoring/screenshot
+        await uploadScreenshot(form); 
         shotsCountRef.current += 1;
       } catch (err) {
         console.warn("[proctoring] snap/upload error:", err);
@@ -156,7 +148,6 @@ const AttemptTest = () => {
     const onEnded = () => {
       stopShotsRef.current = true; // only stop due to user ending share
       if (intervalIdRef.current) clearInterval(intervalIdRef.current);
-      console.log("[proctoring] screen share ended; stopped screenshots");
     };
     track?.addEventListener("ended", onEnded);
 
@@ -165,7 +156,6 @@ const AttemptTest = () => {
       if (intervalIdRef.current) clearInterval(intervalIdRef.current);
       track?.removeEventListener("ended", onEnded);
       document.body.removeChild(video);
-      console.log("[proctoring] cleanup");
     };
   }, []);
 
