@@ -105,14 +105,11 @@ const StepTwo = ({ errors = {} }) => {
         Add Questions
       </h2>
       <p className="text-sm text-gray-500 mb-6">
-        Create different types of questions for your assessment
+        Create different types of questions for your assessment by uploading an
+        Excel file or adding them manually.
       </p>
 
-      <p className="text-sm text-gray-500 mb-4">
-        Upload from Excel or add questions manually
-      </p>
-
-      <div className="flex items-center gap-6 mb-6">
+      <div className="flex items-end gap-6 mb-6">
         <label className="flex items-center gap-2">
           <input
             type="radio"
@@ -137,21 +134,29 @@ const StepTwo = ({ errors = {} }) => {
 
       {mode === "upload" ? (
         <>
-          <div className="mb-3">
-            <input
-              type="file"
-              accept=".xls,.xlsx"
-              onChange={(e) =>
-                e.target.files && onFileSelected(e.target.files[0])
-              }
-            />
+          <div className="flex justify-between items-end">
+            <div className="">
+              <input
+                type="file"
+                accept=".xls,.xlsx"
+                onChange={(e) =>
+                  e.target.files && onFileSelected(e.target.files[0])
+                }
+              />
+            </div>
+            <a
+              href="/src/assets/templates/questions-format.xlsx"
+              className="text-sm text-primary underline"
+            >
+              Download the sample Excel file
+            </a>
           </div>
 
           {parseError && (
             <p className="text-sm text-red-600 mb-2">{parseError}</p>
           )}
 
-          <div className="text-sm text-gray-700 mb-8">
+          <div className="text-sm text-gray-700 mb-8 mt-3">
             Imported:&nbsp;
             <b>{importCounts.mcqs}</b> MCQ,&nbsp;
             <b>{importCounts.trueFalse}</b> True/False,&nbsp;
