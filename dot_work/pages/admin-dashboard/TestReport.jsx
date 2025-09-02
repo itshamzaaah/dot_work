@@ -46,7 +46,7 @@ const TestReport = () => {
           icon: LuDownload,
         }}
       />
-      <div className="flex flex-col gap-y-3 flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+      <div className="flex flex-col gap-y-3 flex-1 p-4 md:p-4 bg-gray-50 overflow-y-auto">
         <TestReportSummary />
 
         <TabsBar tabs={tabs} value={activeTab} onChange={setActiveTab} />
