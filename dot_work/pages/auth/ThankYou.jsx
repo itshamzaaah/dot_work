@@ -23,7 +23,7 @@ const ThankYou = () => {
         {/* Return to Login */}
         <button
           onClick={() => navigate("/login")}
-          className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-all"
+          className="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:bg-indigo-700 transition-all"
         >
           Return to Login
         </button>

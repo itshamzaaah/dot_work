@@ -17,6 +17,7 @@ import {
   signUpEndPoint,
   submitTestEndPoint,
   testDetailsEndPoint,
+  updatedAttemptDetailsEndPoint,
   uploadScreenShotEndPoint,
   verifyOtpEndPoint,
 } from "./config";
@@ -137,5 +138,10 @@ export async function uploadScreenshot(data) {
 
 export async function getAttemptScreenshots(attemptId) {
   const result = await get(getScreenshotsEndPoint(attemptId));
+  return result;
+}
+
+export async function updatedAttemptDetails(attemptId, data) {
+  const result = await patch(updatedAttemptDetailsEndPoint(attemptId), data);
   return result;
 }

@@ -14,8 +14,10 @@ import { proctoringStore } from "../../src/proctoring/proctoringStore";
 import ProctoringFrame from "../../src/components/proctoring/ProctoringFrame";
 import ProctoringOverlay from "../../src/components/proctoring/ProctoringOverlay";
 import { canvasToBlob, getScaledImages } from "../../src/helpers";
+import Loader from "../../src/components/common/Loader";
 
 const AttemptTest = () => {
+  const [loading, setLoading] = useState(false);
   const [test, setTest] = useState({});
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
@@ -237,10 +239,12 @@ const AttemptTest = () => {
       },
     };
     try {
+      setLoading(true);
       const response = await submitTest(payload);
       if (response.status === 200 || response.status === 201) {
         toast.success("Test submitted successfully");
         // OPTIONAL: stop streams when test is done
+        setLoading(false);
         proctoringStore.stopAll();
         navigate("/my-tests");
       }
@@ -331,7 +335,7 @@ const AttemptTest = () => {
                   <button
                     onClick={handleNext}
                     className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium transition-all
-                          bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.98] shadow
+                          bg-primary text-white hover:bg-indigo-700 active:scale-[0.98] shadow
                           focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
                           dark:focus:ring-offset-slate-900"
                     aria-label="Next question"
@@ -352,7 +356,7 @@ const AttemptTest = () => {
                     title="Submit Test"
                   >
                     <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-white/90"></span>
-                    Submit Test
+                    {loading ? <Loader bgColor="white" /> : "Submit Test"}
                   </button>
                 )}
               </div>

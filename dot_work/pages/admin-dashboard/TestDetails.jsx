@@ -4,6 +4,7 @@ import { getTestDetails } from "../../src/services";
 import { toast } from "react-toastify";
 import PageHeader from "../../src/components/common/PageHeader";
 import { MdOutlineArrowCircleLeft } from "react-icons/md";
+import Loader from "../../src/components/common/Loader";
 
 const TestDetails = () => {
   const { testId } = useParams();
@@ -22,7 +23,9 @@ const TestDetails = () => {
     fetchTestDetails();
   }, [testId]);
 
-  if (!testDetails) return <div className="p-6 text-center">Loading...</div>;
+  if (!testDetails) return <div className="p-6 text-center">
+    <Loader bgColor="primary" />
+  </div>;
 
   return (
     <>
@@ -35,7 +38,7 @@ const TestDetails = () => {
           to: "/tests",
         }}
       />
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 mt-3 overflow-y-auto">
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6 mt-3 overflow-y-scroll">
         {/* Header */}
         <div className="bg-white shadow-md rounded-lg p-6">
           <h1 className="text-xl md:text-2xl font-bold text-gray-800">

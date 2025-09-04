@@ -11,6 +11,7 @@ import {
 import AuthLayout from "../../src/layouts/AuthLayout";
 import AuthTextInput from "../../src/components/common/AuthTextInput";
 import AuthPasswordInput from "../../src/components/common/AuthPasswordInput";
+import Loader from "../../src/components/common/Loader";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ const LoginPage = () => {
               : "bg-gray-400 cursor-not-allowed"
           } transition duration-200`}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? <Loader bgColor="white" /> : "Login"}
         </button>
       </form>
     </AuthLayout>

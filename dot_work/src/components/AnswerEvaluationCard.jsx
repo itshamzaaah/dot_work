@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { formatQuestionType } from "../helpers";
 
 const getTypeBadge = (type) => {
   switch (type) {
@@ -35,10 +36,10 @@ const AnswerEvaluationCard = ({ question, index }) => {
               getTypeBadge(type)
             )}
           >
-            {type}
+            {formatQuestionType(type)}
           </span>
           <span className="px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 font-medium">
-            {awardedMarks}/{maxMarks} maxMarks
+            {awardedMarks}/{maxMarks} Max Marks
           </span>
         </div>
       </div>

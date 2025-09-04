@@ -6,6 +6,7 @@ import { emailRegex } from "../../src/constants";
 import { addCandidates, getAllUsers } from "../../src/services";
 import PageHeader from "../../src/components/common/PageHeader";
 import { MdOutlineArrowCircleLeft } from "react-icons/md";
+import Loader from "../../src/components/common/Loader";
 
 let debounceTimeout;
 
@@ -200,7 +201,7 @@ export default function AddCandidatesForm() {
           disabled={isSubmitting}
           className="bg-primary hover:bg-blue-700 text-white px-3 text-sm py-2 rounded-lg"
         >
-          {isSubmitting ? "Submitting..." : "Add Candidates"}
+          {isSubmitting ? <Loader bgColor="white" /> : "Add Candidates"}
         </button>
       </form>
     </>

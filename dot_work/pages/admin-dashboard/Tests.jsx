@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAllTests } from "../../src/services";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import PageHeader from "../../src/components/common/PageHeader";
-import { FaPlus } from "react-icons/fa";
 import { HiPlus } from "react-icons/hi";
+import Loader from "../../src/components/common/Loader";
 
 const Tests = () => {
   const [tests, setTests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchTests = async () => {
+    setLoading(true);
     const response = await getAllTests();
     setTests(response);
+    setLoading(false);
   };
   useEffect(() => {
     try {
@@ -31,7 +34,13 @@ const Tests = () => {
           to: "/create-test",
         }}
       />
-      <div className="space-y-4 flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+
+      <div className="space-y-4 flex-1 p-4 md:p-4 bg-gray-50 overflow-y-auto">
+        {loading && (
+          <div className="flex justify-center py-2 w-full">
+            <Loader bgColor="primary" />
+          </div>
+        )}
         {tests.tests?.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No tests available.</p>

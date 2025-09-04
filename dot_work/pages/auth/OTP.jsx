@@ -132,7 +132,7 @@ const OTP = () => {
           }, 1000);
         }
       } catch (error) {
-        toast.error(error.message || "Failed to verify OTP");
+        toast.error(error.response.data.error || "Failed to verify OTP");
       }
     } else {
       alert("Please enter complete 6-digit OTP");
@@ -199,10 +199,10 @@ const OTP = () => {
         <button
           onClick={handleSubmit}
           disabled={!isComplete}
-          className={`w-full py-3 md:py-4 rounded-xl font-semibold text-white transition-all duration-200 ${
+          className={`w-full py-3 md:py-4 rounded-xl font-semibold transition-all duration-200 ${
             isComplete
-              ? "bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              : "bg-gray-300 cursor-not-allowed"
+              ? "bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-primary"
+              : "bg-gray-300 cursor-not-allowed text-white"
           }`}
         >
           {isComplete ? "Verify OTP" : "Enter Complete OTP"}

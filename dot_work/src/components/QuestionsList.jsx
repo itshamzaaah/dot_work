@@ -8,7 +8,7 @@ const QuestionsList = () => {
   return (
     <div className="mx-auto w-full">
       {attempt?.evaluation?.perQuestion.map((q, idx) => (
-        <AnswerEvaluationCard key={q._id} question={q} index={idx} />
+        <AnswerEvaluationCard key={q.questionId} question={q} index={idx} />
       ))}
     </div>
   );
