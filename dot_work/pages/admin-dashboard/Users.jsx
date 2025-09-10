@@ -55,7 +55,7 @@ const Users = () => {
         title="User Management"
         description="Manage platform users and their permissions"
       />
-      <div className="w-full flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+      <div className="w-full flex-1 p-4 md:p-4 bg-gray-50 overflow-y-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {userStats.map((stat, index) => (
             <StatsCard key={index} {...stat} />

@@ -5,7 +5,7 @@ import StepTwo from "../../src/components/create-test/StepTwo";
 import StepThree from "../../src/components/create-test/StepThree";
 import StepFour from "../../src/components/create-test/StepFour";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentStep } from "../../src/store/slices/createTestSlice";
+import { resetForm, setCurrentStep } from "../../src/store/slices/createTestSlice";
 import {
   validateStepOne,
   validateStepThree,
@@ -16,14 +16,13 @@ import { prepareTestPayload } from "../../src/utils/TestPayload";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageHeader from "../../src/components/common/PageHeader";
-import { VscCloudUpload } from "react-icons/vsc";
 import { BsEye } from "react-icons/bs";
 
 const CreateTest = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
-  const dispatch = useDispatch();
   const currentStep = useSelector((state) => state.testForm.currentStep);
   const formData = useSelector((state) => state.testForm);
 
@@ -38,6 +37,7 @@ const CreateTest = () => {
           navigate("/tests");
         }, 1000);
       }
+      dispatch(resetForm());
     } catch (error) {
       toast.error(error);
     }
@@ -154,7 +154,7 @@ const CreateTest = () => {
           to: "/preview",
         }}
       />
-      <div className="w-full flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
+      <div className="w-full flex-1 p-4 md:p-4 bg-gray-50 overflow-y-auto">
         <Stepper currentStep={currentStep} />
         <div className="min-h-screen bg-gray-50">
           <div className="max-w-4xl mx-auto">

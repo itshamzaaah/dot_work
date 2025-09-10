@@ -14,7 +14,7 @@ export default function Dashboard() {
           to: "/create-test",
         }}
       />
-      <div className="w-full">
+      <div className="w-full overflow-y-auto">
         <ViewSubmissions />
       </div>
     </>

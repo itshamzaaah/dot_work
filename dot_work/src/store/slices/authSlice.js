@@ -9,6 +9,7 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await signIn(credentials); // Automatically handles cookies
       toast.success(response.message || "Login successful");
+      sessionStorage.setItem("user", JSON.stringify(response.user));
 
       return response;
     } catch (error) {
@@ -37,6 +38,7 @@ export const logoutCurrentUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await logoutUser();
+      sessionStorage.removeItem("user");
       return response?.message;
     } catch (error) {
       return rejectWithValue({ error: error.response?.data || error.message });
@@ -46,7 +48,7 @@ export const logoutCurrentUser = createAsyncThunk(
 
 // Initial state
 const initialState = {
-  user: null,
+  user: JSON.parse(sessionStorage.getItem("user")) || null,
   loading: false,
   error: null,
 };

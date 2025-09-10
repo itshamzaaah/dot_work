@@ -1,20 +1,28 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
+  selectAttempt,
   selectScreenshots,
   selectScreenshotsError,
   selectScreenshotsLoading,
 } from "../store/slices/attemptSlice";
-import { BsEye } from "react-icons/bs";
+import { BsCloudDownload, BsEye } from "react-icons/bs";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import CloseBtn from "./common/CloseBtn";
+import { downloadScreenshotsAsZip } from "../helpers";
 
 const ProctoringScreenshots = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedScreenshot, setSelectedScreenshot] = useState(null);
   const screenshots = useSelector(selectScreenshots);
+  const attempt = useSelector(selectAttempt);
+ 
   const loading = useSelector(selectScreenshotsLoading);
   const error = useSelector(selectScreenshotsError);
+
+
+  const candidateName = attempt?.candidate?.name || "candidate";
+  const testName = attempt?.submission?.raw?.test?.testName || "test";
 
   const handleScreenshotClicked = (index) => {
     setSelectedScreenshot(screenshots[index]);
@@ -35,6 +43,10 @@ const ProctoringScreenshots = () => {
         currentIndex === 0 ? screenshots.length - 1 : currentIndex - 1
       ]
     );
+  };
+
+  const handleDownload = async () => {
+    await downloadScreenshotsAsZip(screenshots, candidateName, testName);
   };
 
   return (
@@ -121,20 +133,11 @@ const ProctoringScreenshots = () => {
 
       {/* Download Button */}
       <div className="flex justify-center">
-        <button className="inline-flex items-center text-sm px-6 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium shadow-sm hover:shadow-md">
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
+        <button
+          className="inline-flex gap-x-3 items-center text-sm px-6 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium shadow-sm hover:shadow-md"
+          onClick={handleDownload}
+        >
+          <BsCloudDownload size={18} />
           Download All Screenshots (ZIP)
         </button>
       </div>

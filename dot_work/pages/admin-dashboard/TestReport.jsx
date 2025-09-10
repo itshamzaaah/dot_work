@@ -10,17 +10,21 @@ import {
   fetchAttemptDetails,
   fetchAttemptScreenshots,
   selectAttempt,
+  selectLoading,
 } from "../../src/store/slices/attemptSlice";
 import { selectUser } from "../../src/store/slices/authSlice";
 import TabsBar from "../../src/components/common/TabsBar";
 import PageHeader from "../../src/components/common/PageHeader";
 import { LuDownload } from "react-icons/lu";
+import Loader from "../../src/components/common/Loader";
+import { generateTestResultPDF } from "../../src/helpers";
 
 const TestReport = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const attempt = useSelector(selectAttempt);
+  const loading = useSelector(selectLoading);
   const [activeTab, setActiveTab] = useState("questions");
 
   useEffect(() => {
@@ -36,6 +40,10 @@ const TestReport = () => {
     { id: "screenshots", label: "Screenshots" },
   ];
 
+  const handleDownloadPDF = () => {
+    generateTestResultPDF(attempt);
+  };
+
   return (
     <>
       <PageHeader
@@ -44,23 +52,28 @@ const TestReport = () => {
         button={{
           label: "Download PDF",
           icon: LuDownload,
+          onClick: () => handleDownloadPDF(),
         }}
       />
-      <div className="flex flex-col gap-y-3 flex-1 p-4 md:p-4 bg-gray-50 overflow-auto">
-        <TestReportSummary />
+      {loading ? (
+        <Loader bgColor="primary" />
+      ) : (
+        <div className="flex flex-col gap-y-3 flex-1 p-4 md:p-4 bg-gray-50 overflow-y-auto">
+          <TestReportSummary />
 
-        <TabsBar tabs={tabs} value={activeTab} onChange={setActiveTab} />
-        {activeTab === "questions" && (
-          <>
-            <QuestionsList />
-            {user?.role !== "CANDIDATE" && <AddRemarks />}
-          </>
-        )}
-        {activeTab === "aiEvaluation" && <AIEvaluationSummary />}
-        {activeTab === "screenshots" && user?.role !== "CANDIDATE" && (
-          <ProctoringScreenshots />
-        )}
-      </div>
+          <TabsBar tabs={tabs} value={activeTab} onChange={setActiveTab} />
+          {activeTab === "questions" && (
+            <>
+              <QuestionsList />
+              {user?.role !== "CANDIDATE" && <AddRemarks />}
+            </>
+          )}
+          {activeTab === "aiEvaluation" && <AIEvaluationSummary />}
+          {activeTab === "screenshots" && user?.role !== "CANDIDATE" && (
+            <ProctoringScreenshots />
+          )}
+        </div>
+      )}
     </>
   );
 };

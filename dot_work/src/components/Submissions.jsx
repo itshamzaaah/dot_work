@@ -12,8 +12,10 @@ import { Link } from "react-router-dom";
 import SearchInput from "./common/SearchInput";
 import { selectUser } from "../store/slices/authSlice";
 import { useSelector } from "react-redux";
+import { TbTableExport } from "react-icons/tb";
+import Loader from "./common/Loader";
 
-export default function Submissions({ data = [] }) {
+export default function Submissions({ data = [], loading = false }) {
   const user = useSelector(selectUser);
   const [search, setSearch] = useState("");
   const [exported, setExported] = useState(false);
@@ -22,30 +24,56 @@ export default function Submissions({ data = [] }) {
 
   const filteredSubmissions = data?.filter((sub) => {
     const matchSearch =
-      sub.candidate.name.toLowerCase().includes(search.toLowerCase()) ||
-      sub.test.testName.toLowerCase().includes(search.toLowerCase());
+      sub.candidate?.name.toLowerCase().includes(search.toLowerCase()) ||
+      sub.test?.testName.toLowerCase().includes(search.toLowerCase());
 
     return matchSearch;
   });
 
   const exportToExcel = (data, filename = "submissions.xlsx") => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    // Map the data to extract the necessary fields for Excel export
+    const formattedData = data.map((item) => ({
+      "Candidate Name": item?.candidate?.name,
+      "Candidate Email": item?.candidate?.email,
+      Role: item?.candidate?.role,
+      "Test Name": item?.test?.testName,
+      "Test Category": item?.test?.category,
+      "Test Slug": item?.test?.slug,
+      "Evaluation Percentage": item?.evaluation?.percentage + "%",
+      "Total Awarded": item?.evaluation?.totalAwarded,
+      "Total Possible": item?.evaluation?.totalPossible,
+      "Overall Feedback": item?.evaluation?.overallFeedback,
+      "Manual Remarks": item?.manualRemarks || "N/A",
+      "Submission Time": item?.submittedAt,
+      Status: item?.status,
+    }));
+
+    // Convert the formatted data into a sheet
+    const ws = XLSX.utils.json_to_sheet(formattedData);
+
+    // Create a new workbook and append the sheet
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Submissions");
+
+    // Generate Excel file
     const excelBuffer = XLSX.write(wb, {
       bookType: "xlsx",
       type: "array",
     });
-    const blob = new Blob([excelBuffer], {
-      type: "application/octet-stream",
-    });
+
+    // Create a Blob for the Excel file and trigger download
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, filename);
-    setExported(true);
-    setTimeout(() => setExported(false), 2000);
+
+    // Optionally set a state or flag to indicate that the export is complete
+    // Example: setExported(true);
+    setTimeout(() => {
+      // Example: setExported(false);
+    }, 2000);
   };
 
   const handleIndividualExport = (submission) => {
-    exportToExcel([submission], `${submission.name}_submission.xlsx`);
+    exportToExcel([submission], `${submission.candidate.name}.xlsx`);
   };
 
   const toggleDropdown = (submissionId) => {
@@ -102,114 +130,99 @@ export default function Submissions({ data = [] }) {
               <th className="py-3 px-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {filteredSubmissions?.map((sub) => (
-              <tr
-                key={sub._id}
-                className={`border-b ${
-                  sub.status === "pending" ? "bg-gray-50" : ""
-                }`}
-              >
-                <td className="py-4 px-4 text-gray-700">
-                  <span className="flex flex-col">{sub?.candidate?.name}</span>
-                  <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
-                    {sub?.candidate?.email}
-                  </span>
-                </td>
-                <td className="py-4 px-4 text-gray-700 flex flex-col">
-                  <span className="">{sub?.submission?.testName}</span>
-                  <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
-                    {sub.test.category}
-                  </span>
-                </td>
-                <td className="py-4 px-4">
-                  <span className="text-gray-700">
-                    {sub?.evaluation?.totalAwarded}/
-                    {sub?.evaluation?.totalPossible}
-                  </span>
-                  <span className="font-semibold text-gray-900 flex flex-col">
-                    {sub?.evaluation?.percentage}%
-                  </span>
-                </td>
-                <td className="py-4 px-4">
-                  <span className={getStatusBadge(sub.status)}>
-                    {sub.status}
-                  </span>
-                </td>
-                <td className="py-4 px-4 text-gray-700 flex flex-col">
-                  <span className="">
-                    {sub?.evaluation?.totalAwarded}/
-                    {sub?.evaluation?.totalPossible}
-                  </span>
-                  <span className="text-xs text-gray-400">Questions</span>
-                </td>
-                <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
-                  <div>{sub.submittedAt?.slice(0, 10)}</div>
-                  <div className="text-xs text-gray-400">
-                    {sub.submittedAt?.slice(11, 19)}
-                  </div>
-                </td>
+          {loading ? (
+            <div className="block mx-auto">
+              <Loader bgColor="primary" />
+            </div>
+          ) : (
+            <tbody>
+              {filteredSubmissions?.map((sub) => (
+                <tr
+                  key={sub._id}
+                  className={`border-b ${
+                    sub.status === "pending" ? "bg-gray-50" : ""
+                  }`}
+                >
+                  <td className="py-4 px-4 text-gray-700">
+                    <span className="flex flex-col">
+                      {sub?.candidate?.name}
+                    </span>
+                    <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
+                      {sub?.candidateEmail}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-gray-700 flex flex-col">
+                    <span className="">{sub?.submission?.testName}</span>
+                    <span className="text-xs border rounded-xl w-fit px-2 py-0.5 mt-1 text-black">
+                      {sub.test.category}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className="text-gray-700">
+                      {sub?.evaluation?.totalAwarded}/
+                      {sub?.evaluation?.totalPossible}
+                    </span>
+                    <span className="font-semibold text-gray-900 flex flex-col">
+                      {sub?.evaluation?.percentage}%
+                    </span>
+                  </td>
+                  <td className="py-4 px-4">
+                    <span className={getStatusBadge(sub.status)}>
+                      {sub.status}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-gray-700 flex flex-col">
+                    <span className="">
+                      {sub?.evaluation?.totalAwarded}/
+                      {sub?.evaluation?.totalPossible}
+                    </span>
+                    <span className="text-xs text-gray-400">Questions</span>
+                  </td>
+                  <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
+                    <div>{sub.submittedAt?.slice(0, 10)}</div>
+                    <div className="text-xs text-gray-400">
+                      {sub.submittedAt?.slice(11, 19)}
+                    </div>
+                  </td>
 
-                <td className="py-4 px-4 text-right space-x-2 whitespace-nowrap">
-                  <Link to={`/test-report/${sub._id}`}>
-                    <button className="p-2 border border-gray-200 rounded hover:bg-gray-100">
-                      <MdOutlineRemoveRedEye className="w-4 h-4" title="View" />
-                    </button>
-                  </Link>
-
-                  {/* Dropdown Button */}
-                  {user.role !== "CANDIDATE" && (
-                    <div className="relative inline-block">
-                      <button
-                        onClick={() => toggleDropdown(sub.id)}
-                        className="p-2 border border-gray-200 rounded hover:bg-gray-100"
-                      >
-                        <HiOutlineDotsHorizontal
+                  <td className="py-4 px-4 text-right space-x-2 whitespace-nowrap">
+                    <Link to={`/test-report/${sub._id}`}>
+                      <button className="p-2 border border-gray-200 rounded hover:bg-gray-100">
+                        <MdOutlineRemoveRedEye
                           className="w-4 h-4"
-                          title="More Actions"
+                          title="View"
                         />
                       </button>
+                    </Link>
 
-                      {/* Dropdown Menu */}
-                      {activeDropdown === sub.id && (
-                        <div className="absolute right-0 z-10 mt-2 w-42 bg-white border border-gray-200 rounded-md shadow-lg">
-                          <ul className="text-xs">
-                            <li
-                              onClick={() =>
-                                handleActionClick(sub.id, "downloadPDF")
-                              }
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                            >
-                              <AiOutlineFilePdf className="w-4 h-4 text-red-500" />
-                              Download PDF
-                            </li>
-                            <li
-                              onClick={() =>
-                                handleActionClick(sub.id, "sendResults")
-                              }
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                            >
-                              <IoSendOutline className="w-4 h-4 text-green-500" />
-                              Send Results
-                            </li>
-                            <li
-                              onClick={() =>
-                                handleActionClick(sub.id, "delete")
-                              }
-                              className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2 text-red-600 border-t border-gray-200"
-                            >
-                              <BiTrash className="w-4 h-4" />
-                              Delete
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                    {/* Dropdown Button */}
+                    {user.role !== "CANDIDATE" && (
+                      <div className="relative inline-block">
+                        <button
+                          onClick={() => handleIndividualExport(sub)}
+                          className="p-2 border border-gray-200 rounded hover:bg-gray-100"
+                        >
+                          <TbTableExport
+                            className="w-4 h-4"
+                            title="More Actions"
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+          {filteredSubmissions?.length === 0 && !loading && (
+            <tfoot>
+              <tr>
+                <td colSpan="8" className="py-2 text-center text-gray-500">
+                  No submissions found.
                 </td>
               </tr>
-            ))}
-          </tbody>
+            </tfoot>
+          )}
         </table>
       </div>
 

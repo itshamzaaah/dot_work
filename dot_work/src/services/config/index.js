@@ -21,3 +21,4 @@ export const attemptDetailsEndPoint = (attemptId) => `${baseUrl}/attempt/${attem
 export const getMyAttemptsEndPoint = `${baseUrl}/attempt/mine`;
 export const uploadScreenShotEndPoint = `${baseUrl}/proctoring/upload-screenshot`;
 export const getScreenshotsEndPoint = (attemptId) => `${baseUrl}/proctoring/${attemptId}`;
+export const updatedAttemptDetailsEndPoint = (attemptId) => `${baseUrl}/attempt/remarks/${attemptId}`;

@@ -58,7 +58,7 @@ export default function ProctoringConsent() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-2xl p-6">
       <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
         <h1 className="text-2xl font-bold text-slate-900 mb-2">Proctoring Consent</h1>
         <p className="text-slate-600 text-sm mb-4">
@@ -99,7 +99,7 @@ export default function ProctoringConsent() {
             disabled={!agreed || loading}
             onClick={handleContinue}
             className={`px-4 py-2 rounded-lg text-white font-semibold ${
-              agreed && !loading ? "bg-indigo-600 hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"
+              agreed && !loading ? "bg-primary hover:bg-indigo-700" : "bg-indigo-300 cursor-not-allowed"
             }`}
           >
             {loading ? "Requesting permissions..." : "I Agree & Continue"}

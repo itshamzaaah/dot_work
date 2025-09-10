@@ -23,7 +23,7 @@ const PreviewQuestions = () => {
           to: "/create-test",
         }}
       />
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-6 overflow-y-auto">
         {isEmpty ? (
           <div className="flex flex-col items-center justify-center mt-20 text-gray-500">
             <FiInbox size={48} className="mb-4" />

@@ -16,20 +16,25 @@ const ViewSubmissions = () => {
   const user = useSelector(selectUser);
   const [submissions, setSubmissions] = useState([]);
   const [statsData, setStatsData] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const fetchSubmissions = async () => {
     try {
+      setLoading(true);
       const response = await getAllAttemptsByRole(user?.role);
       const { status, data, stats } = response;
 
       if (status === 200) {
         setStatsData(stats || {});
         setSubmissions(data || []);
+        setLoading(false);
       } else {
         throw new Error(data?.message || "Failed to fetch submissions");
       }
     } catch (error) {
       toast.error(error.message || "Failed to fetch submissions");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,7 +93,7 @@ const ViewSubmissions = () => {
             <StatsCard key={stat.label} {...stat} />
           ))}
         </div>
-        <Submissions data={submissions} />
+        <Submissions data={submissions} loading={loading} />
       </div>
     </>
   );

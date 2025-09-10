@@ -96,7 +96,7 @@ export default function StepFour() {
             <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
               {frequencyOptions.map((option) => (
                 <button
-                  key={option}
+                  key={option.value}
                   onClick={() => {
                     dispatch(
                       updateStepFour({ screenShotFrequency: option.value })

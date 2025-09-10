@@ -6,9 +6,11 @@ import { toast } from "react-toastify";
 import AuthLayout from "../../src/layouts/AuthLayout";
 import AuthTextInput from "../../src/components/common/AuthTextInput";
 import AuthPasswordInput from "../../src/components/common/AuthPasswordInput";
+import Loader from "../../src/components/common/Loader";
 
 const SignupPage = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -55,8 +57,10 @@ const SignupPage = () => {
     if (!canSubmit) return;
 
     try {
+      setLoading(true);
       const response = await signUp(formData);
       if (response.status === 201) {
+        setLoading(false);
         toast.success(response.message);
         setTimeout(() => {
           navigate("/verify-otp", {
@@ -66,6 +70,7 @@ const SignupPage = () => {
       }
     } catch (error) {
       toast.error(error.response?.data.error);
+      setLoading(false);
     }
   };
 
@@ -145,7 +150,7 @@ const SignupPage = () => {
               : "bg-gray-400 cursor-not-allowed"
           } transition duration-200`}
         >
-          Sign Up
+          {loading ? <Loader bgColor="white" /> : "Create Account"}
         </button>
       </form>
     </AuthLayout>
