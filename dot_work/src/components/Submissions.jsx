@@ -217,7 +217,7 @@ export default function Submissions({ data = [], loading = false }) {
           {filteredSubmissions?.length === 0 && !loading && (
             <tfoot>
               <tr>
-                <td colSpan="5" className="py-2 text-center text-gray-500">
+                <td colSpan="8" className="py-2 text-center text-gray-500">
                   No submissions found.
                 </td>
               </tr>

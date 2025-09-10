@@ -7,6 +7,7 @@ import { addCandidates, getAllUsers } from "../../src/services";
 import PageHeader from "../../src/components/common/PageHeader";
 import { MdOutlineArrowCircleLeft } from "react-icons/md";
 import Loader from "../../src/components/common/Loader";
+import { toast } from "react-toastify";
 
 let debounceTimeout;
 
@@ -20,7 +21,6 @@ export default function AddCandidatesForm() {
   const [accessDeadline, setAccessDeadline] = useState("");
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const isValidEmail = (email) => emailRegex.test(email);
 
@@ -68,13 +68,12 @@ export default function AddCandidatesForm() {
       } catch (error) {
         console.error("Error fetching suggestions", error);
       }
-    }, 300);
+    }, 1000);
   }, [inputValue]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    setSuccessMessage("");
 
     if (emails.length === 0) {
       return setErrors({ candidateEmails: "Please enter at least one email." });
@@ -92,9 +91,8 @@ export default function AddCandidatesForm() {
       setIsSubmitting(true);
       const payload = { candidateEmails: emails, accessDeadline };
       const response = await addCandidates({ testId, data: payload });
-
       if (response.status === 200) {
-        setSuccessMessage("Candidates added successfully. Invitations sent.");
+        toast.success(response.message || "Candidates added successfully!");
         setEmails([]);
         setAccessDeadline("");
       }
@@ -108,7 +106,7 @@ export default function AddCandidatesForm() {
 
   return (
     <>
-    <PageHeader
+      <PageHeader
         title="Add Candidates"
         description="Invite candidates to participate in the test"
         button={{
@@ -191,9 +189,6 @@ export default function AddCandidatesForm() {
 
         {errors.submit && (
           <p className="text-sm text-red-500">{errors.submit}</p>
-        )}
-        {successMessage && (
-          <p className="text-sm text-green-600">{successMessage}</p>
         )}
 
         <button

@@ -15,10 +15,13 @@ import ProctoringFrame from "../../src/components/proctoring/ProctoringFrame";
 import ProctoringOverlay from "../../src/components/proctoring/ProctoringOverlay";
 import { canvasToBlob, getScaledImages } from "../../src/helpers";
 import Loader from "../../src/components/common/Loader";
+import useCountdown from "../../src/hooks/useCountdown";
+import TimerDisplay from "../../src/components/TimerDisplay";
 
 const AttemptTest = () => {
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState({});
+  console.log("test", test);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
@@ -28,6 +31,7 @@ const AttemptTest = () => {
   const shotsCountRef = useRef(0);
   const isBusyRef = useRef(false);
   const intervalIdRef = useRef(null);
+  const submittingRef = useRef(false);
 
   const MAX_SHOTS_PER_ATTEMPT = 120;
 
@@ -134,7 +138,7 @@ const AttemptTest = () => {
         form.append("sessionId", sessionId);
         form.append("testSlug", testSlug);
         form.append("takenAt", takenAt);
-        await uploadScreenshot(form); 
+        await uploadScreenshot(form);
         shotsCountRef.current += 1;
       } catch (err) {
         console.warn("[proctoring] snap/upload error:", err);
@@ -177,6 +181,13 @@ const AttemptTest = () => {
   useEffect(() => {
     fetchTest();
   }, [slug]);
+
+  const duration = Number(test?.duration) || 0;
+
+  const { remainingMs } = useCountdown({
+    duration,
+    onExpire: () => handleSubmit(true),
+  });
 
   const handleAnswerChange = (questionId, value) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -228,7 +239,10 @@ const AttemptTest = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (auto = false) => {
+    if (loading || submittingRef.current) return;
+    submittingRef.current = true;
+
     const payload = {
       test,
       answers,
@@ -236,20 +250,23 @@ const AttemptTest = () => {
       metadata: {
         proctoringSessionId:
           localStorage.getItem("proctoringSessionId") || null,
+        autoSubmitted: !!auto,
       },
     };
     try {
       setLoading(true);
       const response = await submitTest(payload);
       if (response.status === 200 || response.status === 201) {
-        toast.success("Test submitted successfully");
-        // OPTIONAL: stop streams when test is done
+        toast.success(
+          auto ? "Time up! Auto-submitted." : "Test submitted successfully"
+        );
         setLoading(false);
         proctoringStore.stopAll();
         navigate("/my-tests");
       }
     } catch (error) {
       toast.error(error?.message || "Submission failed");
+      submittingRef.current = false;
     }
   };
 
@@ -265,9 +282,12 @@ const AttemptTest = () => {
             <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-cyan-500" />
             <div className="flex items-start justify-between gap-4 p-5 sm:p-6">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:ring-indigo-900/60">
-                  <span className="inline-block h-2 w-2 rounded-full bg-indigo-500" />
-                  <span>Assessment</span>
+                <div className="flex gap-x-3">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:ring-indigo-900/60">
+                    <span className="inline-block h-2 w-2 rounded-full bg-indigo-500" />
+                    <span>Assessment</span>
+                  </div>
+                  <TimerDisplay remainingMs={remainingMs} />
                 </div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                   {test?.testName}
