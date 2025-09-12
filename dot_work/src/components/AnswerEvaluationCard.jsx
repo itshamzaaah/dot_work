@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import { formatQuestionType } from "../helpers";
+import { IoCheckmark } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 
 const getTypeBadge = (type) => {
   switch (type) {
@@ -46,23 +48,25 @@ const AnswerEvaluationCard = ({ question, index }) => {
 
       <p className="text-gray-800 font-semibold">{prompt}</p>
 
-      <div className="grid md:grid-cols-2 gap-4 text-sm">
-        <div>
+      <div className="flex justify-between gap-4 text-sm">
+        <div className="w-4/5">
           <p className="font-semibold text-gray-600 mb-1">Candidate Answer</p>
           <div className="bg-blue-50 border border-blue-200 rounded p-2 text-gray-800">
             {candidateAnswer?.toString()}
           </div>
         </div>
-        <div>
+        <div className="w-fit">
           <p className="font-semibold text-gray-600 mb-1">Status</p>
           <div
-            className={`border ${
-              correctness === "correct"
-                ? "bg-green-50 border-green-200"
-                : "border-red-200 bg-red-50"
+            className={`flex justify-center items-center ${
+              correctness === "correct" ? "bg-green-50" : "bg-red-50"
             } rounded p-2 text-gray-800`}
           >
-            {correctness}
+            {correctness === "correct" ? (
+              <IoCheckmark className="text-green-400 font-bold" size={22} />
+            ) : (
+              <RxCross2 className="text-red-400 font-bold" size={22} />
+            )}
           </div>
         </div>
       </div>

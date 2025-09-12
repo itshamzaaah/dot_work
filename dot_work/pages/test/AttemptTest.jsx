@@ -21,7 +21,6 @@ import TimerDisplay from "../../src/components/TimerDisplay";
 const AttemptTest = () => {
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState({});
-  console.log("test", test);
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [currentStep, setCurrentStep] = useState(0);

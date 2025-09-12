@@ -8,6 +8,7 @@ import Loader from "../../src/components/common/Loader";
 
 const Tests = () => {
   const [tests, setTests] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   const fetchTests = async () => {

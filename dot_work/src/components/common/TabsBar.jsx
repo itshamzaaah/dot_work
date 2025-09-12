@@ -1,7 +1,17 @@
+import { useSelector } from "react-redux";
+import { selectUser } from "../../store/slices/authSlice";
+
 const TabsBar = ({ tabs = [], value, onChange }) => {
+  const user = useSelector(selectUser);
+
+  const filteredTabs =
+    user.role === "CANDIDATE"
+      ? tabs.filter((tab) => tab.id !== "screenshots")
+      : tabs;
+
   return (
     <div className="bg-gray-200 text-sm rounded p-2 flex gap-x-2">
-      {tabs.map((tab) => {
+      {filteredTabs?.map((tab) => {
         const selected = value === tab.id;
         return (
           <button

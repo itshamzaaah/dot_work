@@ -8,8 +8,15 @@ import { useNavigate } from "react-router-dom";
 
 const TestCard = ({ testData }) => {
   const navigate = useNavigate();
-  const { accessDeadline, category, description, duration, testName, slug } =
-    testData;
+  const {
+    accessDeadline,
+    category,
+    description,
+    duration,
+    testName,
+    slug,
+    hasAttempted,
+  } = testData;
 
   // Format the deadline date
   const formatDeadline = (dateString) => {
@@ -70,14 +77,20 @@ const TestCard = ({ testData }) => {
       {/* Perform Test Button */}
       <button
         onClick={handleTestAccess}
-        disabled={isDeadlinePassed}
+        disabled={isDeadlinePassed || hasAttempted}
         className={`w-full py-2 px-6 rounded-lg font-semibold text-lg transition-all duration-200 flex items-center justify-center space-x-2 mt-4 ${
-          isDeadlinePassed
+          isDeadlinePassed || hasAttempted
             ? "bg-gray-200 text-gray-500 cursor-not-allowed"
             : "bg-primary text-white hover:bg-blue-700 hover:shadow-md active:bg-blue-800"
         }`}
       >
-        <span>{isDeadlinePassed ? "Test Expired" : "Perform Test"}</span>
+        <span>
+          {isDeadlinePassed
+            ? "Test Expired"
+            : hasAttempted
+            ? "Already Attempted"
+            : "Perform Test"}
+        </span>
         {!isDeadlinePassed && <MdOpenInNew className="w-5 h-5" />}
       </button>
     </div>
