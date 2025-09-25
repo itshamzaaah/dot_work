@@ -13,6 +13,7 @@ import {
   getScreenshotsEndPoint,
   getTestEndPoint,
   logoutEndPoint,
+  resolveInviteEndPoint,
   signInEndPoint,
   signUpEndPoint,
   submitTestEndPoint,
@@ -121,7 +122,8 @@ export async function submitTest(data) {
 }
 
 export async function getAllAttemptsByRole(role, params = {}) {
-  const endpoint = role === "CANDIDATE" ? getMyAttemptsEndPoint : getAllAttemptsEndPoint;
+  const endpoint =
+    role === "CANDIDATE" ? getMyAttemptsEndPoint : getAllAttemptsEndPoint;
   const result = await get(endpoint, params);
   return result;
 }
@@ -143,5 +145,10 @@ export async function getAttemptScreenshots(attemptId) {
 
 export async function updatedAttemptDetails(attemptId, data) {
   const result = await patch(updatedAttemptDetailsEndPoint(attemptId), data);
+  return result;
+}
+
+export async function resolveInvite(token) {
+  const result = await post(resolveInviteEndPoint(), { token });
   return result;
 }

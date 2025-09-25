@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AttemptTest from "../pages/test/AttemptTest";
 import ProctoringConsent from "../pages/test/ProctoringConsent";
+import InviteLanding from "../pages/test/InviteLanding";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
       <Route path="/" element={<Signup />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/verify-otp" element={<OTP />} />
+      <Route path="/invite" element={<InviteLanding />} />
       <Route path="/thank-you" element={<ThankYou />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>

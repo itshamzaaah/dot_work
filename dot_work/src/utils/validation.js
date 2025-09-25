@@ -131,7 +131,6 @@ export const validateStepThree = (data) => {
 };
 
 // get status color
-
 export const getStatusBadge = (status) => {
   const base = "px-3 py-0.5 text-xs font-semibold rounded-full capitalize";
   if (status === "evaluated") return `${base} bg-green-700 text-white`;
